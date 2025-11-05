@@ -16,7 +16,7 @@
       "id": 2,
       "title": "HTTP Methods Guide",
       "description": "Learn about HTTP methods and their usage in web development.",
-      "link": "blogs/http-methods.html",
+      "link": "blogs/http-methods-guide.html",
       "category": ["web-dev", "http", "methods"],
       "date": "2025-11-10",
       "readTime": "10 min read",
@@ -32,6 +32,16 @@
       "category": ["web-dev", "http", "methods"],
       "date": "2025-11-08",
       "readTime": "8 min read",
+      "featured": false
+    }, 
+    {
+      "id": 4,
+      "title": "Advantages and Disadvantages of Data Structures",
+      "description": "Learn about the advantages and disadvantages of different data structures.",
+      "link": "blogs/advantages-and-disadvantages-of-data-structures.html",
+      "category": ["data-structures", "algorithms"],
+      "date": "2025-11-05",
+      "readTime": "5 min read",
       "featured": false
     }
     

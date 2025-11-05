@@ -606,7 +606,8 @@
                         <div class="answer">
                             <p><strong>GET</strong> is the primary method for retrieving resource representations. It's
                                 <strong>safe</strong> (no side effects), <strong>idempotent</strong>, and
-                                <strong>cacheable</strong>.</p>
+                                <strong>cacheable</strong>.
+                            </p>
                         </div>
                     </div>
 
@@ -829,17 +830,18 @@ except Exception as e:
 
                             <div class="code-examples">
                                 <div class="example-tabs">
-                                    <button class="tab-btn active" data-tab="post-create">Create Resource</button>
-                                    <button class="tab-btn" data-tab="post-action">Perform Action</button>
-                                    <button class="tab-btn" data-tab="post-file">File Upload</button>
-                                </div>
+                                    <div class="tab-buttons">
+                                        <button class="tab-btn active" data-tab="post-curl">cURL</button>
+                                        <button class="tab-btn" data-tab="post-js">JavaScript</button>
+                                        <button class="tab-btn" data-tab="post-python">Python</button>
+                                    </div>
 
-                                <div class="tab-content active" id="post-create">
-                                    <div class="code-block">
-                                        <div class="code-header">
-                                            <span>Create User with POST</span>
-                                        </div>
-                                        <pre><code class="language-bash"># Create new user - server generates ID
+                                    <div class="tab-content active" id="post-curl">
+                                        <div class="code-block">
+                                            <div class="code-header">
+                                                <span>POST Request Examples</span>
+                                            </div>
+                                            <pre><code class="language-bash"># Create new user - server generates ID
 curl -X POST "https://api.example.com/users" \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer token123" \
@@ -849,24 +851,7 @@ curl -X POST "https://api.example.com/users" \
     "password": "securepassword123"
   }'
 
-# Expected Response:
-# HTTP 201 Created
-# Location: /users/789
-# {
-#   "id": 789,
-#   "name": "Alice Johnson",
-#   "email": "alice@example.com",
-#   "created_at": "2023-10-05T10:30:00Z"
-# }</code></pre>
-                                    </div>
-                                </div>
-
-                                <div class="tab-content" id="post-action">
-                                    <div class="code-block">
-                                        <div class="code-header">
-                                            <span>Perform Action with POST</span>
-                                        </div>
-                                        <pre><code class="language-bash"># Process payment (non-idempotent action)
+# Process payment (non-idempotent action)
 curl -X POST "https://api.example.com/payments" \
   -H "Content-Type: application/json" \
   -H "Idempotency-Key: unique-payment-123" \
@@ -877,39 +862,158 @@ curl -X POST "https://api.example.com/payments" \
     "description": "Monthly subscription"
   }'
 
-# Search with complex criteria (too large for GET)
-curl -X POST "https://api.example.com/search" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "query": "advanced search",
-    "filters": {
-      "category": ["tech", "programming"],
-      "date_range": {"from": "2023-01-01", "to": "2023-12-31"},
-      "tags": ["javascript", "nodejs", "react"]
-    },
-    "sort": {"field": "date", "order": "desc"},
-    "pagination": {"page": 1, "size": 20}
-  }'</code></pre>
-                                    </div>
-                                </div>
-
-                                <div class="tab-content" id="post-file">
-                                    <div class="code-block">
-                                        <div class="code-header">
-                                            <span>File Upload with POST</span>
-                                        </div>
-                                        <pre><code class="language-bash"># Upload file with multipart/form-data
+# Upload file with multipart/form-data
 curl -X POST "https://api.example.com/upload" \
   -H "Authorization: Bearer token123" \
   -F "file=@document.pdf" \
   -F "description=Project documentation" \
-  -F "category=documents"
+  -F "category=documents"</code></pre>
+                                        </div>
+                                    </div>
 
-# Upload with specific content type
-curl -X POST "https://api.example.com/images" \
-  -H "Content-Type: image/jpeg" \
-  -H "Authorization: Bearer token123" \
-  --data-binary "@photo.jpg"</code></pre>
+                                    <div class="tab-content" id="post-js">
+                                        <div class="code-block">
+                                            <div class="code-header">
+                                                <span>POST with Fetch API</span>
+                                            </div>
+                                            <pre><code class="language-javascript">// Create user with POST
+async function createUser(userData) {
+  try {
+    const response = await fetch('https://api.example.com/users', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer token123'
+      },
+      body: JSON.stringify(userData)
+    });
+    
+    if (response.status === 201) {
+      const newUser = await response.json();
+      const location = response.headers.get('Location');
+      return { user: newUser, location };
+    } else {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+  } catch (error) {
+    console.error('POST request failed:', error);
+    throw error;
+  }
+}
+
+// Usage
+const userData = {
+  name: 'Alice Johnson',
+  email: 'alice@example.com',
+  password: 'securepassword123'
+};
+
+createUser(userData)
+  .then(result => {
+    console.log('User created:', result.user);
+    console.log('Location:', result.location);
+  })
+  .catch(error => console.error('Error:', error));
+
+// File upload with FormData
+async function uploadFile(file, description) {
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('description', description);
+  formData.append('category', 'documents');
+  
+  try {
+    const response = await fetch('https://api.example.com/upload', {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer token123'
+      },
+      body: formData
+    });
+    
+    if (response.ok) {
+      return await response.json();
+    } else {
+      throw new Error(`Upload failed: ${response.status}`);
+    }
+  } catch (error) {
+    console.error('File upload failed:', error);
+    throw error;
+  }
+}</code></pre>
+                                        </div>
+                                    </div>
+
+                                    <div class="tab-content" id="post-python">
+                                        <div class="code-block">
+                                            <div class="code-header">
+                                                <span>POST with Python Requests</span>
+                                            </div>
+                                            <pre><code class="language-python">import requests
+import json
+
+def create_user(user_data):
+    """POST request to create a user"""
+    try:
+        response = requests.post(
+            'https://api.example.com/users',
+            headers={
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer token123'
+            },
+            data=json.dumps(user_data)
+        )
+        
+        response.raise_for_status()
+        
+        if response.status_code == 201:
+            return {
+                'user': response.json(),
+                'location': response.headers.get('Location')
+            }
+        return response.json()
+        
+    except requests.exceptions.RequestException as e:
+        print(f"POST request failed: {e}")
+        raise
+
+def upload_file(file_path, description):
+    """POST request to upload a file"""
+    try:
+        with open(file_path, 'rb') as file:
+            files = {'file': file}
+            data = {
+                'description': description,
+                'category': 'documents'
+            }
+            
+            response = requests.post(
+                'https://api.example.com/upload',
+                headers={'Authorization': 'Bearer token123'},
+                files=files,
+                data=data
+            )
+            
+            response.raise_for_status()
+            return response.json()
+            
+    except requests.exceptions.RequestException as e:
+        print(f"File upload failed: {e}")
+        raise
+
+# Usage
+user_data = {
+    'name': 'Alice Johnson',
+    'email': 'alice@example.com',
+    'password': 'securepassword123'
+}
+
+try:
+    result = create_user(user_data)
+    print(f"User created: {result}")
+except Exception as e:
+    print(f"Error: {e}")</code></pre>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -980,11 +1084,19 @@ curl -X POST "https://api.example.com/images" \
                             </p>
 
                             <div class="code-examples">
-                                <div class="code-block">
-                                    <div class="code-header">
-                                        <span>PUT for Create vs Update</span>
+                                <div class="example-tabs">
+                                    <div class="tab-buttons">
+                                        <button class="tab-btn active" data-tab="put-curl">cURL</button>
+                                        <button class="tab-btn" data-tab="put-js">JavaScript</button>
+                                        <button class="tab-btn" data-tab="put-python">Python</button>
                                     </div>
-                                    <pre><code class="language-bash"># CREATE with PUT (client controls ID)
+
+                                    <div class="tab-content active" id="put-curl">
+                                        <div class="code-block">
+                                            <div class="code-header">
+                                                <span>PUT Request Examples</span>
+                                            </div>
+                                            <pre><code class="language-bash"># CREATE with PUT (client controls ID)
 curl -X PUT "https://api.example.com/users/alice-johnson" \
   -H "Content-Type: application/json" \
   -d '{
@@ -1004,6 +1116,113 @@ curl -X PUT "https://api.example.com/users/123" \
     "preferences": {"theme": "dark"}
   }'
 # Note: Missing fields from previous state are removed!</code></pre>
+                                        </div>
+                                    </div>
+
+                                    <div class="tab-content" id="put-js">
+                                        <div class="code-block">
+                                            <div class="code-header">
+                                                <span>PUT with Fetch API</span>
+                                            </div>
+                                            <pre><code class="language-javascript">// Create or replace user with PUT
+async function putUser(userId, userData) {
+  try {
+    const response = await fetch(`https://api.example.com/users/${userId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer token123'
+      },
+      body: JSON.stringify(userData)
+    });
+    
+    if (response.ok) {
+      const result = await response.json();
+      const status = response.status;
+      return { result, status, created: status === 201 };
+    } else {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+  } catch (error) {
+    console.error('PUT request failed:', error);
+    throw error;
+  }
+}
+
+// Usage
+const userData = {
+  id: 123,
+  name: 'Alice Smith',
+  email: 'alice.smith@example.com',
+  age: 30,
+  preferences: { theme: 'dark' }
+};
+
+putUser(123, userData)
+  .then(result => {
+    if (result.created) {
+      console.log('User created with PUT');
+    } else {
+      console.log('User updated with PUT');
+    }
+    console.log('Result:', result.result);
+  })
+  .catch(error => console.error('Error:', error));</code></pre>
+                                        </div>
+                                    </div>
+
+                                    <div class="tab-content" id="put-python">
+                                        <div class="code-block">
+                                            <div class="code-header">
+                                                <span>PUT with Python Requests</span>
+                                            </div>
+                                            <pre><code class="language-python">import requests
+import json
+
+def put_user(user_id, user_data):
+    """PUT request to create or replace a user"""
+    try:
+        response = requests.put(
+            f'https://api.example.com/users/{user_id}',
+            headers={
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer token123'
+            },
+            data=json.dumps(user_data)
+        )
+        
+        response.raise_for_status()
+        
+        return {
+            'result': response.json(),
+            'status': response.status_code,
+            'created': response.status_code == 201
+        }
+        
+    except requests.exceptions.RequestException as e:
+        print(f"PUT request failed: {e}")
+        raise
+
+# Usage
+user_data = {
+    'id': 123,
+    'name': 'Alice Smith',
+    'email': 'alice.smith@example.com',
+    'age': 30,
+    'preferences': {'theme': 'dark'}
+}
+
+try:
+    result = put_user(123, user_data)
+    if result['created']:
+        print('User created with PUT')
+    else:
+        print('User updated with PUT')
+    print('Result:', result['result'])
+except Exception as e:
+    print(f"Error: {e}")</code></pre>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1066,17 +1285,18 @@ curl -X PUT "https://api.example.com/users/123" \
 
                             <div class="code-examples">
                                 <div class="example-tabs">
-                                    <button class="tab-btn active" data-tab="patch-json">JSON Merge</button>
-                                    <button class="tab-btn" data-tab="patch-rfc">JSON Patch</button>
-                                    <button class="tab-btn" data-tab="patch-custom">Custom Format</button>
-                                </div>
+                                    <div class="tab-buttons">
+                                        <button class="tab-btn active" data-tab="patch-curl">cURL</button>
+                                        <button class="tab-btn" data-tab="patch-js">JavaScript</button>
+                                        <button class="tab-btn" data-tab="patch-python">Python</button>
+                                    </div>
 
-                                <div class="tab-content active" id="patch-json">
-                                    <div class="code-block">
-                                        <div class="code-header">
-                                            <span>JSON Merge Patch (RFC 7396) - Not Idempotent</span>
-                                        </div>
-                                        <pre><code class="language-bash"># Simple field updates
+                                    <div class="tab-content active" id="patch-curl">
+                                        <div class="code-block">
+                                            <div class="code-header">
+                                                <span>PATCH Request Examples</span>
+                                            </div>
+                                            <pre><code class="language-bash"># JSON Merge Patch (RFC 7396) - Not Idempotent
 curl -X PATCH "https://api.example.com/users/123" \
   -H "Content-Type: application/merge-patch+json" \
   -d '{
@@ -1086,19 +1306,7 @@ curl -X PATCH "https://api.example.com/users/123" \
     }
   }'
 
-# Problem: Increment operations are not idempotent
-curl -X PATCH "https://api.example.com/counter/123" \
-  -H "Content-Type: application/merge-patch+json" \
-  -d '{"views": 10}'  # Not idempotent - what if retried?</code></pre>
-                                    </div>
-                                </div>
-
-                                <div class="tab-content" id="patch-rfc">
-                                    <div class="code-block">
-                                        <div class="code-header">
-                                            <span>JSON Patch (RFC 6902) - Idempotent</span>
-                                        </div>
-                                        <pre><code class="language-bash"># Standardized patch operations
+# JSON Patch (RFC 6902) - Idempotent
 curl -X PATCH "https://api.example.com/users/123" \
   -H "Content-Type: application/json-patch+json" \
   -d '[
@@ -1108,17 +1316,7 @@ curl -X PATCH "https://api.example.com/users/123" \
     { "op": "remove", "path": "/phone_number" }
   ]'
 
-# Atomic and idempotent - same result if applied multiple times
-# All operations succeed or all fail (atomic)</code></pre>
-                                    </div>
-                                </div>
-
-                                <div class="tab-content" id="patch-custom">
-                                    <div class="code-block">
-                                        <div class="code-header">
-                                            <span>Custom Operations Format</span>
-                                        </div>
-                                        <pre><code class="language-bash"># Custom patch format for specific operations
+# Custom operations format
 curl -X PATCH "https://api.example.com/users/123" \
   -H "Content-Type: application/json" \
   -d '{
@@ -1128,14 +1326,148 @@ curl -X PATCH "https://api.example.com/users/123" \
     },
     "$inc": {
       "login_count": 1
-    },
-    "$push": {
-      "tags": "vip"
     }
-  }'
+  }'</code></pre>
+                                        </div>
+                                    </div>
 
-# Common in MongoDB-like APIs
-# $inc operations are not idempotent!</code></pre>
+                                    <div class="tab-content" id="patch-js">
+                                        <div class="code-block">
+                                            <div class="code-header">
+                                                <span>PATCH with Fetch API</span>
+                                            </div>
+                                            <pre><code class="language-javascript">// PATCH with JSON Merge format
+async function patchUserMerge(userId, patchData) {
+  try {
+    const response = await fetch(`https://api.example.com/users/${userId}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/merge-patch+json',
+        'Authorization': 'Bearer token123'
+      },
+      body: JSON.stringify(patchData)
+    });
+    
+    if (response.ok) {
+      return await response.json();
+    } else {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+  } catch (error) {
+    console.error('PATCH request failed:', error);
+    throw error;
+  }
+}
+
+// PATCH with JSON Patch format
+async function patchUserJsonPatch(userId, patchOperations) {
+  try {
+    const response = await fetch(`https://api.example.com/users/${userId}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json-patch+json',
+        'Authorization': 'Bearer token123'
+      },
+      body: JSON.stringify(patchOperations)
+    });
+    
+    if (response.ok) {
+      return await response.json();
+    } else {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+  } catch (error) {
+    console.error('PATCH request failed:', error);
+    throw error;
+  }
+}
+
+// Usage examples
+const mergePatch = {
+  age: 31,
+  preferences: {
+    theme: 'light'
+  }
+};
+
+const jsonPatch = [
+  { op: 'replace', path: '/age', value: 31 },
+  { op: 'replace', path: '/preferences/theme', value: 'light' },
+  { op: 'add', path: '/tags', value: ['vip'] }
+];
+
+patchUserMerge(123, mergePatch)
+  .then(updatedUser => console.log('Updated user:', updatedUser))
+  .catch(error => console.error('Error:', error));</code></pre>
+                                        </div>
+                                    </div>
+
+                                    <div class="tab-content" id="patch-python">
+                                        <div class="code-block">
+                                            <div class="code-header">
+                                                <span>PATCH with Python Requests</span>
+                                            </div>
+                                            <pre><code class="language-python">import requests
+import json
+
+def patch_user_merge(user_id, patch_data):
+    """PATCH request with JSON Merge format"""
+    try:
+        response = requests.patch(
+            f'https://api.example.com/users/{user_id}',
+            headers={
+                'Content-Type': 'application/merge-patch+json',
+                'Authorization': 'Bearer token123'
+            },
+            data=json.dumps(patch_data)
+        )
+        
+        response.raise_for_status()
+        return response.json()
+        
+    except requests.exceptions.RequestException as e:
+        print(f"PATCH request failed: {e}")
+        raise
+
+def patch_user_json_patch(user_id, patch_operations):
+    """PATCH request with JSON Patch format"""
+    try:
+        response = requests.patch(
+            f'https://api.example.com/users/{user_id}',
+            headers={
+                'Content-Type': 'application/json-patch+json',
+                'Authorization': 'Bearer token123'
+            },
+            data=json.dumps(patch_operations)
+        )
+        
+        response.raise_for_status()
+        return response.json()
+        
+    except requests.exceptions.RequestException as e:
+        print(f"PATCH request failed: {e}")
+        raise
+
+# Usage examples
+merge_patch = {
+    'age': 31,
+    'preferences': {
+        'theme': 'light'
+    }
+}
+
+json_patch = [
+    {'op': 'replace', 'path': '/age', 'value': 31},
+    {'op': 'replace', 'path': '/preferences/theme', 'value': 'light'},
+    {'op': 'add', 'path': '/tags', 'value': ['vip']}
+]
+
+try:
+    updated_user = patch_user_merge(123, merge_patch)
+    print('Updated user:', updated_user)
+except Exception as e:
+    print(f"Error: {e}")</code></pre>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -1199,11 +1531,19 @@ curl -X PATCH "https://api.example.com/users/123" \
                             </ul>
 
                             <div class="code-examples">
-                                <div class="code-block">
-                                    <div class="code-header">
-                                        <span>DELETE Request Examples</span>
+                                <div class="example-tabs">
+                                    <div class="tab-buttons">
+                                        <button class="tab-btn active" data-tab="delete-curl">cURL</button>
+                                        <button class="tab-btn" data-tab="delete-js">JavaScript</button>
+                                        <button class="tab-btn" data-tab="delete-python">Python</button>
                                     </div>
-                                    <pre><code class="language-bash"># Delete a user
+
+                                    <div class="tab-content active" id="delete-curl">
+                                        <div class="code-block">
+                                            <div class="code-header">
+                                                <span>DELETE Request Examples</span>
+                                            </div>
+                                            <pre><code class="language-bash"># Delete a user
 curl -X DELETE "https://api.example.com/users/123" \
   -H "Authorization: Bearer token123"
 
@@ -1216,6 +1556,115 @@ curl -X DELETE "https://api.example.com/users/123" \
 
 # Response: 404 Not Found or 410 Gone
 # Both indicate resource doesn't exist - idempotent!</code></pre>
+                                        </div>
+                                    </div>
+
+                                    <div class="tab-content" id="delete-js">
+                                        <div class="code-block">
+                                            <div class="code-header">
+                                                <span>DELETE with Fetch API</span>
+                                            </div>
+                                            <pre><code class="language-javascript">// Delete resource with DELETE
+async function deleteResource(resourceUrl) {
+  try {
+    const response = await fetch(resourceUrl, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': 'Bearer token123'
+      }
+    });
+    
+    // DELETE is idempotent - 404 is considered success for idempotency
+    if (response.ok || response.status === 404 || response.status === 410) {
+      return {
+        success: true,
+        status: response.status,
+        message: response.status === 404 ? 'Resource already deleted' : 'Resource deleted'
+      };
+    } else {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+  } catch (error) {
+    console.error('DELETE request failed:', error);
+    throw error;
+  }
+}
+
+// Batch delete multiple resources
+async function deleteMultiple(resourceUrls) {
+  const results = [];
+  
+  for (const url of resourceUrls) {
+    try {
+      const result = await deleteResource(url);
+      results.push({ url, ...result });
+    } catch (error) {
+      results.push({ url, success: false, error: error.message });
+    }
+  }
+  
+  return results;
+}
+
+// Usage
+deleteResource('https://api.example.com/users/123')
+  .then(result => {
+    console.log('Delete result:', result);
+  })
+  .catch(error => console.error('Error:', error));</code></pre>
+                                        </div>
+                                    </div>
+
+                                    <div class="tab-content" id="delete-python">
+                                        <div class="code-block">
+                                            <div class="code-header">
+                                                <span>DELETE with Python Requests</span>
+                                            </div>
+                                            <pre><code class="language-python">import requests
+
+def delete_resource(resource_url):
+    """DELETE request to remove a resource"""
+    try:
+        response = requests.delete(
+            resource_url,
+            headers={'Authorization': 'Bearer token123'}
+        )
+        
+        # DELETE is idempotent - 404 is considered success for idempotency
+        if response.ok or response.status_code in [404, 410]:
+            return {
+                'success': True,
+                'status': response.status_code,
+                'message': 'Resource already deleted' if response.status_code == 404 else 'Resource deleted'
+            }
+        else:
+            response.raise_for_status()
+            
+    except requests.exceptions.RequestException as e:
+        print(f"DELETE request failed: {e}")
+        raise
+
+def delete_multiple(resource_urls):
+    """Batch delete multiple resources"""
+    results = []
+    
+    for url in resource_urls:
+        try:
+            result = delete_resource(url)
+            results.append({'url': url, **result})
+        except Exception as e:
+            results.append({'url': url, 'success': False, 'error': str(e)})
+    
+    return results
+
+# Usage
+try:
+    result = delete_resource('https://api.example.com/users/123')
+    print('Delete result:', result)
+except Exception as e:
+    print(f"Error: {e}")</code></pre>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1299,11 +1748,19 @@ curl -X DELETE "https://api.example.com/users/123" \
                         <h4><i class="fas fa-question-circle"></i> HEAD Implementation Examples</h4>
                         <div class="answer">
                             <div class="code-examples">
-                                <div class="code-block">
-                                    <div class="code-header">
-                                        <span>HEAD Request Examples</span>
+                                <div class="example-tabs">
+                                    <div class="tab-buttons">
+                                        <button class="tab-btn active" data-tab="head-curl">cURL</button>
+                                        <button class="tab-btn" data-tab="head-js">JavaScript</button>
+                                        <button class="tab-btn" data-tab="head-python">Python</button>
                                     </div>
-                                    <pre><code class="language-bash"># Check if resource exists and get metadata
+
+                                    <div class="tab-content active" id="head-curl">
+                                        <div class="code-block">
+                                            <div class="code-header">
+                                                <span>HEAD Request Examples</span>
+                                            </div>
+                                            <pre><code class="language-bash"># Check if resource exists and get metadata
 curl -I "https://api.example.com/users/123" \
   -H "Authorization: Bearer token123"
 
@@ -1320,23 +1777,12 @@ curl -I "https://api.example.com/files/document.pdf"
 
 # Response shows Content-Length: 1048576
 # You can decide to download based on size</code></pre>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                                        </div>
+                                    </div>
 
-                    <div class="question">
-                        <h4><i class="fas fa-question-circle"></i> HEAD in JavaScript and Python</h4>
-                        <div class="answer">
-                            <div class="code-examples">
-                                <div class="example-tabs">
-                                    <button class="tab-btn active" data-tab="head-js">JavaScript</button>
-                                    <button class="tab-btn" data-tab="head-python">Python</button>
-                                </div>
-
-                                <div class="tab-content active" id="head-js">
-                                    <div class="code-block">
-                                        <pre><code class="language-javascript">// Check resource metadata with HEAD
+                                    <div class="tab-content" id="head-js">
+                                        <div class="code-block">
+                                            <pre><code class="language-javascript">// Check resource metadata with HEAD
 async function checkResource(url) {
   try {
     const response = await fetch(url, {
@@ -1366,6 +1812,22 @@ async function checkResource(url) {
   }
 }
 
+// Check multiple resources efficiently
+async function checkResources(urls) {
+  const results = [];
+  
+  for (const url of urls) {
+    try {
+      const metadata = await checkResource(url);
+      results.push({ url, ...metadata });
+    } catch (error) {
+      results.push({ url, error: error.message });
+    }
+  }
+  
+  return results;
+}
+
 // Usage
 checkResource('https://api.example.com/users/123')
   .then(metadata => {
@@ -1376,12 +1838,12 @@ checkResource('https://api.example.com/users/123')
       }
     }
   });</code></pre>
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div class="tab-content" id="head-python">
-                                    <div class="code-block">
-                                        <pre><code class="language-python">import requests
+                                    <div class="tab-content" id="head-python">
+                                        <div class="code-block">
+                                            <pre><code class="language-python">import requests
 
 def check_resource(url):
     """Check resource metadata with HEAD"""
@@ -1408,10 +1870,24 @@ def check_resource(url):
         print(f"HEAD request failed: {e}")
         raise
 
+def check_resources(urls):
+    """Check multiple resources efficiently"""
+    results = []
+    
+    for url in urls:
+        try:
+            metadata = check_resource(url)
+            results.append({'url': url, **metadata})
+        except Exception as e:
+            results.append({'url': url, 'error': str(e)})
+    
+    return results
+
 # Usage
 metadata = check_resource('https://api.example.com/users/123')
 if metadata['exists']:
     print(f"Resource size: {metadata['content_length']} bytes")</code></pre>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -1451,11 +1927,19 @@ if metadata['exists']:
                                 applications:</p>
 
                             <div class="code-examples">
-                                <div class="code-block">
-                                    <div class="code-header">
-                                        <span>CORS Preflight with OPTIONS</span>
+                                <div class="example-tabs">
+                                    <div class="tab-buttons">
+                                        <button class="tab-btn active" data-tab="options-curl">cURL</button>
+                                        <button class="tab-btn" data-tab="options-js">JavaScript</button>
+                                        <button class="tab-btn" data-tab="options-python">Python</button>
                                     </div>
-                                    <pre><code class="language-bash"># Browser automatically sends OPTIONS for cross-origin requests
+
+                                    <div class="tab-content active" id="options-curl">
+                                        <div class="code-block">
+                                            <div class="code-header">
+                                                <span>OPTIONS Request Examples</span>
+                                            </div>
+                                            <pre><code class="language-bash"># Browser automatically sends OPTIONS for cross-origin requests
 curl -X OPTIONS "https://api.example.com/users" \
   -H "Origin: https://example.com" \
   -H "Access-Control-Request-Method: POST" \
@@ -1466,23 +1950,9 @@ curl -X OPTIONS "https://api.example.com/users" \
 # Access-Control-Allow-Origin: https://example.com
 # Access-Control-Allow-Methods: GET, POST, PUT, DELETE
 # Access-Control-Allow-Headers: Content-Type, Authorization
-# Access-Control-Max-Age: 86400</code></pre>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+# Access-Control-Max-Age: 86400
 
-                    <div class="question">
-                        <h4><i class="fas fa-question-circle"></i> OPTIONS for API Discovery</h4>
-                        <div class="answer">
-                            <p><strong>OPTIONS can also be used for API discovery</strong> and documentation:</p>
-
-                            <div class="code-examples">
-                                <div class="code-block">
-                                    <div class="code-header">
-                                        <span>API Discovery with OPTIONS</span>
-                                    </div>
-                                    <pre><code class="language-bash"># Discover available methods for a resource
+# API discovery with OPTIONS
 curl -X OPTIONS "https://api.example.com/users/123" \
   -H "Accept: application/json"
 
@@ -1498,12 +1968,170 @@ curl -X OPTIONS "https://api.example.com/users/123" \
 #     "PUT": {"description": "Replace user data"},
 #     "PATCH": {"description": "Update user fields"},
 #     "DELETE": {"description": "Delete user"}
-#   },
-#   "links": {
-#     "self": "/users/123",
-#     "posts": "/users/123/posts"
 #   }
 # }</code></pre>
+                                        </div>
+                                    </div>
+
+                                    <div class="tab-content" id="options-js">
+                                        <div class="code-block">
+                                            <div class="code-header">
+                                                <span>OPTIONS with Fetch API</span>
+                                            </div>
+                                            <pre><code class="language-javascript">// Discover API capabilities with OPTIONS
+async function discoverApi(url) {
+  try {
+    const response = await fetch(url, {
+      method: 'OPTIONS',
+      headers: {
+        'Accept': 'application/json'
+      }
+    });
+    
+    if (response.ok) {
+      const allowHeader = response.headers.get('Allow');
+      const capabilities = {
+        allowedMethods: allowHeader ? allowHeader.split(', ').map(m => m.trim()) : [],
+        cors: {
+          allowOrigin: response.headers.get('Access-Control-Allow-Origin'),
+          allowMethods: response.headers.get('Access-Control-Allow-Methods'),
+          allowHeaders: response.headers.get('Access-Control-Allow-Headers')
+        }
+      };
+      
+      // If response has body, parse it for additional info
+      if (response.status !== 204) {
+        try {
+          capabilities.details = await response.json();
+        } catch (e) {
+          // No JSON body or parsing failed
+        }
+      }
+      
+      return capabilities;
+    } else {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+  } catch (error) {
+    console.error('OPTIONS request failed:', error);
+    throw error;
+  }
+}
+
+// Usage for CORS preflight simulation
+async function simulateCorsPreflight(url, origin, method, headers) {
+  try {
+    const requestHeaders = {
+      'Origin': origin,
+      'Access-Control-Request-Method': method
+    };
+    
+    if (headers && headers.length > 0) {
+      requestHeaders['Access-Control-Request-Headers'] = headers.join(', ');
+    }
+    
+    const response = await fetch(url, {
+      method: 'OPTIONS',
+      headers: requestHeaders
+    });
+    
+    return {
+      allowed: response.ok,
+      headers: {
+        allowOrigin: response.headers.get('Access-Control-Allow-Origin'),
+        allowMethods: response.headers.get('Access-Control-Allow-Methods'),
+        allowHeaders: response.headers.get('Access-Control-Allow-Headers')
+      }
+    };
+  } catch (error) {
+    console.error('CORS preflight simulation failed:', error);
+    throw error;
+  }
+}
+
+// Usage
+discoverApi('https://api.example.com/users/123')
+  .then(capabilities => {
+    console.log('API capabilities:', capabilities);
+  })
+  .catch(error => console.error('Error:', error));</code></pre>
+                                        </div>
+                                    </div>
+
+                                    <div class="tab-content" id="options-python">
+                                        <div class="code-block">
+                                            <div class="code-header">
+                                                <span>OPTIONS with Python Requests</span>
+                                            </div>
+                                            <pre><code class="language-python">import requests
+
+def discover_api(url):
+    """Discover API capabilities with OPTIONS"""
+    try:
+        response = requests.options(
+            url,
+            headers={'Accept': 'application/json'}
+        )
+        
+        response.raise_for_status()
+        
+        capabilities = {
+            'allowed_methods': response.headers.get('Allow', '').split(', '),
+            'cors': {
+                'allow_origin': response.headers.get('Access-Control-Allow-Origin'),
+                'allow_methods': response.headers.get('Access-Control-Allow-Methods'),
+                'allow_headers': response.headers.get('Access-Control-Allow-Headers')
+            }
+        }
+        
+        # If response has body, parse it for additional info
+        if response.status_code != 204 and response.text:
+            try:
+                capabilities['details'] = response.json()
+            except ValueError:
+                # No JSON body or parsing failed
+                pass
+        
+        return capabilities
+        
+    except requests.exceptions.RequestException as e:
+        print(f"OPTIONS request failed: {e}")
+        raise
+
+def simulate_cors_preflight(url, origin, method, headers=None):
+    """Simulate CORS preflight request"""
+    try:
+        request_headers = {
+            'Origin': origin,
+            'Access-Control-Request-Method': method
+        }
+        
+        if headers:
+            request_headers['Access-Control-Request-Headers'] = ', '.join(headers)
+        
+        response = requests.options(url, headers=request_headers)
+        
+        return {
+            'allowed': response.ok,
+            'headers': {
+                'allow_origin': response.headers.get('Access-Control-Allow-Origin'),
+                'allow_methods': response.headers.get('Access-Control-Allow-Methods'),
+                'allow_headers': response.headers.get('Access-Control-Allow-Headers')
+            }
+        }
+        
+    except requests.exceptions.RequestException as e:
+        print(f"CORS preflight simulation failed: {e}")
+        raise
+
+# Usage
+try:
+    capabilities = discover_api('https://api.example.com/users/123')
+    print('API capabilities:', capabilities)
+except Exception as e:
+    print(f"Error: {e}")</code></pre>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1577,11 +2205,19 @@ curl -X OPTIONS "https://api.example.com/users/123" \
                         <h4><i class="fas fa-question-circle"></i> CONNECT in Action</h4>
                         <div class="answer">
                             <div class="code-examples">
-                                <div class="code-block">
-                                    <div class="code-header">
-                                        <span>CONNECT Through HTTP Proxy</span>
+                                <div class="example-tabs">
+                                    <div class="tab-buttons">
+                                        <button class="tab-btn active" data-tab="connect-curl">cURL</button>
+                                        <button class="tab-btn" data-tab="connect-js">JavaScript</button>
+                                        <button class="tab-btn" data-tab="connect-python">Python</button>
                                     </div>
-                                    <pre><code class="language-bash"># Establish SSL tunnel through proxy to api.example.com:443
+
+                                    <div class="tab-content active" id="connect-curl">
+                                        <div class="code-block">
+                                            <div class="code-header">
+                                                <span>CONNECT Through HTTP Proxy</span>
+                                            </div>
+                                            <pre><code class="language-bash"># Establish SSL tunnel through proxy to api.example.com:443
 curl -x proxy.example.com:8080 \
   --proxy-anyauth \
   --proxy-user username:password \
@@ -1591,24 +2227,172 @@ curl -x proxy.example.com:8080 \
 curl -x proxy.example.com:8080 \
   --proxy-anyauth \
   --proxy-user username:password \
-  https://api.example.com/users
+  https://api.example.com/users</code></pre>
+                                        </div>
+                                    </div>
 
-# Node.js example with CONNECT
+                                    <div class="tab-content" id="connect-js">
+                                        <div class="code-block">
+                                            <div class="code-header">
+                                                <span>CONNECT with Node.js</span>
+                                            </div>
+                                            <pre><code class="language-javascript">// Node.js HTTP proxy server handling CONNECT requests
 const http = require('http');
 const net = require('net');
+const { URL } = require('url');
 
-// Proxy server handling CONNECT requests
+// Create proxy server
 const proxy = http.createServer();
+
 proxy.on('connect', (req, clientSocket, head) => {
-  // Connect to destination
+  // Extract target host and port from CONNECT request
   const { port, hostname } = new URL(`http://${req.url}`);
+  
+  console.log(`CONNECT request to ${hostname}:${port}`);
+  
+  // Create connection to target server
   const serverSocket = net.connect(port || 443, hostname, () => {
+    // Send HTTP 200 to client when tunnel is established
     clientSocket.write('HTTP/1.1 200 Connection Established\r\n\r\n');
+    
+    // Pipe the sockets together
     serverSocket.write(head);
     serverSocket.pipe(clientSocket);
     clientSocket.pipe(serverSocket);
   });
-});</code></pre>
+  
+  // Handle errors
+  serverSocket.on('error', (err) => {
+    console.error('Target server error:', err);
+    clientSocket.end('HTTP/1.1 500 Connection Failed\r\n\r\n');
+  });
+  
+  clientSocket.on('error', (err) => {
+    console.error('Client socket error:', err);
+    serverSocket.end();
+  });
+});
+
+// Start proxy server
+proxy.listen(8080, () => {
+  console.log('HTTP proxy server listening on port 8080');
+});
+
+// Client example using CONNECT tunnel
+const https = require('https');
+
+// Make request through proxy using CONNECT tunnel
+const options = {
+  hostname: 'proxy.example.com',
+  port: 8080,
+  path: 'https://api.example.com:443/users',
+  method: 'GET',
+  headers: {
+    'Host': 'api.example.com'
+  }
+};
+
+const req = https.request(options, (res) => {
+  console.log(`STATUS: ${res.statusCode}`);
+  res.on('data', (chunk) => {
+    console.log(`BODY: ${chunk}`);
+  });
+});
+
+req.on('error', (e) => {
+  console.error(`Problem with request: ${e.message}`);
+});
+
+req.end();</code></pre>
+                                        </div>
+                                    </div>
+
+                                    <div class="tab-content" id="connect-python">
+                                        <div class="code-block">
+                                            <div class="code-header">
+                                                <span>CONNECT with Python</span>
+                                            </div>
+                                            <pre><code class="language-python">import socket
+import ssl
+import requests
+from urllib.parse import urlparse
+
+class HTTPProxyConnector:
+    """HTTP proxy connector with CONNECT support"""
+    
+    def __init__(self, proxy_host, proxy_port):
+        self.proxy_host = proxy_host
+        self.proxy_port = proxy_port
+    
+    def connect_via_proxy(self, target_host, target_port=443):
+        """Establish CONNECT tunnel through proxy"""
+        try:
+            # Connect to proxy
+            proxy_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            proxy_sock.connect((self.proxy_host, self.proxy_port))
+            
+            # Send CONNECT request
+            connect_req = f"CONNECT {target_host}:{target_port} HTTP/1.1\r\nHost: {target_host}:{target_port}\r\n\r\n"
+            proxy_sock.send(connect_req.encode())
+            
+            # Read proxy response
+            response = proxy_sock.recv(4096).decode()
+            if not response.startswith('HTTP/1.1 200'):
+                raise Exception(f"Proxy connection failed: {response}")
+            
+            # Wrap socket with SSL for HTTPS
+            context = ssl.create_default_context()
+            ssl_sock = context.wrap_socket(proxy_sock, server_hostname=target_host)
+            
+            return ssl_sock
+            
+        except Exception as e:
+            print(f"CONNECT tunnel failed: {e}")
+            raise
+
+# Using requests with HTTP proxy
+def make_request_via_proxy(target_url, proxy_url):
+    """Make request through HTTP proxy"""
+    try:
+        proxies = {
+            'http': proxy_url,
+            'https': proxy_url
+        }
+        
+        response = requests.get(target_url, proxies=proxies, verify=True)
+        return response
+        
+    except requests.exceptions.RequestException as e:
+        print(f"Request via proxy failed: {e}")
+        raise
+
+# Usage examples
+if __name__ == "__main__":
+    # Method 1: Using requests with proxy
+    proxy_url = 'http://proxy.example.com:8080'
+    target_url = 'https://api.example.com/users'
+    
+    try:
+        response = make_request_via_proxy(target_url, proxy_url)
+        print(f"Response status: {response.status_code}")
+        print(f"Response data: {response.json()}")
+    except Exception as e:
+        print(f"Error: {e}")
+    
+    # Method 2: Manual CONNECT tunnel
+    connector = HTTPProxyConnector('proxy.example.com', 8080)
+    try:
+        ssl_sock = connector.connect_via_proxy('api.example.com', 443)
+        # Now you can send HTTPS requests through this socket
+        request = "GET /users HTTP/1.1\r\nHost: api.example.com\r\n\r\n"
+        ssl_sock.send(request.encode())
+        response = ssl_sock.recv(4096).decode()
+        print(f"Manual CONNECT response: {response}")
+        ssl_sock.close()
+    except Exception as e:
+        print(f"Manual CONNECT failed: {e}")</code></pre>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1683,11 +2467,19 @@ proxy.on('connect', (req, clientSocket, head) => {
                         <h4><i class="fas fa-question-circle"></i> TRACE Examples</h4>
                         <div class="answer">
                             <div class="code-examples">
-                                <div class="code-block">
-                                    <div class="code-header">
-                                        <span>TRACE Request Example</span>
+                                <div class="example-tabs">
+                                    <div class="tab-buttons">
+                                        <button class="tab-btn active" data-tab="trace-curl">cURL</button>
+                                        <button class="tab-btn" data-tab="trace-js">JavaScript</button>
+                                        <button class="tab-btn" data-tab="trace-python">Python</button>
                                     </div>
-                                    <pre><code class="language-bash"># Perform TRACE request
+
+                                    <div class="tab-content active" id="trace-curl">
+                                        <div class="code-block">
+                                            <div class="code-header">
+                                                <span>TRACE Request Example</span>
+                                            </div>
+                                            <pre><code class="language-bash"># Perform TRACE request
 curl -X TRACE "https://api.example.com/users" \
   -H "Custom-Header: value" \
   -H "User-Agent: MyApp/1.0" \
@@ -1705,6 +2497,155 @@ curl -X TRACE "https://api.example.com/users" \
 
 # Note: Server may remove sensitive headers like Authorization
 # before echoing back the request</code></pre>
+                                        </div>
+                                    </div>
+
+                                    <div class="tab-content" id="trace-js">
+                                        <div class="code-block">
+                                            <div class="code-header">
+                                                <span>TRACE with Fetch API</span>
+                                            </div>
+                                            <pre><code class="language-javascript">// TRACE request for debugging
+async function traceRequest(url, customHeaders = {}) {
+  try {
+    const response = await fetch(url, {
+      method: 'TRACE',
+      headers: {
+        'User-Agent': 'MyApp/1.0',
+        ...customHeaders
+      }
+    });
+    
+    if (response.ok) {
+      const traceData = await response.text();
+      return {
+        status: response.status,
+        contentType: response.headers.get('Content-Type'),
+        traceData: traceData
+      };
+    } else {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+  } catch (error) {
+    console.error('TRACE request failed:', error);
+    throw error;
+  }
+}
+
+// Test request transformation through proxies
+async function testProxyTransformation(url) {
+  const testHeaders = {
+    'X-Test-Header': 'test-value',
+    'X-Another-Header': 'another-value'
+  };
+  
+  try {
+    const result = await traceRequest(url, testHeaders);
+    
+    // Analyze the trace to see header modifications
+    console.log('TRACE Result:', result);
+    
+    // Check if our test headers made it through
+    if (result.traceData.includes('X-Test-Header')) {
+      console.log('Test headers preserved');
+    } else {
+      console.log('Test headers were modified or removed');
+    }
+    
+    return result;
+  } catch (error) {
+    console.error('Proxy transformation test failed:', error);
+    throw error;
+  }
+}
+
+// Usage (note: TRACE is often disabled for security)
+traceRequest('https://api.example.com/users')
+  .then(result => {
+    console.log('TRACE response:', result);
+  })
+  .catch(error => {
+    if (error.message.includes('405')) {
+      console.log('TRACE method not allowed (common security measure)');
+    } else {
+      console.error('Error:', error);
+    }
+  });</code></pre>
+                                        </div>
+                                    </div>
+
+                                    <div class="tab-content" id="trace-python">
+                                        <div class="code-block">
+                                            <div class="code-header">
+                                                <span>TRACE with Python Requests</span>
+                                            </div>
+                                            <pre><code class="language-python">import requests
+
+def trace_request(url, custom_headers=None):
+    """TRACE request for debugging"""
+    try:
+        headers = {
+            'User-Agent': 'MyApp/1.0'
+        }
+        
+        if custom_headers:
+            headers.update(custom_headers)
+        
+        response = requests.request(
+            'TRACE', 
+            url, 
+            headers=headers
+        )
+        
+        if response.ok:
+            return {
+                'status': response.status_code,
+                'content_type': response.headers.get('Content-Type'),
+                'trace_data': response.text
+            }
+        else:
+            response.raise_for_status()
+            
+    except requests.exceptions.RequestException as e:
+        print(f"TRACE request failed: {e}")
+        raise
+
+def test_proxy_transformation(url):
+    """Test request transformation through proxies"""
+    test_headers = {
+        'X-Test-Header': 'test-value',
+        'X-Another-Header': 'another-value'
+    }
+    
+    try:
+        result = trace_request(url, test_headers)
+        
+        # Analyze the trace to see header modifications
+        print('TRACE Result:', result)
+        
+        # Check if our test headers made it through
+        if 'X-Test-Header' in result['trace_data']:
+            print('Test headers preserved')
+        else:
+            print('Test headers were modified or removed')
+        
+        return result
+        
+    except Exception as e:
+        print(f"Proxy transformation test failed: {e}")
+        raise
+
+# Usage (note: TRACE is often disabled for security)
+try:
+    result = trace_request('https://api.example.com/users')
+    print('TRACE response:', result)
+except Exception as e:
+    if '405' in str(e):
+        print('TRACE method not allowed (common security measure)')
+    else:
+        print(f"Error: {e}")</code></pre>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1719,7 +2660,8 @@ curl -X TRACE "https://api.example.com/users" \
                                 <ul>
                                     <li><strong>Apache:</strong> <code>TraceEnable off</code> in httpd.conf</li>
                                     <li><strong>Nginx:</strong>
-                                        <code>limit_except GET POST PUT DELETE { deny all; }</code></li>
+                                        <code>limit_except GET POST PUT DELETE { deny all; }</code>
+                                    </li>
                                     <li><strong>Node.js:</strong> Implement method filtering in your framework</li>
                                     <li><strong>Cloudflare:</strong> Use WAF rules to block TRACE requests</li>
                                 </ul>
