@@ -1,0 +1,35 @@
+{
+  "name": "blog",
+  "version": "1.0.0",
+  "description": "blog related of tech",
+  "keywords": [
+    "ritik raj",
+    "raj",
+    "lord_ritik07",
+    "blog",
+    "tech_blog"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "xxx"
+  },
+  "license": "ISC",
+  "author": "ritikraj07",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "test",
+    "dev": "nodemon index.js",
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "cloudinary": "^1.41.3",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "mongoose": "^8.19.2",
+    "multer": "^2.0.2",
+    "multer-storage-cloudinary": "^4.0.0",
+    "nodemon": "^3.1.10"
+  }
+}

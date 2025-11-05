@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechBlog - Latest Technology Insights</title>
+    <link rel="stylesheet" href="styles.css">
+    <script  src="scripts.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="nav-container">
+                <div class="logo">
+                    <i class="fas fa-laptop-code"></i>
+                    <span>TechBlog</span>
+                </div>
+                <nav class="nav-menu">
+                    <a href="#featured">Featured</a>
+                    <a href="#all-blogs">All Posts</a>
+                    <a href="#web-dev">Web Dev</a>
+                    <a href="#ai-ml">AI/ML</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Welcome to TechBlog</h1>
+                <p>Your daily dose of technology insights, tutorials, and cutting-edge developments</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Search and Filter Section -->
+    <section class="search-section">
+        <div class="container">
+            <div class="search-container">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="search-input" placeholder="Search blogs by title, description, or tags...">
+                    <button id="clear-search" class="clear-btn">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+
+                <div class="filter-controls">
+                    <div class="filter-group">
+                        <h3>Filter by Category</h3>
+                        <div class="filter-buttons">
+                            <button class="filter-btn active" data-filter="all">All</button>
+                            <button class="filter-btn" data-filter="web-dev">Web Dev</button>
+                            <button class="filter-btn" data-filter="ai-ml">AI/ML</button>
+                            <button class="filter-btn" data-filter="devops">DevOps</button>
+                            <button class="filter-btn" data-filter="react">React</button>
+                            <button class="filter-btn" data-filter="javascript">JavaScript</button>
+                            <button class="filter-btn" data-filter="python">Python</button>
+                        </div>
+                    </div>
+
+                    <div class="sort-group">
+                        <label for="sort-select">Sort by:</label>
+                        <select id="sort-select">
+                            <option value="newest">Newest First</option>
+                            <option value="oldest">Oldest First</option>
+                            <option value="title-asc">Title (A-Z)</option>
+                            <option value="title-desc">Title (Z-A)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="search-results" class="search-results">
+                    <span id="results-count">0</span> posts found
+                    <button id="clear-filters" class="clear-filters-btn">Clear All</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Posts -->
+    <section id="featured" class="featured-section">
+        <div class="container">
+            <h2 class="section-title">
+                <i class="fas fa-star"></i>
+                Featured Posts
+            </h2>
+            <div class="featured-grid" id="featured-posts">
+                <!-- Featured posts will be loaded here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- All Blog Posts -->
+    <section id="all-blogs" class="blogs-section">
+        <div class="container">
+            <h2 class="section-title">
+                <i class="fas fa-newspaper"></i>
+                All Blog Posts
+            </h2>
+            <div class="blogs-grid" id="blogs-container">
+                <!-- All posts will be loaded here -->
+            </div>
+            <div id="no-results" class="no-results">
+                <i class="fas fa-search"></i>
+                <h3>No posts found</h3>
+                <p>Try adjusting your search or filters</p>
+                <button id="reset-search" class="reset-btn">Reset Search</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <i class="fas fa-laptop-code"></i>
+                    <span>TechBlog</span>
+                </div>
+                <p>&copy; 2024 TechBlog. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="scripts.js"></script>
+</body>
+
+</html>

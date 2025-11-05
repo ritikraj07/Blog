@@ -1,0 +1,2021 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete HTTP Methods Documentation - Deep Dive</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #7c3aed;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #06b6d4;
+            --light: #f8fafc;
+            --dark: #1e293b;
+            --gray: #64748b;
+            --gray-light: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header-content p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Navigation */
+        nav {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            overflow-x: auto;
+        }
+
+        .nav-item {
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            position: relative;
+            white-space: nowrap;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            color: var(--primary);
+        }
+
+        .nav-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--primary);
+        }
+
+        /* Main Content */
+        main {
+            padding: 2rem 0;
+        }
+
+        section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--dark);
+        }
+
+        .section-title h2 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-title p {
+            color: var(--gray);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Method Cards */
+        .method-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.07);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            transition: all 0.3s ease;
+            border-left: 5px solid var(--primary);
+        }
+
+        .method-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .method-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .method-title {
+            flex: 1;
+        }
+
+        .method-name {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .method-description {
+            color: var(--gray);
+            font-size: 1.1rem;
+        }
+
+        .method-badges {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .method-badge {
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: white;
+        }
+
+        .badge-safe {
+            background: var(--success);
+        }
+
+        .badge-idempotent {
+            background: var(--info);
+        }
+
+        .badge-unsafe {
+            background: var(--warning);
+        }
+
+        .badge-danger {
+            background: var(--danger);
+        }
+
+        .badge-cacheable {
+            background: var(--primary);
+        }
+
+        .badge-special {
+            background: var(--secondary);
+        }
+
+        /* Question Sections */
+        .question-section {
+            margin: 2rem 0;
+        }
+
+        .question {
+            background: var(--light);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid var(--primary);
+        }
+
+        .question h4 {
+            color: var(--dark);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.2rem;
+        }
+
+        .question h4 i {
+            color: var(--primary);
+        }
+
+        .answer {
+            color: var(--gray);
+            line-height: 1.7;
+        }
+
+        .answer ul,
+        .answer ol {
+            margin: 1rem 0;
+            padding-left: 1.5rem;
+        }
+
+        .answer li {
+            margin-bottom: 0.5rem;
+        }
+
+        .important-note {
+            background: #fff7ed;
+            border-left: 4px solid var(--warning);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .important-note h5 {
+            color: var(--warning);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .security-note {
+            background: #fef2f2;
+            border-left: 4px solid var(--danger);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .security-note h5 {
+            color: var(--danger);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Code Examples */
+        .code-examples {
+            margin-top: 2rem;
+        }
+
+        .example-tabs {
+            margin-bottom: 1rem;
+        }
+
+        .tab-buttons {
+            display: flex;
+            border-bottom: 1px solid var(--gray-light);
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 0.7rem 1.2rem;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--gray);
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab-btn.active {
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+        }
+
+        .tab-content {
+            display: none;
+            padding: 1rem 0;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .code-block {
+            background: #1e293b;
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 1rem 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .code-header {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 0.7rem 1rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        pre {
+            margin: 0;
+            padding: 1rem;
+            overflow-x: auto;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        code {
+            font-family: 'Fira Code', 'Courier New', monospace;
+        }
+
+        /* Use Cases */
+        .use-cases {
+            margin-top: 2rem;
+        }
+
+        .use-case-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .use-case {
+            background: var(--light);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--success);
+        }
+
+        .use-case h5 {
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .use-case p {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        /* References */
+        .references {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 2px solid var(--gray-light);
+        }
+
+        .reference-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .reference-item {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .reference-item a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .reference-item a:hover {
+            text-decoration: underline;
+        }
+
+        .reference-desc {
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 2rem 0;
+            margin-top: 3rem;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 1rem 0;
+        }
+
+        .footer-links a {
+            color: #cbd5e1;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .copyright {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .tab-buttons {
+                flex-direction: column;
+            }
+
+            .method-header {
+                flex-direction: column;
+            }
+
+            .use-case-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .reference-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="container header-content">
+            <h1><i class="fas fa-exchange-alt"></i> Complete HTTP Methods Guide</h1>
+            <p>Deep dive into all 9 HTTP methods with practical examples and references</p>
+        </div>
+    </header>
+
+    <nav>
+        <div class="container nav-container">
+            <div class="nav-item active" data-target="overview">Overview</div>
+            <div class="nav-item" data-target="get">GET</div>
+            <div class="nav-item" data-target="post">POST</div>
+            <div class="nav-item" data-target="put">PUT</div>
+            <div class="nav-item" data-target="patch">PATCH</div>
+            <div class="nav-item" data-target="delete">DELETE</div>
+            <div class="nav-item" data-target="head">HEAD</div>
+            <div class="nav-item" data-target="options">OPTIONS</div>
+            <div class="nav-item" data-target="connect">CONNECT</div>
+            <div class="nav-item" data-target="trace">TRACE</div>
+            <div class="nav-item" data-target="comparison">Comparison</div>
+            <div class="nav-item" data-target="references">References</div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <!-- Overview Section -->
+        <section id="overview" class="active">
+            <div class="section-title">
+                <h2>HTTP Methods Overview</h2>
+                <p>Complete reference for all HTTP/1.1 request methods with deep technical explanations</p>
+            </div>
+
+            <div class="method-card">
+                <div class="question-section">
+                    <div class="question">
+                        <h4><i class="fas fa-question-circle"></i> What are HTTP Methods?</h4>
+                        <div class="answer">
+                            <p>HTTP methods (also called HTTP verbs) indicate the desired action to be performed on the
+                                identified resource. They form the core of RESTful API design and web communication.</p>
+
+                            <div class="important-note">
+                                <h5><i class="fas fa-lightbulb"></i> Key HTTP Concepts</h5>
+                                <ul>
+                                    <li><strong>Safe Methods:</strong> GET, HEAD, OPTIONS - No server state modification
+                                    </li>
+                                    <li><strong>Idempotent Methods:</strong> GET, PUT, DELETE, HEAD, OPTIONS - Same
+                                        effect when called multiple times</li>
+                                    <li><strong>Cacheable Methods:</strong> GET, HEAD - Responses can be cached</li>
+                                    <li><strong>Request Body Allowed:</strong> POST, PUT, PATCH, CONNECT</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question">
+                        <h4><i class="fas fa-history"></i> HTTP Method Evolution</h4>
+                        <div class="answer">
+                            <p>HTTP methods have evolved through different specifications:</p>
+                            <ul>
+                                <li><strong>HTTP/0.9 (1991):</strong> Only GET method</li>
+                                <li><strong>HTTP/1.0 (1996):</strong> GET, HEAD, POST</li>
+                                <li><strong>HTTP/1.1 (1997):</strong> GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS,
+                                    CONNECT</li>
+                                <li><strong>RFC 5789 (2010):</strong> PATCH method added</li>
+                                <li><strong>HTTP/2 (2015), HTTP/3 (2022):</strong> Same methods, different transport
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- GET Method Section -->
+        <section id="get">
+            <div class="section-title">
+                <h2>GET Method - Retrieve Resources</h2>
+                <p>The fundamental method for safe resource retrieval</p>
+            </div>
+
+            <div class="method-card">
+                <div class="method-header">
+                    <div class="method-title">
+                        <div class="method-name">GET</div>
+                        <div class="method-description">
+                            Retrieve a representation of the specified resource. Requests using GET should only retrieve
+                            data.
+                        </div>
+                    </div>
+                    <div class="method-badges">
+                        <div class="method-badge badge-safe">Safe</div>
+                        <div class="method-badge badge-idempotent">Idempotent</div>
+                        <div class="method-badge badge-cacheable">Cacheable</div>
+                    </div>
+                </div>
+
+                <div class="question-section">
+                    <div class="question">
+                        <h4><i class="fas fa-question-circle"></i> What is GET?</h4>
+                        <div class="answer">
+                            <p><strong>GET</strong> is the primary method for retrieving resource representations. It's
+                                <strong>safe</strong> (no side effects), <strong>idempotent</strong>, and
+                                <strong>cacheable</strong>.</p>
+                        </div>
+                    </div>
+
+                    <div class="question">
+                        <h4><i class="fas fa-question-circle"></i> Why is GET Safe and Idempotent?</h4>
+                        <div class="answer">
+                            <p><strong>Safe:</strong> GET requests should not modify any server state. They are
+                                read-only operations.</p>
+                            <p><strong>Idempotent:</strong> Multiple identical GET requests return the same response
+                                (assuming resource hasn't changed).</p>
+
+                            <div class="important-note">
+                                <h5><i class="fas fa-exclamation-triangle"></i> Important Considerations</h5>
+                                <p>While GET should be safe, some implementations might have side effects (like
+                                    logging). However, according to HTTP specification, GET should be safe.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question">
+                        <h4><i class="fas fa-question-circle"></i> How do I use GET?</h4>
+                        <div class="answer">
+                            <p>GET requests typically use query parameters for filtering and should never have a request
+                                body.</p>
+
+                            <div class="code-examples">
+                                <div class="example-tabs">
+                                    <div class="tab-buttons">
+                                        <button class="tab-btn active" data-tab="get-curl">cURL</button>
+                                        <button class="tab-btn" data-tab="get-js">JavaScript</button>
+                                        <button class="tab-btn" data-tab="get-python">Python</button>
+                                    </div>
+
+                                    <div class="tab-content active" id="get-curl">
+                                        <div class="code-block">
+                                            <div class="code-header">
+                                                <span>GET with Query Parameters</span>
+                                            </div>
+                                            <pre><code class="language-bash"># Get users with pagination and filtering
+curl -X GET "https://api.example.com/users?page=1&limit=10&active=true" \
+  -H "Accept: application/json" \
+  -H "Authorization: Bearer token123"
+
+# Get specific user by ID
+curl -X GET "https://api.example.com/users/123" \
+  -H "Accept: application/json"
+
+# Search with complex parameters
+curl -X GET "https://api.example.com/search?q=javascript&type=article&sort=date&order=desc" \
+  -H "Accept: application/json"</code></pre>
+                                        </div>
+                                    </div>
+
+                                    <div class="tab-content" id="get-js">
+                                        <div class="code-block">
+                                            <div class="code-header">
+                                                <span>GET with Fetch API</span>
+                                            </div>
+                                            <pre><code class="language-javascript">// Get users with query parameters
+async function getUsers(page = 1, limit = 10) {
+  const queryParams = new URLSearchParams({
+    page: page.toString(),
+    limit: limit.toString(),
+    active: 'true'
+  });
+  
+  try {
+    const response = await fetch(`https://api.example.com/users?${queryParams}`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer token123'
+      }
+    });
+    
+    if (response.ok) {
+      const users = await response.json();
+      return users;
+    } else {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+  } catch (error) {
+    console.error('GET request failed:', error);
+    throw error;
+  }
+}
+
+// Usage
+getUsers(1, 10)
+  .then(users => console.log('Users:', users))
+  .catch(error => console.error('Error:', error));</code></pre>
+                                        </div>
+                                    </div>
+
+                                    <div class="tab-content" id="get-python">
+                                        <div class="code-block">
+                                            <div class="code-header">
+                                                <span>GET with Python Requests</span>
+                                            </div>
+                                            <pre><code class="language-python">import requests
+
+def get_users(page=1, limit=10, active=True):
+    """GET request with query parameters"""
+    try:
+        params = {
+            'page': page,
+            'limit': limit,
+            'active': str(active).lower()
+        }
+        
+        response = requests.get(
+            'https://api.example.com/users',
+            params=params,
+            headers={
+                'Accept': 'application/json',
+                'Authorization': 'Bearer token123'
+            }
+        )
+        
+        response.raise_for_status()  # Raises exception for 4xx/5xx status
+        return response.json()
+        
+    except requests.exceptions.RequestException as e:
+        print(f"GET request failed: {e}")
+        raise
+
+# Usage
+try:
+    users = get_users(page=1, limit=10)
+    print(f"Retrieved {len(users)} users")
+except Exception as e:
+    print(f"Error: {e}")</code></pre>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question">
+                        <h4><i class="fas fa-question-circle"></i> Where should I use GET?</h4>
+                        <div class="answer">
+                            <div class="use-case-grid">
+                                <div class="use-case">
+                                    <h5><i class="fas fa-users"></i> User Management</h5>
+                                    <p>GET /users - List users<br>GET /users/{id} - Get specific user</p>
+                                </div>
+                                <div class="use-case">
+                                    <h5><i class="fas fa-shopping-cart"></i> E-commerce</h5>
+                                    <p>GET /products - List products<br>GET /products/{id} - Product details</p>
+                                </div>
+                                <div class="use-case">
+                                    <h5><i class="fas fa-newspaper"></i> Content</h5>
+                                    <p>GET /articles - List articles<br>GET /search - Search content</p>
+                                </div>
+                                <div class="use-case">
+                                    <h5><i class="fas fa-cog"></i> Configuration</h5>
+                                    <p>GET /settings - Get settings<br>GET /config - Configuration data</p>
+                                </div>
+                            </div>
+
+                            <div class="important-note">
+                                <h5><i class="fas fa-database"></i> Caching Headers for GET</h5>
+                                <p>Use proper caching headers to improve performance:</p>
+                                <ul>
+                                    <li><code>Cache-Control: max-age=3600</code> - Cache for 1 hour</li>
+                                    <li><code>ETag: "abc123"</code> - Entity tag for conditional requests</li>
+                                    <li><code>Last-Modified: Wed, 21 Oct 2015 07:28:00 GMT</code></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- POST Method Section -->
+        <section id="post">
+            <div class="section-title">
+                <h2>POST Method - Create Resources</h2>
+                <p>The flexible method for creating resources and performing actions</p>
+            </div>
+
+            <div class="method-card">
+                <div class="method-header">
+                    <div class="method-title">
+                        <div class="method-name">POST</div>
+                        <div class="method-description">
+                            Submit an entity to the specified resource, often causing a change in state or side effects
+                        </div>
+                    </div>
+                    <div class="method-badges">
+                        <div class="method-badge badge-unsafe">Unsafe</div>
+                        <div class="method-badge badge-danger">Not Idempotent</div>
+                        <div class="method-badge badge-danger">Not Cacheable</div>
+                    </div>
+                </div>
+
+                <div class="question-section">
+                    <div class="question">
+                        <h4><i class="fas fa-question-circle"></i> Why is POST Not Idempotent?</h4>
+                        <div class="answer">
+                            <p><strong>POST is not idempotent</strong> because multiple identical requests typically
+                                create multiple resources. This is by design for operations where duplication matters.
+                            </p>
+
+                            <div class="important-note">
+                                <h5><i class="fas fa-exclamation-triangle"></i> Real-world Example</h5>
+                                <p>If you POST a payment request twice, you might get charged twice. This is why payment
+                                    processors use idempotency keys with POST requests.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question">
+                        <h4><i class="fas fa-question-circle"></i> How do I use POST?</h4>
+                        <div class="answer">
+                            <p>POST requests include a request body and are used for creation and complex operations.
+                            </p>
+
+                            <div class="code-examples">
+                                <div class="example-tabs">
+                                    <button class="tab-btn active" data-tab="post-create">Create Resource</button>
+                                    <button class="tab-btn" data-tab="post-action">Perform Action</button>
+                                    <button class="tab-btn" data-tab="post-file">File Upload</button>
+                                </div>
+
+                                <div class="tab-content active" id="post-create">
+                                    <div class="code-block">
+                                        <div class="code-header">
+                                            <span>Create User with POST</span>
+                                        </div>
+                                        <pre><code class="language-bash"># Create new user - server generates ID
+curl -X POST "https://api.example.com/users" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer token123" \
+  -d '{
+    "name": "Alice Johnson",
+    "email": "alice@example.com",
+    "password": "securepassword123"
+  }'
+
+# Expected Response:
+# HTTP 201 Created
+# Location: /users/789
+# {
+#   "id": 789,
+#   "name": "Alice Johnson",
+#   "email": "alice@example.com",
+#   "created_at": "2023-10-05T10:30:00Z"
+# }</code></pre>
+                                    </div>
+                                </div>
+
+                                <div class="tab-content" id="post-action">
+                                    <div class="code-block">
+                                        <div class="code-header">
+                                            <span>Perform Action with POST</span>
+                                        </div>
+                                        <pre><code class="language-bash"># Process payment (non-idempotent action)
+curl -X POST "https://api.example.com/payments" \
+  -H "Content-Type: application/json" \
+  -H "Idempotency-Key: unique-payment-123" \
+  -d '{
+    "amount": 99.99,
+    "currency": "USD",
+    "source": "tok_visa_123",
+    "description": "Monthly subscription"
+  }'
+
+# Search with complex criteria (too large for GET)
+curl -X POST "https://api.example.com/search" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "query": "advanced search",
+    "filters": {
+      "category": ["tech", "programming"],
+      "date_range": {"from": "2023-01-01", "to": "2023-12-31"},
+      "tags": ["javascript", "nodejs", "react"]
+    },
+    "sort": {"field": "date", "order": "desc"},
+    "pagination": {"page": 1, "size": 20}
+  }'</code></pre>
+                                    </div>
+                                </div>
+
+                                <div class="tab-content" id="post-file">
+                                    <div class="code-block">
+                                        <div class="code-header">
+                                            <span>File Upload with POST</span>
+                                        </div>
+                                        <pre><code class="language-bash"># Upload file with multipart/form-data
+curl -X POST "https://api.example.com/upload" \
+  -H "Authorization: Bearer token123" \
+  -F "file=@document.pdf" \
+  -F "description=Project documentation" \
+  -F "category=documents"
+
+# Upload with specific content type
+curl -X POST "https://api.example.com/images" \
+  -H "Content-Type: image/jpeg" \
+  -H "Authorization: Bearer token123" \
+  --data-binary "@photo.jpg"</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question">
+                        <h4><i class="fas fa-question-circle"></i> POST Best Practices</h4>
+                        <div class="answer">
+                            <div class="important-note">
+                                <h5><i class="fas fa-check-circle"></i> POST Implementation Guidelines</h5>
+                                <ul>
+                                    <li><strong>Return 201 Created</strong> for successful resource creation</li>
+                                    <li>Include <strong>Location header</strong> with URL to new resource</li>
+                                    <li>Use <strong>Idempotency-Key header</strong> for financial transactions</li>
+                                    <li>Validate all input data thoroughly</li>
+                                    <li>Implement CSRF protection for web forms</li>
+                                    <li>Use appropriate Content-Type for the data being sent</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PUT Method Section -->
+        <section id="put">
+            <div class="section-title">
+                <h2>PUT Method - Replace Resources</h2>
+                <p>The idempotent method for complete resource replacement</p>
+            </div>
+
+            <div class="method-card">
+                <div class="method-header">
+                    <div class="method-title">
+                        <div class="method-name">PUT</div>
+                        <div class="method-description">
+                            Replace all current representations of the target resource with the request payload
+                        </div>
+                    </div>
+                    <div class="method-badges">
+                        <div class="method-badge badge-unsafe">Unsafe</div>
+                        <div class="method-badge badge-idempotent">Idempotent</div>
+                        <div class="method-badge badge-danger">Not Cacheable</div>
+                    </div>
+                </div>
+
+                <div class="question-section">
+                    <div class="question">
+                        <h4><i class="fas fa-question-circle"></i> Why is PUT Idempotent?</h4>
+                        <div class="answer">
+                            <p><strong>PUT is idempotent</strong> because multiple identical requests have the same
+                                effect as a single request. This makes PUT ideal for:</p>
+                            <ul>
+                                <li><strong>Reliable updates</strong> - Can be safely retried on network failures</li>
+                                <li><strong>Concurrent operations</strong> - Last write wins semantics</li>
+                                <li><strong>Distributed systems</strong> - Consistent behavior across retries</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="question">
+                        <h4><i class="fas fa-question-circle"></i> PUT vs POST for Creation</h4>
+                        <div class="answer">
+                            <p><strong>POST for creation:</strong> Server generates resource ID<br>
+                                <strong>PUT for creation:</strong> Client specifies resource ID
+                            </p>
+
+                            <div class="code-examples">
+                                <div class="code-block">
+                                    <div class="code-header">
+                                        <span>PUT for Create vs Update</span>
+                                    </div>
+                                    <pre><code class="language-bash"># CREATE with PUT (client controls ID)
+curl -X PUT "https://api.example.com/users/alice-johnson" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Alice Johnson",
+    "email": "alice@example.com"
+  }'
+# Response: 201 Created (if new) or 200 OK (if updated)
+
+# UPDATE with PUT (complete replacement)
+curl -X PUT "https://api.example.com/users/123" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "id": 123,
+    "name": "Alice Smith",
+    "email": "alice.smith@example.com",
+    "age": 30,
+    "preferences": {"theme": "dark"}
+  }'
+# Note: Missing fields from previous state are removed!</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question">
+                        <h4><i class="fas fa-question-circle"></i> PUT Implementation Patterns</h4>
+                        <div class="answer">
+                            <div class="use-case-grid">
+                                <div class="use-case">
+                                    <h5><i class="fas fa-user-edit"></i> User Profiles</h5>
+                                    <p>PUT /users/{id} - Replace entire user profile</p>
+                                </div>
+                                <div class="use-case">
+                                    <h5><i class="fas fa-file-alt"></i> Document Management</h5>
+                                    <p>PUT /documents/{id} - Replace document content</p>
+                                </div>
+                                <div class="use-case">
+                                    <h5><i class="fas fa-cogs"></i> Configuration</h5>
+                                    <p>PUT /config/{key} - Replace configuration value</p>
+                                </div>
+                                <div class="use-case">
+                                    <h5><i class="fas fa-sync-alt"></i> State Management</h5>
+                                    <p>PUT /orders/{id}/status - Replace order status</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PATCH Method Section -->
+        <section id="patch">
+            <div class="section-title">
+                <h2>PATCH Method - Partial Updates</h2>
+                <p>The efficient method for updating specific resource fields</p>
+            </div>
+
+            <div class="method-card">
+                <div class="method-header">
+                    <div class="method-title">
+                        <div class="method-name">PATCH</div>
+                        <div class="method-description">
+                            Apply partial modifications to a resource without replacing the entire entity
+                        </div>
+                    </div>
+                    <div class="method-badges">
+                        <div class="method-badge badge-unsafe">Unsafe</div>
+                        <div class="method-badge badge-danger">Not Idempotent*</div>
+                        <div class="method-badge badge-danger">Not Cacheable</div>
+                    </div>
+                </div>
+
+                <div class="question-section">
+                    <div class="question">
+                        <h4><i class="fas fa-question-circle"></i> PATCH Formats and Idempotency</h4>
+                        <div class="answer">
+                            <p>PATCH idempotency depends on the patch format used:</p>
+
+                            <div class="code-examples">
+                                <div class="example-tabs">
+                                    <button class="tab-btn active" data-tab="patch-json">JSON Merge</button>
+                                    <button class="tab-btn" data-tab="patch-rfc">JSON Patch</button>
+                                    <button class="tab-btn" data-tab="patch-custom">Custom Format</button>
+                                </div>
+
+                                <div class="tab-content active" id="patch-json">
+                                    <div class="code-block">
+                                        <div class="code-header">
+                                            <span>JSON Merge Patch (RFC 7396) - Not Idempotent</span>
+                                        </div>
+                                        <pre><code class="language-bash"># Simple field updates
+curl -X PATCH "https://api.example.com/users/123" \
+  -H "Content-Type: application/merge-patch+json" \
+  -d '{
+    "age": 31,
+    "preferences": {
+      "theme": "light"
+    }
+  }'
+
+# Problem: Increment operations are not idempotent
+curl -X PATCH "https://api.example.com/counter/123" \
+  -H "Content-Type: application/merge-patch+json" \
+  -d '{"views": 10}'  # Not idempotent - what if retried?</code></pre>
+                                    </div>
+                                </div>
+
+                                <div class="tab-content" id="patch-rfc">
+                                    <div class="code-block">
+                                        <div class="code-header">
+                                            <span>JSON Patch (RFC 6902) - Idempotent</span>
+                                        </div>
+                                        <pre><code class="language-bash"># Standardized patch operations
+curl -X PATCH "https://api.example.com/users/123" \
+  -H "Content-Type: application/json-patch+json" \
+  -d '[
+    { "op": "replace", "path": "/age", "value": 31 },
+    { "op": "replace", "path": "/preferences/theme", "value": "light" },
+    { "op": "add", "path": "/tags", "value": ["vip"] },
+    { "op": "remove", "path": "/phone_number" }
+  ]'
+
+# Atomic and idempotent - same result if applied multiple times
+# All operations succeed or all fail (atomic)</code></pre>
+                                    </div>
+                                </div>
+
+                                <div class="tab-content" id="patch-custom">
+                                    <div class="code-block">
+                                        <div class="code-header">
+                                            <span>Custom Operations Format</span>
+                                        </div>
+                                        <pre><code class="language-bash"># Custom patch format for specific operations
+curl -X PATCH "https://api.example.com/users/123" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "$set": {
+      "age": 31,
+      "preferences.theme": "light"
+    },
+    "$inc": {
+      "login_count": 1
+    },
+    "$push": {
+      "tags": "vip"
+    }
+  }'
+
+# Common in MongoDB-like APIs
+# $inc operations are not idempotent!</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question">
+                        <h4><i class="fas fa-question-circle"></i> When to Use PATCH vs PUT</h4>
+                        <div class="answer">
+                            <div class="important-note">
+                                <h5><i class="fas fa-balance-scale"></i> PATCH vs PUT Decision Guide</h5>
+                                <p><strong>Use PUT when:</strong><br>
+                                    • You're replacing the entire resource<br>
+                                    • You have all the resource data<br>
+                                    • You need strong idempotency guarantees<br>
+                                    • Bandwidth is not a concern</p>
+
+                                <p><strong>Use PATCH when:</strong><br>
+                                    • You're updating specific fields only<br>
+                                    • You want to conserve bandwidth<br>
+                                    • Multiple clients might update different fields<br>
+                                    • The resource is large with many optional fields</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- DELETE Method Section -->
+        <section id="delete">
+            <div class="section-title">
+                <h2>DELETE Method - Remove Resources</h2>
+                <p>The idempotent method for resource removal</p>
+            </div>
+
+            <div class="method-card">
+                <div class="method-header">
+                    <div class="method-title">
+                        <div class="method-name">DELETE</div>
+                        <div class="method-description">
+                            Delete the specified resource from the server
+                        </div>
+                    </div>
+                    <div class="method-badges">
+                        <div class="method-badge badge-unsafe">Unsafe</div>
+                        <div class="method-badge badge-idempotent">Idempotent</div>
+                        <div class="method-badge badge-danger">Not Cacheable</div>
+                    </div>
+                </div>
+
+                <div class="question-section">
+                    <div class="question">
+                        <h4><i class="fas fa-question-circle"></i> Why is DELETE Idempotent?</h4>
+                        <div class="answer">
+                            <p><strong>DELETE is idempotent</strong> because:</p>
+                            <ul>
+                                <li>First DELETE: Resource is removed, returns 200 OK or 204 No Content</li>
+                                <li>Subsequent DELETE: Resource already gone, returns 404 Not Found or 410 Gone</li>
+                                <li>Same result: Resource doesn't exist after first call</li>
+                            </ul>
+
+                            <div class="code-examples">
+                                <div class="code-block">
+                                    <div class="code-header">
+                                        <span>DELETE Request Examples</span>
+                                    </div>
+                                    <pre><code class="language-bash"># Delete a user
+curl -X DELETE "https://api.example.com/users/123" \
+  -H "Authorization: Bearer token123"
+
+# Response: 204 No Content (success, no body)
+# or 200 OK with deletion confirmation
+
+# Subsequent request to same resource:
+curl -X DELETE "https://api.example.com/users/123" \
+  -H "Authorization: Bearer token123"
+
+# Response: 404 Not Found or 410 Gone
+# Both indicate resource doesn't exist - idempotent!</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question">
+                        <h4><i class="fas fa-question-circle"></i> DELETE Response Codes</h4>
+                        <div class="answer">
+                            <p>Different DELETE response codes and their meanings:</p>
+                            <ul>
+                                <li><strong>200 OK</strong> - Deletion successful, response body may contain status</li>
+                                <li><strong>202 Accepted</strong> - Deletion queued for processing</li>
+                                <li><strong>204 No Content</strong> - Deletion successful, no response body</li>
+                                <li><strong>404 Not Found</strong> - Resource doesn't exist (treated as success for
+                                    idempotency)</li>
+                                <li><strong>410 Gone</strong> - Resource previously existed but is now gone</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="question">
+                        <h4><i class="fas fa-question-circle"></i> Soft Delete vs Hard Delete</h4>
+                        <div class="answer">
+                            <div class="important-note">
+                                <h5><i class="fas fa-trash-restore"></i> Implementation Considerations</h5>
+                                <p><strong>Soft Delete:</strong> Mark resource as deleted but keep in database<br>
+                                    <code>DELETE /users/123</code> → sets <code>deleted_at</code> timestamp
+                                </p>
+
+                                <p><strong>Hard Delete:</strong> Permanently remove resource from database<br>
+                                    <code>DELETE /users/123</code> → removes database record
+                                </p>
+
+                                <p><strong>Best Practice:</strong> Use soft delete for user data, hard delete for
+                                    temporary data. Always consider data recovery requirements.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- HEAD Method Section -->
+        <section id="head">
+            <div class="section-title">
+                <h2>HEAD Method - Resource Metadata</h2>
+                <p>Retrieve resource headers without the response body</p>
+            </div>
+
+            <div class="method-card">
+                <div class="method-header">
+                    <div class="method-title">
+                        <div class="method-name">HEAD</div>
+                        <div class="method-description">
+                            Identical to GET but returns only headers, no response body
+                        </div>
+                    </div>
+                    <div class="method-badges">
+                        <div class="method-badge badge-safe">Safe</div>
+                        <div class="method-badge badge-idempotent">Idempotent</div>
+                        <div class="method-badge badge-cacheable">Cacheable</div>
+                    </div>
+                </div>
+
+                <div class="question-section">
+                    <div class="question">
+                        <h4><i class="fas fa-question-circle"></i> Why Use HEAD Instead of GET?</h4>
+                        <div class="answer">
+                            <p><strong>HEAD is optimized for efficiency</strong> when you only need metadata:</p>
+                            <ul>
+                                <li><strong>Check if resource exists</strong> without downloading content</li>
+                                <li><strong>Get Content-Length</strong> before deciding to download large files</li>
+                                <li><strong>Check Last-Modified</strong> for caching decisions</li>
+                                <li><strong>Validate links</strong> without transferring content</li>
+                                <li><strong>Monitor API health</strong> with minimal bandwidth</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="question">
+                        <h4><i class="fas fa-question-circle"></i> HEAD Implementation Examples</h4>
+                        <div class="answer">
+                            <div class="code-examples">
+                                <div class="code-block">
+                                    <div class="code-header">
+                                        <span>HEAD Request Examples</span>
+                                    </div>
+                                    <pre><code class="language-bash"># Check if resource exists and get metadata
+curl -I "https://api.example.com/users/123" \
+  -H "Authorization: Bearer token123"
+
+# Response headers only:
+# HTTP/1.1 200 OK
+# Content-Type: application/json
+# Content-Length: 245
+# Last-Modified: Wed, 21 Oct 2015 07:28:00 GMT
+# ETag: "abc123"
+# Cache-Control: max-age=3600
+
+# Check file size before download
+curl -I "https://api.example.com/files/document.pdf"
+
+# Response shows Content-Length: 1048576
+# You can decide to download based on size</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question">
+                        <h4><i class="fas fa-question-circle"></i> HEAD in JavaScript and Python</h4>
+                        <div class="answer">
+                            <div class="code-examples">
+                                <div class="example-tabs">
+                                    <button class="tab-btn active" data-tab="head-js">JavaScript</button>
+                                    <button class="tab-btn" data-tab="head-python">Python</button>
+                                </div>
+
+                                <div class="tab-content active" id="head-js">
+                                    <div class="code-block">
+                                        <pre><code class="language-javascript">// Check resource metadata with HEAD
+async function checkResource(url) {
+  try {
+    const response = await fetch(url, {
+      method: 'HEAD',
+      headers: {
+        'Authorization': 'Bearer token123'
+      }
+    });
+    
+    if (response.ok) {
+      const metadata = {
+        exists: true,
+        contentLength: response.headers.get('Content-Length'),
+        contentType: response.headers.get('Content-Type'),
+        lastModified: response.headers.get('Last-Modified'),
+        etag: response.headers.get('ETag')
+      };
+      return metadata;
+    } else if (response.status === 404) {
+      return { exists: false };
+    } else {
+      throw new Error(`HTTP ${response.status}`);
+    }
+  } catch (error) {
+    console.error('HEAD request failed:', error);
+    throw error;
+  }
+}
+
+// Usage
+checkResource('https://api.example.com/users/123')
+  .then(metadata => {
+    if (metadata.exists) {
+      console.log('Resource exists, size:', metadata.contentLength);
+      if (parseInt(metadata.contentLength) > 1000000) {
+        console.log('Large file, consider streaming');
+      }
+    }
+  });</code></pre>
+                                    </div>
+                                </div>
+
+                                <div class="tab-content" id="head-python">
+                                    <div class="code-block">
+                                        <pre><code class="language-python">import requests
+
+def check_resource(url):
+    """Check resource metadata with HEAD"""
+    try:
+        response = requests.head(
+            url,
+            headers={'Authorization': 'Bearer token123'}
+        )
+        
+        if response.status_code == 200:
+            return {
+                'exists': True,
+                'content_length': response.headers.get('Content-Length'),
+                'content_type': response.headers.get('Content-Type'),
+                'last_modified': response.headers.get('Last-Modified'),
+                'etag': response.headers.get('ETag')
+            }
+        elif response.status_code == 404:
+            return {'exists': False}
+        else:
+            response.raise_for_status()
+            
+    except requests.exceptions.RequestException as e:
+        print(f"HEAD request failed: {e}")
+        raise
+
+# Usage
+metadata = check_resource('https://api.example.com/users/123')
+if metadata['exists']:
+    print(f"Resource size: {metadata['content_length']} bytes")</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- OPTIONS Method Section -->
+        <section id="options">
+            <div class="section-title">
+                <h2>OPTIONS Method - Server Capabilities</h2>
+                <p>Discover communication options for the target resource</p>
+            </div>
+
+            <div class="method-card">
+                <div class="method-header">
+                    <div class="method-title">
+                        <div class="method-name">OPTIONS</div>
+                        <div class="method-description">
+                            Describe the communication options for the target resource
+                        </div>
+                    </div>
+                    <div class="method-badges">
+                        <div class="method-badge badge-safe">Safe</div>
+                        <div class="method-badge badge-idempotent">Idempotent</div>
+                        <div class="method-badge badge-danger">Not Cacheable</div>
+                    </div>
+                </div>
+
+                <div class="question-section">
+                    <div class="question">
+                        <h4><i class="fas fa-question-circle"></i> OPTIONS for CORS Preflight</h4>
+                        <div class="answer">
+                            <p><strong>OPTIONS is primarily used for CORS preflight requests</strong> in modern web
+                                applications:</p>
+
+                            <div class="code-examples">
+                                <div class="code-block">
+                                    <div class="code-header">
+                                        <span>CORS Preflight with OPTIONS</span>
+                                    </div>
+                                    <pre><code class="language-bash"># Browser automatically sends OPTIONS for cross-origin requests
+curl -X OPTIONS "https://api.example.com/users" \
+  -H "Origin: https://example.com" \
+  -H "Access-Control-Request-Method: POST" \
+  -H "Access-Control-Request-Headers: Content-Type, Authorization"
+
+# Server response for CORS:
+# HTTP/1.1 204 No Content
+# Access-Control-Allow-Origin: https://example.com
+# Access-Control-Allow-Methods: GET, POST, PUT, DELETE
+# Access-Control-Allow-Headers: Content-Type, Authorization
+# Access-Control-Max-Age: 86400</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question">
+                        <h4><i class="fas fa-question-circle"></i> OPTIONS for API Discovery</h4>
+                        <div class="answer">
+                            <p><strong>OPTIONS can also be used for API discovery</strong> and documentation:</p>
+
+                            <div class="code-examples">
+                                <div class="code-block">
+                                    <div class="code-header">
+                                        <span>API Discovery with OPTIONS</span>
+                                    </div>
+                                    <pre><code class="language-bash"># Discover available methods for a resource
+curl -X OPTIONS "https://api.example.com/users/123" \
+  -H "Accept: application/json"
+
+# Response with available operations:
+# HTTP/1.1 200 OK
+# Allow: GET, PUT, PATCH, DELETE
+# Content-Type: application/json
+#
+# {
+#   "resource": "user",
+#   "methods": {
+#     "GET": {"description": "Get user details"},
+#     "PUT": {"description": "Replace user data"},
+#     "PATCH": {"description": "Update user fields"},
+#     "DELETE": {"description": "Delete user"}
+#   },
+#   "links": {
+#     "self": "/users/123",
+#     "posts": "/users/123/posts"
+#   }
+# }</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question">
+                        <h4><i class="fas fa-question-circle"></i> OPTIONS Implementation</h4>
+                        <div class="answer">
+                            <div class="important-note">
+                                <h5><i class="fas fa-cogs"></i> OPTIONS Response Headers</h5>
+                                <p><strong>Required for CORS:</strong><br>
+                                    • <code>Access-Control-Allow-Origin</code><br>
+                                    • <code>Access-Control-Allow-Methods</code><br>
+                                    • <code>Access-Control-Allow-Headers</code></p>
+
+                                <p><strong>Standard HTTP Headers:</strong><br>
+                                    • <code>Allow: GET, POST, PUT, DELETE</code><br>
+                                    • <code>Content-Type</code> (if response body included)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONNECT Method Section -->
+        <section id="connect">
+            <div class="section-title">
+                <h2>CONNECT Method - Tunnel Establishment</h2>
+                <p>Establish a network tunnel to the target resource</p>
+            </div>
+
+            <div class="method-card">
+                <div class="method-header">
+                    <div class="method-title">
+                        <div class="method-name">CONNECT</div>
+                        <div class="method-description">
+                            Establish a tunnel to the server identified by the target resource
+                        </div>
+                    </div>
+                    <div class="method-badges">
+                        <div class="method-badge badge-unsafe">Unsafe</div>
+                        <div class="method-badge badge-danger">Not Idempotent</div>
+                        <div class="method-badge badge-danger">Not Cacheable</div>
+                        <div class="method-badge badge-special">Specialized</div>
+                    </div>
+                </div>
+
+                <div class="question-section">
+                    <div class="question">
+                        <h4><i class="fas fa-question-circle"></i> What is CONNECT Used For?</h4>
+                        <div class="answer">
+                            <p><strong>CONNECT is primarily used for SSL/TLS tunneling through HTTP proxies</strong>:
+                            </p>
+                            <ul>
+                                <li><strong>HTTPS through corporate proxies</strong></li>
+                                <li><strong>SSL termination at proxy level</strong></li>
+                                <li><strong>Establishing secure tunnels</strong></li>
+                                <li><strong>Proxy chaining and forwarding</strong></li>
+                            </ul>
+
+                            <div class="security-note">
+                                <h5><i class="fas fa-shield-alt"></i> Security Implications</h5>
+                                <p>CONNECT can be used to bypass security controls. Proper proxy configuration should
+                                    restrict CONNECT to specific ports (typically 443 for HTTPS).</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question">
+                        <h4><i class="fas fa-question-circle"></i> CONNECT in Action</h4>
+                        <div class="answer">
+                            <div class="code-examples">
+                                <div class="code-block">
+                                    <div class="code-header">
+                                        <span>CONNECT Through HTTP Proxy</span>
+                                    </div>
+                                    <pre><code class="language-bash"># Establish SSL tunnel through proxy to api.example.com:443
+curl -x proxy.example.com:8080 \
+  --proxy-anyauth \
+  --proxy-user username:password \
+  -X CONNECT api.example.com:443
+
+# Once tunnel established, regular HTTPS requests flow through:
+curl -x proxy.example.com:8080 \
+  --proxy-anyauth \
+  --proxy-user username:password \
+  https://api.example.com/users
+
+# Node.js example with CONNECT
+const http = require('http');
+const net = require('net');
+
+// Proxy server handling CONNECT requests
+const proxy = http.createServer();
+proxy.on('connect', (req, clientSocket, head) => {
+  // Connect to destination
+  const { port, hostname } = new URL(`http://${req.url}`);
+  const serverSocket = net.connect(port || 443, hostname, () => {
+    clientSocket.write('HTTP/1.1 200 Connection Established\r\n\r\n');
+    serverSocket.write(head);
+    serverSocket.pipe(clientSocket);
+    clientSocket.pipe(serverSocket);
+  });
+});</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question">
+                        <h4><i class="fas fa-question-circle"></i> CONNECT vs Other Methods</h4>
+                        <div class="answer">
+                            <div class="important-note">
+                                <h5><i class="fas fa-random"></i> CONNECT Unique Characteristics</h5>
+                                <ul>
+                                    <li><strong>Not a REST method</strong> - Doesn't operate on resources</li>
+                                    <li><strong>Creates bidirectional tunnel</strong> - Unlike request-response pattern
+                                    </li>
+                                    <li><strong>Used by clients, not applications</strong> - Typically browser/proxy
+                                        communication</li>
+                                    <li><strong>Requires special proxy support</strong> - Not all HTTP servers handle
+                                        CONNECT</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TRACE Method Section -->
+        <section id="trace">
+            <div class="section-title">
+                <h2>TRACE Method - Request Diagnostics</h2>
+                <p>Perform a message loop-back test for debugging</p>
+            </div>
+
+            <div class="method-card">
+                <div class="method-header">
+                    <div class="method-title">
+                        <div class="method-name">TRACE</div>
+                        <div class="method-description">
+                            Perform a message loop-back test along the path to the target resource
+                        </div>
+                    </div>
+                    <div class="method-badges">
+                        <div class="method-badge badge-safe">Safe</div>
+                        <div class="method-badge badge-idempotent">Idempotent</div>
+                        <div class="method-badge badge-danger">Not Cacheable</div>
+                        <div class="method-badge badge-special">Diagnostic</div>
+                    </div>
+                </div>
+
+                <div class="question-section">
+                    <div class="question">
+                        <h4><i class="fas fa-question-circle"></i> What is TRACE Used For?</h4>
+                        <div class="answer">
+                            <p><strong>TRACE is primarily a diagnostic tool</strong> used for:</p>
+                            <ul>
+                                <li><strong>Debugging proxy chains</strong> - See how requests are modified</li>
+                                <li><strong>Testing request transformations</strong> - Headers, content modifications
+                                </li>
+                                <li><strong>Security testing</strong> - Identifying request manipulation</li>
+                                <li><strong>Network troubleshooting</strong> - Path verification</li>
+                            </ul>
+
+                            <div class="security-note">
+                                <h5><i class="fas fa-exclamation-triangle"></i> Security Warning</h5>
+                                <p>TRACE can be used in Cross-Site Tracing (XST) attacks to steal cookies. It should be
+                                    disabled on production servers.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question">
+                        <h4><i class="fas fa-question-circle"></i> TRACE Examples</h4>
+                        <div class="answer">
+                            <div class="code-examples">
+                                <div class="code-block">
+                                    <div class="code-header">
+                                        <span>TRACE Request Example</span>
+                                    </div>
+                                    <pre><code class="language-bash"># Perform TRACE request
+curl -X TRACE "https://api.example.com/users" \
+  -H "Custom-Header: value" \
+  -H "User-Agent: MyApp/1.0" \
+  -H "Authorization: Bearer token123"
+
+# Response shows the exact request received by server:
+# HTTP/1.1 200 OK
+# Content-Type: message/http
+#
+# TRACE /users HTTP/1.1
+# Host: api.example.com
+# Custom-Header: value
+# User-Agent: MyApp/1.0
+# Authorization: Bearer token123
+
+# Note: Server may remove sensitive headers like Authorization
+# before echoing back the request</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question">
+                        <h4><i class="fas fa-question-circle"></i> TRACE Security Considerations</h4>
+                        <div class="answer">
+                            <div class="important-note">
+                                <h5><i class="fas fa-shield-alt"></i> Production Security</h5>
+                                <p><strong>Disable TRACE in production:</strong></p>
+                                <ul>
+                                    <li><strong>Apache:</strong> <code>TraceEnable off</code> in httpd.conf</li>
+                                    <li><strong>Nginx:</strong>
+                                        <code>limit_except GET POST PUT DELETE { deny all; }</code></li>
+                                    <li><strong>Node.js:</strong> Implement method filtering in your framework</li>
+                                    <li><strong>Cloudflare:</strong> Use WAF rules to block TRACE requests</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Comparison Section -->
+        <section id="comparison">
+            <div class="section-title">
+                <h2>HTTP Methods Comparison</h2>
+                <p>Complete reference table and usage guidelines</p>
+            </div>
+
+            <div class="method-card">
+                <div class="question-section">
+                    <div class="question">
+                        <h4><i class="fas fa-question-circle"></i> Complete Methods Comparison</h4>
+                        <div class="answer">
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <span>HTTP Methods Reference Table</span>
+                                </div>
+                                <pre><code class="language-markdown">| Method   | Safe | Idempotent | Cacheable | Body | Primary Use                  | RFC     |
+|----------|------|------------|-----------|------|------------------------------|---------|
+| GET      | ✅   | ✅         | ✅        | ❌   | Retrieve resources           | 7231    |
+| HEAD     | ✅   | ✅         | ✅        | ❌   | Get headers only             | 7231    |
+| POST     | ❌   | ❌         | ❌        | ✅   | Create resources             | 7231    |
+| PUT      | ❌   | ✅         | ❌        | ✅   | Replace resources            | 7231    |
+| PATCH    | ❌   | ⚠️*        | ❌        | ✅   | Partial updates              | 5789    |
+| DELETE   | ❌   | ✅         | ❌        | ❌   | Remove resources             | 7231    |
+| OPTIONS  | ✅   | ✅         | ❌        | ❌   | Discover capabilities        | 7231    |
+| CONNECT  | ❌   | ❌         | ❌        | ✅   | Establish tunnel             | 7231    |
+| TRACE    | ✅   | ✅         | ❌        | ❌   | Diagnostic testing           | 7231    |
+
+* PATCH idempotency depends on patch format used
+
+## CRUD Operations Mapping:
+
+| Operation | HTTP Method | Typical URL Pattern     |
+|-----------|-------------|-------------------------|
+| Create    | POST        | /resources              |
+| Read      | GET         | /resources/{id}         |
+| Update    | PUT/PATCH   | /resources/{id}         |
+| Delete    | DELETE      | /resources/{id}         |
+
+## Response Code Guidelines:
+
+| Method   | Success Codes        | Error Codes            |
+|----------|----------------------|------------------------|
+| GET      | 200 OK               | 404, 400, 500         |
+| POST     | 201 Created          | 400, 409, 422, 500    |
+| PUT      | 200 OK, 201 Created  | 400, 404, 409, 500    |
+| PATCH    | 200 OK               | 400, 404, 409, 422    |
+| DELETE   | 200, 204, 404*       | 400, 403, 500         |
+| OPTIONS  | 200, 204             | -                     |
+| HEAD     | 200 OK               | 404, 400, 500         |
+| CONNECT  | 200 Established      | 407, 500              |
+| TRACE    | 200 OK               | 405, 500              |
+
+* 404 for DELETE is considered success (idempotent)
+
+## Security Considerations:
+
+- **GET, HEAD, OPTIONS**: Generally safe, but sensitive data exposure risk
+- **POST, PUT, PATCH, DELETE**: Require authentication and authorization
+- **CONNECT**: Should be restricted to specific ports (443)
+- **TRACE**: Should be disabled in production environments</code></pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question">
+                        <h4><i class="fas fa-question-circle"></i> Method Selection Guide</h4>
+                        <div class="answer">
+                            <div class="use-case-grid">
+                                <div class="use-case">
+                                    <h5><i class="fas fa-database"></i> Data Retrieval</h5>
+                                    <p><strong>GET</strong> - Read data<br>
+                                        <strong>HEAD</strong> - Check existence<br>
+                                        <strong>OPTIONS</strong> - Discover API
+                                    </p>
+                                </div>
+                                <div class="use-case">
+                                    <h5><i class="fas fa-plus-circle"></i> Data Creation</h5>
+                                    <p><strong>POST</strong> - Create with server ID<br>
+                                        <strong>PUT</strong> - Create with client ID
+                                    </p>
+                                </div>
+                                <div class="use-case">
+                                    <h5><i class="fas fa-edit"></i> Data Modification</h5>
+                                    <p><strong>PUT</strong> - Complete replacement<br>
+                                        <strong>PATCH</strong> - Partial updates
+                                    </p>
+                                </div>
+                                <div class="use-case">
+                                    <h5><i class="fas fa-trash-alt"></i> Data Removal</h5>
+                                    <p><strong>DELETE</strong> - Remove resources</p>
+                                </div>
+                                <div class="use-case">
+                                    <h5><i class="fas fa-network-wired"></i> Infrastructure</h5>
+                                    <p><strong>CONNECT</strong> - Tunneling<br>
+                                        <strong>TRACE</strong> - Diagnostics
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- References Section -->
+        <section id="references">
+            <div class="section-title">
+                <h2>References and Further Reading</h2>
+                <p>Official specifications, tools, and learning resources</p>
+            </div>
+
+            <div class="method-card">
+                <div class="references">
+                    <h3><i class="fas fa-book"></i> Official Specifications</h3>
+                    <div class="reference-list">
+                        <div class="reference-item">
+                            <a href="https://tools.ietf.org/html/rfc7231" target="_blank">RFC 7231 - HTTP/1.1
+                                Semantics</a>
+                            <div class="reference-desc">Defines GET, HEAD, POST, PUT, DELETE, CONNECT, OPTIONS, TRACE
+                            </div>
+                        </div>
+                        <div class="reference-item">
+                            <a href="https://tools.ietf.org/html/rfc5789" target="_blank">RFC 5789 - PATCH Method</a>
+                            <div class="reference-desc">Defines the PATCH method for partial resource modifications
+                            </div>
+                        </div>
+                        <div class="reference-item">
+                            <a href="https://tools.ietf.org/html/rfc6902" target="_blank">RFC 6902 - JSON Patch</a>
+                            <div class="reference-desc">Standard format for JSON document patching operations</div>
+                        </div>
+                        <div class="reference-item">
+                            <a href="https://tools.ietf.org/html/rfc7396" target="_blank">RFC 7396 - JSON Merge
+                                Patch</a>
+                            <div class="reference-desc">Alternative format for JSON document patching</div>
+                        </div>
+                    </div>
+
+                    <h3 style="margin-top: 2rem;"><i class="fas fa-tools"></i> Development Tools</h3>
+                    <div class="reference-list">
+                        <div class="reference-item">
+                            <a href="https://curl.se/" target="_blank">cURL</a>
+                            <div class="reference-desc">Command-line tool for making HTTP requests</div>
+                        </div>
+                        <div class="reference-item">
+                            <a href="https://httpie.io/" target="_blank">HTTPie</a>
+                            <div class="reference-desc">User-friendly HTTP client for API testing</div>
+                        </div>
+                        <div class="reference-item">
+                            <a href="https://www.postman.com/" target="_blank">Postman</a>
+                            <div class="reference-desc">API development and testing platform</div>
+                        </div>
+                        <div class="reference-item">
+                            <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP" target="_blank">MDN HTTP
+                                Docs</a>
+                            <div class="reference-desc">Mozilla's comprehensive HTTP documentation</div>
+                        </div>
+                    </div>
+
+                    <h3 style="margin-top: 2rem;"><i class="fas fa-graduation-cap"></i> Learning Resources</h3>
+                    <div class="reference-list">
+                        <div class="reference-item">
+                            <a href="https://httpwg.org/specs/" target="_blank">HTTP Working Group</a>
+                            <div class="reference-desc">Latest HTTP specifications and drafts</div>
+                        </div>
+                        <div class="reference-item">
+                            <a href="https://restfulapi.net/http-methods/" target="_blank">REST API Tutorial</a>
+                            <div class="reference-desc">HTTP methods in RESTful API design</div>
+                        </div>
+                        <div class="reference-item">
+                            <a href="https://www.w3.org/Protocols/" target="_blank">W3C HTTP Protocol</a>
+                            <div class="reference-desc">Historical and current HTTP documentation</div>
+                        </div>
+                        <div class="reference-item">
+                            <a href="https://httpstatuses.com/" target="_blank">HTTP Status Codes</a>
+                            <div class="reference-desc">Comprehensive HTTP status code reference</div>
+                        </div>
+                    </div>
+
+                    <h3 style="margin-top: 2rem;"><i class="fas fa-shield-alt"></i> Security Resources</h3>
+                    <div class="reference-list">
+                        <div class="reference-item">
+                            <a href="https://owasp.org/www-community/attacks/Cross_Site_Tracing" target="_blank">OWASP
+                                XST</a>
+                            <div class="reference-desc">Cross-Site Tracing attack documentation</div>
+                        </div>
+                        <div class="reference-item">
+                            <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS" target="_blank">MDN
+                                CORS</a>
+                            <div class="reference-desc">Cross-Origin Resource Sharing guide</div>
+                        </div>
+                        <div class="reference-item">
+                            <a href="https://cheatsheetseries.owasp.org/cheatsheets/REST_Security_Cheat_Sheet.html"
+                                target="_blank">OWASP REST Security</a>
+                            <div class="reference-desc">REST API security best practices</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container footer-content">
+            <h3>Complete HTTP Methods Documentation</h3>
+            <p>Comprehensive guide to all HTTP/1.1 request methods</p>
+
+            <div class="footer-links">
+                <a href="#"><i class="fab fa-github"></i> Source</a>
+                <a href="#"><i class="fas fa-bug"></i> Report Issue</a>
+                <a href="#"><i class="fas fa-envelope"></i> Contact</a>
+            </div>
+
+            <div class="copyright">
+                <p>&copy; 2023 HTTP Methods Guide | Based on RFC 7231 and related specifications</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize syntax highlighting
+        hljs.highlightAll();
+
+        // Navigation functionality
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function () {
+                // Remove active class from all nav items
+                document.querySelectorAll('.nav-item').forEach(nav => {
+                    nav.classList.remove('active');
+                });
+
+                // Add active class to clicked nav item
+                this.classList.add('active');
+
+                // Hide all sections
+                document.querySelectorAll('section').forEach(section => {
+                    section.classList.remove('active');
+                });
+
+                // Show target section
+                const targetId = this.getAttribute('data-target');
+                document.getElementById(targetId).classList.add('active');
+
+                // Re-highlight code in the new section
+                setTimeout(() => {
+                    document.querySelectorAll('pre code').forEach((block) => {
+                        hljs.highlightElement(block);
+                    });
+                }, 100);
+
+                // Scroll to top
+                window.scrollTo(0, 0);
+            });
+        });
+
+        // Tab functionality for code examples
+        document.querySelectorAll('.tab-btn').forEach(button => {
+            button.addEventListener('click', function () {
+                const tabId = this.getAttribute('data-tab');
+                const tabContainer = this.closest('.example-tabs');
+
+                // Remove active class from all buttons in this tab container
+                tabContainer.querySelectorAll('.tab-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+
+                // Add active class to clicked button
+                this.classList.add('active');
+
+                // Hide all tab content in this container
+                tabContainer.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+
+                // Show target tab content
+                document.getElementById(tabId).classList.add('active');
+
+                // Re-highlight code in the new tab
+                setTimeout(() => {
+                    document.querySelectorAll('pre code').forEach((block) => {
+                        hljs.highlightElement(block);
+                    });
+                }, 100);
+            });
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,1336 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Coding Practices | Developer Security Guide</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #7c3aed;
+            --accent: #dc2626;
+            --light: #f8fafc;
+            --dark: #1e293b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --gray: #64748b;
+            --gray-light: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1.5rem 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 70%);
+            z-index: 1;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo i {
+            font-size: 2rem;
+        }
+
+        .logo h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .youtube-btn {
+            background: #ff0000;
+            color: white;
+            border: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-decoration: none;
+        }
+
+        .youtube-btn:hover {
+            background: #cc0000;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Navigation */
+        nav {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            flex-wrap: wrap;
+        }
+
+        .nav-item {
+            padding: 1.2rem 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            position: relative;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            color: var(--primary);
+        }
+
+        .nav-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--primary);
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: var(--light);
+            border-radius: 50px;
+            padding: 0.5rem 1rem;
+            margin-left: 1rem;
+        }
+
+        .search-box input {
+            border: none;
+            background: transparent;
+            outline: none;
+            padding: 0.3rem;
+            width: 180px;
+        }
+
+        /* Main Content */
+        main {
+            padding: 2rem 0;
+        }
+
+        section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            color: var(--dark);
+            position: relative;
+        }
+
+        .section-title h2 {
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-title p {
+            color: var(--gray);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            margin: 15px auto;
+            border-radius: 2px;
+        }
+
+        /* Topic Cards */
+        .topic-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .topic-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.07);
+            padding: 1.8rem;
+            transition: all 0.3s ease;
+            border-top: 5px solid var(--primary);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .topic-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .topic-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+        }
+
+        .topic-card h3 {
+            color: var(--dark);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.4rem;
+        }
+
+        .topic-card h3 i {
+            color: var(--primary);
+            font-size: 1.6rem;
+        }
+
+        .topic-card p {
+            color: var(--gray);
+            margin-bottom: 1.5rem;
+        }
+
+        .incident-example {
+            background: #fff7ed;
+            border-left: 4px solid var(--warning);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .incident-example h4 {
+            color: var(--warning);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 0.5rem;
+        }
+
+        .code-tabs {
+            margin: 1.5rem 0;
+        }
+
+        .tab-buttons {
+            display: flex;
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        .tab-btn {
+            padding: 0.7rem 1.2rem;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--gray);
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab-btn.active {
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+        }
+
+        .tab-content {
+            display: none;
+            padding: 1rem 0;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .code-block {
+            background: #1e293b;
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 1rem 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .code-header {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 0.7rem 1rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .code-header .badge {
+            background: var(--danger);
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+
+        .code-header .badge.secure {
+            background: var(--success);
+        }
+
+        pre {
+            margin: 0;
+            padding: 1rem;
+            overflow-x: auto;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        code {
+            font-family: 'Fira Code', 'Courier New', monospace;
+        }
+
+        .resource-links {
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px dashed var(--gray-light);
+        }
+
+        .resource-links a {
+            color: var(--primary);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            margin-right: 1rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .resource-links a:hover {
+            text-decoration: underline;
+        }
+
+        /* Resources Section */
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .resource-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.07);
+            padding: 1.8rem;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .resource-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .resource-card h3 {
+            color: var(--dark);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .resource-card p {
+            color: var(--gray);
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+        }
+
+        .resource-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--primary);
+            color: white;
+            padding: 0.7rem 1.2rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            width: fit-content;
+        }
+
+        .resource-link:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 3rem 0 2rem;
+            margin-top: 3rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-column h3 {
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 40px;
+            height: 2px;
+            background: var(--primary);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: #cbd5e1;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid #334155;
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+
+        /* Back to top button */
+        .back-to-top {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background: var(--primary);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 99;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+        }
+
+        .back-to-top:hover {
+            background: var(--primary-dark);
+            transform: translateY(-3px);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-links {
+                justify-content: center;
+            }
+
+            .topic-grid,
+            .resources-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .search-box {
+                margin: 0;
+                width: 100%;
+            }
+
+            .search-box input {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-shield-alt"></i>
+                    <h1>Secure Coding Practices</h1>
+                </div>
+                <!-- <a href="https://youtube.com/yourchannel" class="youtube-btn" target="_blank">
+                    <i class="fab fa-youtube"></i> Subscribe to My Channel
+                </a> -->
+            </div>
+        </div>
+    </header>
+
+    <nav>
+        <div class="container nav-container">
+            <ul class="nav-links">
+                <li class="nav-item active" data-target="overview">Overview</li>
+                <li class="nav-item" data-target="input-validation">Input Validation</li>
+                <li class="nav-item" data-target="secure-communication">Secure Communication</li>
+                <li class="nav-item" data-target="authentication">Authentication</li>
+                <li class="nav-item" data-target="resources">Resources</li>
+            </ul>
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search topics...">
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <section id="overview" class="active">
+            <div class="section-title">
+                <h2>Secure Coding Practices Guide</h2>
+                <p>Learn how to write secure, resilient code that protects against common vulnerabilities and cyber
+                    attacks</p>
+            </div>
+
+            <div class="topic-grid">
+                <div class="topic-card">
+                    <h3><i class="fas fa-filter"></i> Input Validation</h3>
+                    <p>Validate and sanitize all user inputs to prevent injection attacks and data corruption.</p>
+                    <div class="incident-example">
+                        <h4><i class="fas fa-exclamation-triangle"></i> Real-World Incident</h4>
+                        <p><strong>Equifax Breach (2017):</strong> Attackers exploited an input validation vulnerability
+                            in Apache Struts to access sensitive data of 147 million people.</p>
+                    </div>
+                </div>
+
+                <div class="topic-card">
+                    <h3><i class="fas fa-lock"></i> Secure Communication</h3>
+                    <p>Use encryption and secure protocols like HTTPS/TLS to protect data in transit.</p>
+                    <div class="incident-example">
+                        <h4><i class="fas fa-exclamation-triangle"></i> Real-World Incident</h4>
+                        <p><strong>Superfish Adware (2015):</strong> Pre-installed on Lenovo laptops, it intercepted
+                            HTTPS connections, making users vulnerable to MITM attacks.</p>
+                    </div>
+                </div>
+
+                <div class="topic-card">
+                    <h3><i class="fas fa-key"></i> Authentication & Authorization</h3>
+                    <p>Implement secure authentication mechanisms and proper access controls.</p>
+                    <div class="incident-example">
+                        <h4><i class="fas fa-exclamation-triangle"></i> Real-World Incident</h4>
+                        <p><strong>Twitter Bitcoin Scam (2020):</strong> Hackers used social engineering to bypass
+                            authentication controls of high-profile accounts.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-title">
+                <h2>Why Secure Coding Matters</h2>
+            </div>
+
+            <div class="topic-card">
+                <h3><i class="fas fa-chart-line"></i> The Cost of Insecure Code</h3>
+                <p>Data breaches cost companies an average of $4.24 million per incident in 2021, with the healthcare
+                    industry facing the highest costs.</p>
+
+                <div class="resource-links">
+                    <a href="https://www.ibm.com/security/data-breach" target="_blank"><i
+                            class="fas fa-external-link-alt"></i> IBM Cost of Data Breach Report</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="input-validation">
+            <div class="section-title">
+                <h2>Input Validation</h2>
+                <p>Never trust user input. Always validate, sanitize, and escape data from external sources.</p>
+            </div>
+
+            <div class="topic-card">
+                <h3><i class="fas fa-code"></i> Input Validation in Node.js/Express</h3>
+                <p>Proper input validation prevents attacks like SQL Injection, XSS, and Command Injection.</p>
+
+                <div class="code-tabs">
+                    <div class="tab-buttons">
+                        <button class="tab-btn active" data-tab="bad-1">Vulnerable Code</button>
+                        <button class="tab-btn" data-tab="good-1">Secure Code</button>
+                    </div>
+
+                    <div class="tab-content active" id="bad-1">
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span>Vulnerable Input Handling</span>
+                                <span class="badge">INSECURE</span>
+                            </div>
+                            <pre><code class="language-javascript">const express = require('express');
+const app = express();
+const db = require('./database');
+
+// VULNERABLE: Directly using user input in database query
+app.get('/user', (req, res) => {
+    const userId = req.query.id;
+    
+    // SQL Injection vulnerability
+    const query = `SELECT * FROM users WHERE id = ${userId}`;
+    db.query(query, (err, result) => {
+        if (err) throw err;
+        res.json(result);
+    });
+});
+
+// VULNERABLE: No input validation for file paths
+app.get('/files', (req, res) => {
+    const filePath = req.query.file;
+    
+    // Path Traversal vulnerability
+    res.sendFile(`/uploads/${filePath}`);
+});</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="tab-content" id="good-1">
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span>Secure Input Handling</span>
+                                <span class="badge secure">SECURE</span>
+                            </div>
+                            <pre><code class="language-javascript">const express = require('express');
+const app = express();
+const db = require('./database');
+const { body, validationResult } = require('express-validator');
+const path = require('path');
+
+// SECURE: Using parameterized queries
+app.get('/user', [
+    // Input validation
+    body('id').isInt({ min: 1 }).withMessage('Invalid user ID')
+], (req, res) => {
+    // Check for validation errors
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+    
+    const userId = req.query.id;
+    
+    // Parameterized query prevents SQL injection
+    const query = 'SELECT * FROM users WHERE id = ?';
+    db.query(query, [userId], (err, result) => {
+        if (err) throw err;
+        res.json(result);
+    });
+});
+
+// SECURE: Path traversal protection
+app.get('/files', [
+    body('file').isWhitelisted('abcdefghijklmnopqrstuvwxyz0123456789-_.')
+], (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+    
+    const filePath = req.query.file;
+    
+    // Resolve and normalize the path to prevent traversal
+    const safePath = path.resolve(path.join('uploads', filePath));
+    
+    // Ensure the path is within the uploads directory
+    if (!safePath.startsWith(path.resolve('uploads'))) {
+        return res.status(400).send('Invalid file path');
+    }
+    
+    res.sendFile(safePath);
+});</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="resource-links">
+                    <a href="https://cheatsheetseries.owasp.org/cheatsheets/Input_Validation_Cheat_Sheet.html"
+                        target="_blank"><i class="fas fa-external-link-alt"></i> OWASP Input Validation Cheat Sheet</a>
+                    <a href="https://express-validator.github.io/docs/" target="_blank"><i
+                            class="fas fa-external-link-alt"></i> Express Validator Documentation</a>
+                </div>
+            </div>
+
+            <div class="topic-card">
+                <h3><i class="fas fa-shield-alt"></i> Preventing Command Injection</h3>
+                <p>Command injection occurs when an attacker can execute arbitrary commands on the host operating
+                    system.</p>
+
+                <div class="code-tabs">
+                    <div class="tab-buttons">
+                        <button class="tab-btn active" data-tab="bad-2">Vulnerable Code</button>
+                        <button class="tab-btn" data-tab="good-2">Secure Code</button>
+                    </div>
+
+                    <div class="tab-content active" id="bad-2">
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span>Vulnerable Command Execution</span>
+                                <span class="badge">INSECURE</span>
+                            </div>
+                            <pre><code class="language-javascript">const { exec } = require('child_process');
+
+// VULNERABLE: Directly concatenating user input into command
+app.get('/ping', (req, res) => {
+    const host = req.query.host;
+    
+    // Command injection vulnerability
+    const command = `ping -c 4 ${host}`;
+    
+    exec(command, (err, stdout, stderr) => {
+        if (err) {
+            return res.status(500).send('Error executing command');
+        }
+        res.send(`<pre>${stdout}</pre>`);
+                            });
+                            });</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="tab-content" id="good-2">
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span>Secure Command Execution</span>
+                                <span class="badge secure">SECURE</span>
+                            </div>
+                            <pre><code class="language-javascript">const { execFile } = require('child_process');
+
+// SECURE: Using execFile with separate arguments
+app.get('/ping', [
+    body('host').isFQDN().withMessage('Invalid hostname')
+], (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+    
+    const host = req.query.host;
+    
+    // Using execFile with separate arguments prevents command injection
+    execFile('ping', ['-c', '4', host], (err, stdout, stderr) => {
+        if (err) {
+            return res.status(500).send('Error executing command');
+        }
+        res.send(`<pre>${stdout}</pre>`);
+                            });
+                            });
+
+                            // Alternative: Using a library that handles shell escaping
+                            const { exec } = require('child_process');
+                            const { escape } = require('shell-escape');
+
+                            app.get('/ping-safe', (req, res) => {
+                            const host = req.query.host;
+
+                            // Escape the host parameter
+                            const escapedHost = escape([host]);
+                            const command = `ping -c 4 ${escapedHost}`;
+
+                            exec(command, (err, stdout, stderr) => {
+                            if (err) {
+                            return res.status(500).send('Error executing command');
+                            }
+                            res.send(`
+                            <pre>${stdout}</pre>`);
+                            });
+                            });</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="resource-links">
+                    <a href="https://owasp.org/www-community/attacks/Command_Injection" target="_blank"><i
+                            class="fas fa-external-link-alt"></i> OWASP Command Injection</a>
+                    <a href="https://nodejs.org/api/child_process.html" target="_blank"><i
+                            class="fas fa-external-link-alt"></i> Node.js Child Process Docs</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="secure-communication">
+            <div class="section-title">
+                <h2>Secure Communication</h2>
+                <p>Protect data in transit using encryption and secure protocols</p>
+            </div>
+
+            <div class="topic-card">
+                <h3><i class="fas fa-lock"></i> Enforcing HTTPS in Express</h3>
+                <p>Always use HTTPS in production to encrypt data between client and server.</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span>HTTPS Configuration</span>
+                        <span class="badge secure">SECURE</span>
+                    </div>
+                    <pre><code class="language-javascript">const express = require('express');
+const helmet = require('helmet');
+const app = express();
+
+// Use Helmet to set security headers
+app.use(helmet());
+
+// Redirect HTTP to HTTPS in production
+if (process.env.NODE_ENV === 'production') {
+    app.use((req, res, next) => {
+        if (req.get('X-Forwarded-Proto') !== 'https') {
+            res.redirect(`https://${req.get('Host')}${req.url}`);
+        } else {
+            next();
+        }
+    });
+}
+
+// Set HSTS header for HTTPS enforcement
+app.use(helmet({
+    hsts: {
+        maxAge: 31536000,
+        includeSubDomains: true,
+        preload: true
+    }
+}));</code></pre>
+                </div>
+
+                <div class="resource-links">
+                    <a href="https://helmetjs.github.io/" target="_blank"><i class="fas fa-external-link-alt"></i>
+                        Helmet.js Documentation</a>
+                    <a href="https://letsencrypt.org/" target="_blank"><i class="fas fa-external-link-alt"></i> Let's
+                        Encrypt - Free SSL Certificates</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="authentication">
+            <div class="section-title">
+                <h2>Authentication & Authorization</h2>
+                <p>Secure user authentication and proper access control implementation</p>
+            </div>
+
+            <div class="topic-card">
+                <h3><i class="fas fa-key"></i> Secure Password Handling</h3>
+                <p>Never store passwords in plain text. Always use strong hashing with salt.</p>
+
+                <div class="code-tabs">
+                    <div class="tab-buttons">
+                        <button class="tab-btn active" data-tab="bad-3">Vulnerable Code</button>
+                        <button class="tab-btn" data-tab="good-3">Secure Code</button>
+                    </div>
+
+                    <div class="tab-content active" id="bad-3">
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span>Vulnerable Password Storage</span>
+                                <span class="badge">INSECURE</span>
+                            </div>
+                            <pre><code class="language-javascript">// VULNERABLE: Storing passwords in plain text
+app.post('/register', (req, res) => {
+    const { username, password } = req.body;
+    
+    // INSECURE: Plain text password storage
+    const user = {
+        username,
+        password // Stored in plain text!
+    };
+    
+    // Save user to database
+    db.query('INSERT INTO users SET ?', user, (err, result) => {
+        if (err) throw err;
+        res.send('User registered');
+    });
+});
+
+// VULNERABLE: Using weak hashing (MD5)
+const crypto = require('crypto');
+
+app.post('/register-weak', (req, res) => {
+    const { username, password } = req.body;
+    
+    // INSECURE: Weak MD5 hashing without salt
+    const hashedPassword = crypto.createHash('md5').update(password).digest('hex');
+    
+    const user = {
+        username,
+        password: hashedPassword
+    };
+    
+    db.query('INSERT INTO users SET ?', user, (err, result) => {
+        if (err) throw err;
+        res.send('User registered');
+    });
+});</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="tab-content" id="good-3">
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span>Secure Password Storage</span>
+                                <span class="badge secure">SECURE</span>
+                            </div>
+                            <pre><code class="language-javascript">const bcrypt = require('bcrypt');
+const saltRounds = 12;
+
+// SECURE: Using bcrypt for password hashing
+app.post('/register', async (req, res) => {
+    const { username, password } = req.body;
+    
+    // Validate password strength
+    if (password.length < 8) {
+        return res.status(400).json({ 
+            error: 'Password must be at least 8 characters long' 
+        });
+    }
+    
+    try {
+        // Generate salt and hash password
+        const salt = await bcrypt.genSalt(saltRounds);
+        const hashedPassword = await bcrypt.hash(password, salt);
+        
+        const user = {
+            username,
+            password: hashedPassword
+        };
+        
+        // Save user to database
+        db.query('INSERT INTO users SET ?', user, (err, result) => {
+            if (err) throw err;
+            res.json({ 
+                message: 'User registered successfully',
+                userId: result.insertId
+            });
+        });
+    } catch (error) {
+        console.error('Error hashing password:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// SECURE: Password verification
+app.post('/login', async (req, res) => {
+    const { username, password } = req.body;
+    
+    try {
+        // Find user by username
+        db.query('SELECT * FROM users WHERE username = ?', [username], async (err, results) => {
+            if (err) throw err;
+            
+            if (results.length === 0) {
+                // Use generic error message to avoid user enumeration
+                return res.status(401).json({ 
+                    error: 'Invalid credentials' 
+                });
+            }
+            
+            const user = results[0];
+            
+            // Compare password with hash
+            const isMatch = await bcrypt.compare(password, user.password);
+            
+            if (!isMatch) {
+                return res.status(401).json({ 
+                    error: 'Invalid credentials' 
+                });
+            }
+            
+            // Generate JWT token or session
+            const token = generateAuthToken(user);
+            
+            res.json({
+                message: 'Login successful',
+                token,
+                user: { id: user.id, username: user.username }
+            });
+        });
+    } catch (error) {
+        console.error('Login error:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="resource-links">
+                    <a href="https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html"
+                        target="_blank"><i class="fas fa-external-link-alt"></i> OWASP Password Storage Cheat Sheet</a>
+                    <a href="https://github.com/kelektiv/node.bcrypt.js" target="_blank"><i
+                            class="fas fa-external-link-alt"></i> bcrypt.js Documentation</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="resources">
+            <div class="section-title">
+                <h2>Learning Resources & References</h2>
+                <p>Essential resources for mastering secure coding practices</p>
+            </div>
+
+            <div class="resources-grid">
+                <div class="resource-card">
+                    <h3><i class="fab fa-osi"></i> OWASP Resources</h3>
+                    <p>The Open Web Application Security Project provides free, open-source resources for web
+                        application security.</p>
+                    <a href="https://owasp.org" class="resource-link" target="_blank">Visit OWASP <i
+                            class="fas fa-arrow-right"></i></a>
+                </div>
+
+                <div class="resource-card">
+                    <h3><i class="fas fa-book"></i> Secure Coding Books</h3>
+                    <p>Recommended books for deep diving into secure software development practices.</p>
+                    <a href="https://www.amazon.com/Secure-Coding-Principles-Practices-Donald/dp/0596002424"
+                        class="resource-link" target="_blank">View Books <i class="fas fa-arrow-right"></i></a>
+                </div>
+
+                <div class="resource-card">
+                    <h3><i class="fas fa-tools"></i> Security Tools</h3>
+                    <p>Essential tools for testing and improving your application security.</p>
+                    <a href="https://owasp.org/www-community/Vulnerability_Scanning_Tools" class="resource-link"
+                        target="_blank">Explore Tools <i class="fas fa-arrow-right"></i></a>
+                </div>
+
+                <div class="resource-card">
+                    <h3><i class="fas fa-graduation-cap"></i> Online Courses</h3>
+                    <p>Structured learning paths for application security and secure coding.</p>
+                    <a href="https://www.coursera.org/specializations/secure-software-design" class="resource-link"
+                        target="_blank">Find Courses <i class="fas fa-arrow-right"></i></a>
+                </div>
+
+                <div class="resource-card">
+                    <h3><i class="fas fa-bug"></i> Vulnerability Databases</h3>
+                    <p>Stay updated with the latest security vulnerabilities and patches.</p>
+                    <a href="https://cve.mitre.org" class="resource-link" target="_blank">CVE Database <i
+                            class="fas fa-arrow-right"></i></a>
+                </div>
+
+                <div class="resource-card">
+                    <h3><i class="fab fa-node-js"></i> Node.js Security</h3>
+                    <p>Node.js specific security best practices and resources.</p>
+                    <a href="https://nodejs.org/en/docs/guides/security/" class="resource-link" target="_blank">Node.js
+                        Security <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+
+            <div class="section-title" style="margin-top: 3rem;">
+                <h2>YouTube Channel</h2>
+                <p>Subscribe to my channel for more tech tutorials and security content</p>
+            </div>
+
+            <div class="topic-card" style="text-align: center;">
+                <h3><i class="fab fa-youtube" style="color: #ff0000;"></i> Tech Tutorials & Security Guides</h3>
+                <p>Join our community of developers learning about secure coding, web development, and cutting-edge
+                    technologies.</p>
+
+                <div style="margin: 2rem 0;">
+                    <a href="https://youtube.com/yourchannel" class="youtube-btn"
+                        style="font-size: 1.2rem; padding: 1rem 2rem;" target="_blank">
+                        <i class="fab fa-youtube"></i> Subscribe to My Channel
+                    </a>
+                </div>
+
+                <p>New videos every week on topics like:</p>
+                <ul style="columns: 2; list-style: none; margin: 1.5rem 0;">
+                    <li><i class="fas fa-check" style="color: var(--success);"></i> Secure Coding Practices</li>
+                    <li><i class="fas fa-check" style="color: var(--success);"></i> Node.js & Express Security</li>
+                    <li><i class="fas fa-check" style="color: var(--success);"></i> Web Application Penetration Testing
+                    </li>
+                    <li><i class="fas fa-check" style="color: var(--success);"></i> API Security Best Practices</li>
+                    <li><i class="fas fa-check" style="color: var(--success);"></i> DevSecOps Implementation</li>
+                    <li><i class="fas fa-check" style="color: var(--success);"></i> Cloud Security</li>
+                </ul>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Secure Coding Guide</h3>
+                    <p>Your comprehensive resource for learning secure software development practices and protecting
+                        your applications from cyber threats.</p>
+                </div>
+
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="#" data-target="overview">Overview</a></li>
+                        <li><a href="#" data-target="input-validation">Input Validation</a></li>
+                        <li><a href="#" data-target="secure-communication">Secure Communication</a></li>
+                        <li><a href="#" data-target="authentication">Authentication</a></li>
+                        <li><a href="#" data-target="resources">Resources</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h3>External Resources</h3>
+                    <ul class="footer-links">
+                        <li><a href="https://owasp.org" target="_blank">OWASP</a></li>
+                        <li><a href="https://www.sans.org/top25-software-errors/" target="_blank">SANS Top 25</a></li>
+                        <li><a href="https://cheatsheetseries.owasp.org/" target="_blank">OWASP Cheat Sheets</a></li>
+                        <li><a href="https://cve.mitre.org" target="_blank">CVE Database</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h3>Connect</h3>
+                    <ul class="footer-links">
+                        <li><a href="https://youtube.com/yourchannel" target="_blank"><i class="fab fa-youtube"></i>
+                                YouTube Channel</a></li>
+                        <li><a href="https://github.com" target="_blank"><i class="fab fa-github"></i> GitHub</a></li>
+                        <li><a href="https://twitter.com" target="_blank"><i class="fab fa-twitter"></i> Twitter</a>
+                        </li>
+                        <li><a href="https://linkedin.com" target="_blank"><i class="fab fa-linkedin"></i> LinkedIn</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="copyright">
+                <p>&copy; 2023 Secure Coding Practices Guide. All rights reserved. | Created for educational purposes
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <div class="back-to-top" id="backToTop">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
+    <script>
+        // Initialize syntax highlighting
+        hljs.highlightAll();
+
+        // Navigation functionality
+        document.querySelectorAll('.nav-item, .footer-links a').forEach(item => {
+            item.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                const targetId = this.getAttribute('data-target');
+                if (!targetId) return;
+
+                // Remove active class from all nav items
+                document.querySelectorAll('.nav-item').forEach(nav => {
+                    nav.classList.remove('active');
+                });
+
+                // Add active class to clicked nav item
+                if (this.classList.contains('nav-item')) {
+                    this.classList.add('active');
+                } else {
+                    // Find corresponding nav item for footer links
+                    const correspondingNav = document.querySelector(`.nav-item[data-target="${targetId}"]`);
+                    if (correspondingNav) {
+                        correspondingNav.classList.add('active');
+                    }
+                }
+
+                // Hide all sections
+                document.querySelectorAll('section').forEach(section => {
+                    section.classList.remove('active');
+                });
+
+                // Show target section
+                document.getElementById(targetId).classList.add('active');
+
+                // Re-highlight code in the new section
+                setTimeout(() => {
+                    document.querySelectorAll('pre code').forEach((block) => {
+                        hljs.highlightElement(block);
+                    });
+                }, 100);
+
+                // Scroll to top
+                window.scrollTo(0, 0);
+            });
+        });
+
+        // Tab functionality for code examples
+        document.querySelectorAll('.tab-btn').forEach(button => {
+            button.addEventListener('click', function () {
+                const tabId = this.getAttribute('data-tab');
+                const tabContainer = this.closest('.code-tabs');
+
+                // Remove active class from all buttons in this tab container
+                tabContainer.querySelectorAll('.tab-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+
+                // Add active class to clicked button
+                this.classList.add('active');
+
+                // Hide all tab content in this container
+                tabContainer.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+
+                // Show target tab content
+                document.getElementById(tabId).classList.add('active');
+
+                // Re-highlight code in the new tab
+                setTimeout(() => {
+                    document.querySelectorAll('pre code').forEach((block) => {
+                        hljs.highlightElement(block);
+                    });
+                }, 100);
+            });
+        });
+
+        // Back to top button functionality
+        const backToTopButton = document.getElementById('backToTop');
+
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                backToTopButton.classList.add('visible');
+            } else {
+                backToTopButton.classList.remove('visible');
+            }
+        });
+
+        backToTopButton.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // Search functionality
+        const searchInput = document.querySelector('.search-box input');
+
+        searchInput.addEventListener('input', function () {
+            const searchTerm = this.value.toLowerCase();
+
+            if (searchTerm.length < 2) return;
+
+            // This is a simplified search - in a real implementation,
+            // you would search through all content and show results
+            document.querySelectorAll('.topic-card h3').forEach(title => {
+                const card = title.closest('.topic-card');
+                if (title.textContent.toLowerCase().includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

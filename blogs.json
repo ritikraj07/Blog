@@ -1,0 +1,39 @@
+{
+  "blogs": [
+    {
+      "id": 1,
+      "title": "Secure Coding Practices",
+      "description": "Learn how to write secure code with these best practices and tools.",
+      "link": "blogs/secure-coding-practices.html",
+      "category": ["devops", "security", "coding-practices"],
+      "date": "2025-11-15",
+      "readTime": "15 min read",
+      "featured": true,
+      "tags": ["python", "web development", "security"],
+      "referenced": []
+    },
+    {
+      "id": 2,
+      "title": "HTTP Methods Guide",
+      "description": "Learn about HTTP methods and their usage in web development.",
+      "link": "blogs/http-methods.html",
+      "category": ["web-dev", "http", "methods"],
+      "date": "2025-11-10",
+      "readTime": "10 min read",
+      "featured": true,
+      "tags": ["html", "css", "javascript"],
+      "referenced": ["blogs/deep-dive-in-put-patch-post.html"]
+    },
+    {
+      "id": 3,
+      "title": "Deep Dive in PUT, PATCH, and POST",
+      "description": "Learn how PUT, PATCH, and POST methods work in web development.",
+      "link": "blogs/deep-dive-in-put-patch-post.html",
+      "category": ["web-dev", "http", "methods"],
+      "date": "2025-11-08",
+      "readTime": "8 min read",
+      "featured": false
+    }
+    
+    ]
+}
