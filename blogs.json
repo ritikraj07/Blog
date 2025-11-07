@@ -6,11 +6,11 @@
       "description": "Learn how to write secure code with these best practices and tools.",
       "link": "blogs/secure-coding-practices.html",
       "category": ["devops", "security", "coding-practices"],
-      "date": "2025-11-15",
+      "date": "2025-11-08",
       "readTime": "15 min read",
-      "featured": true,
+      "featured": false,
       "tags": ["python", "web development", "security"],
-      "referenced": []
+      "referenced": ["blogs/updated-secure-coding-practices.html"]
     },
     {
       "id": 2,
@@ -43,6 +43,18 @@
       "date": "2025-11-05",
       "readTime": "5 min read",
       "featured": false
+    },
+       {
+      "id": 5,
+      "title": "Updated Secure Coding Practices",
+      "description": "Learn how to write secure code with these best practices and tools.",
+      "link": "blogs/updated-secure-coding-practices.html",
+      "category": ["devops", "security", "coding-practices"],
+      "date": "2025-11-18",
+      "readTime": "15 min read",
+      "featured": true,
+      "tags": ["python", "web development", "security"],
+      "referenced": []
     }
     
     ]
