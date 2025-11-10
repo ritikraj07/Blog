@@ -1,0 +1,1759 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Complete guide to Conditional HTTP Requests - from beginner to advanced concepts with practical examples and references">
+    <meta name="keywords"
+        content="conditional requests, HTTP, ETag, Last-Modified, caching, web performance, 304 Not Modified">
+    <meta name="author" content="Ritik Raj">
+    <meta name="robots" content="index, follow">
+
+    <!-- Ritik Raj SEO Meta Tags -->
+    <meta name="ritik" content="ritik07, lord ritik, lord_ritik07">
+
+    <title>Conditional HTTP Requests: Complete Guide | Ritik Raj</title>
+
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #64748b;
+            --accent: #06b6d4;
+            --background: #0f172a;
+            --surface: #1e293b;
+            --card: #1e293b;
+            --text: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --border: #334155;
+            --success: #10b981;
+            --error: #ef4444;
+            --warning: #f59e0b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.7;
+            font-size: 16px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 3rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" preserveAspectRatio="none"><path d="M0,0 L1000,100 L0,100 Z" fill="rgba(255,255,255,0.1)"/></svg>');
+            background-size: cover;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #ffffff, #e0f2fe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            font-weight: 300;
+            max-width: 700px;
+            margin: 0 auto 1.5rem;
+        }
+
+        /* Navigation */
+        nav {
+            background-color: var(--surface);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--text);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo span {
+            color: var(--accent);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            transition: color 0.3s;
+            padding: 0.5rem 0;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--text);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--accent);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Main Content */
+        main {
+            padding: 3rem 0;
+        }
+
+        section {
+            margin: 3rem 0;
+            scroll-margin-top: 80px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .section-icon {
+            background-color: var(--primary);
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            font-weight: bold;
+        }
+
+        h2 {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            margin: 1.5rem 0 1rem;
+            color: var(--accent);
+        }
+
+        h4 {
+            font-size: 1.2rem;
+            margin: 1.2rem 0 0.8rem;
+            color: var(--text);
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+        }
+
+        /* Cards */
+        .card {
+            background-color: var(--card);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--border);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .card-icon {
+            background-color: var(--primary);
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 0.75rem;
+            font-size: 0.9rem;
+        }
+
+        .card.warning {
+            border-left: 4px solid var(--warning);
+        }
+
+        .card.success {
+            border-left: 4px solid var(--success);
+        }
+
+        .card.info {
+            border-left: 4px solid var(--accent);
+        }
+
+        .card.danger {
+            border-left: 4px solid var(--error);
+        }
+
+        /* Code and Examples */
+        code {
+            background-color: rgba(30, 41, 59, 0.8);
+            color: var(--text);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            font-size: 0.9rem;
+            border: 1px solid var(--border);
+        }
+
+        pre {
+            background-color: #1a202c;
+            color: #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            line-height: 1.5;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            border: 1px solid var(--border);
+        }
+
+        .request-example {
+            background-color: #1a202c;
+            color: #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            font-size: 0.9rem;
+            border: 1px solid var(--border);
+        }
+
+        .request-example .method {
+            color: #63b3ed;
+        }
+
+        .request-example .path {
+            color: #68d391;
+        }
+
+        .request-example .header-name {
+            color: #fbb6ce;
+        }
+
+        .request-example .header-value {
+            color: #faf089;
+        }
+
+        .request-example .status {
+            color: #68d391;
+        }
+
+        /* Tables */
+        .table-container {
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: var(--surface);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        th,
+        td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background-color: var(--primary-dark);
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Interactive Demo */
+        .interactive-demo {
+            background-color: var(--surface);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+            border: 1px solid var(--border);
+        }
+
+        .demo-controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        button:hover {
+            background-color: var(--primary-dark);
+        }
+
+        button.secondary {
+            background-color: var(--secondary);
+        }
+
+        button.secondary:hover {
+            background-color: #475569;
+        }
+
+        select,
+        input {
+            background-color: var(--background);
+            color: var(--text);
+            border: 1px solid var(--border);
+            padding: 0.75rem;
+            border-radius: 6px;
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .demo-output {
+            background-color: #1a202c;
+            color: #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 8px;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            min-height: 300px;
+            overflow-y: auto;
+            border: 1px solid var(--border);
+        }
+
+        /* Reference Section */
+        .reference-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .reference-card {
+            background-color: var(--card);
+            border-radius: 8px;
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .reference-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .reference-card h4 {
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .reference-card a {
+            color: var(--primary);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            margin-top: 0.75rem;
+            font-weight: 500;
+        }
+
+        .reference-card a:hover {
+            text-decoration: underline;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--surface);
+            padding: 3rem 0;
+            margin-top: 3rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-section h3 {
+            color: var(--text);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: var(--background);
+            border-radius: 50%;
+            color: var(--text);
+            text-decoration: none;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .social-links a:hover {
+            background-color: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Flow Diagram */
+        .flow-diagram {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .flow-step {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .step-number {
+            background-color: var(--primary);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .step-content {
+            flex: 1;
+            padding: 1rem;
+            background-color: var(--card);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        /* Comparison Table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 1rem;
+            text-align: left;
+            border: 1px solid var(--border);
+        }
+
+        .comparison-table th {
+            background-color: var(--primary-dark);
+            color: white;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+
+            .subtitle {
+                font-size: 1.1rem;
+            }
+
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background-color: var(--surface);
+                flex-direction: column;
+                padding: 1rem;
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+                border-top: 1px solid var(--border);
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .demo-controls {
+                flex-direction: column;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+
+            .flow-step {
+                flex-direction: column;
+            }
+
+            .step-number {
+                align-self: flex-start;
+            }
+        }
+
+        /* Progress indicators */
+        .progress-container {
+            display: flex;
+            justify-content: space-between;
+            margin: 2rem 0;
+            position: relative;
+        }
+
+        .progress-container::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: var(--border);
+            z-index: 1;
+        }
+
+        .progress-item {
+            text-align: center;
+            flex: 1;
+            position: relative;
+            z-index: 2;
+        }
+
+        .progress-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 0.5rem;
+            font-weight: bold;
+            color: white;
+            box-shadow: 0 0 0 4px var(--background);
+        }
+
+        /* Advanced Section Styles */
+        .advanced-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .advanced-card {
+            background-color: var(--card);
+            border-radius: 8px;
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .advanced-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-5px);
+        }
+
+        .advanced-card h4 {
+            color: var(--accent);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .advanced-card .header-badge {
+            background-color: var(--primary);
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .rfc-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            margin-top: 0.75rem;
+            font-size: 0.9rem;
+        }
+
+        .rfc-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Visualization */
+        .visualization {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .vis-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .vis-label {
+            min-width: 120px;
+            font-weight: 500;
+        }
+
+        .vis-bar {
+            flex: 1;
+            height: 30px;
+            background-color: var(--surface);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .vis-fill {
+            height: 100%;
+            background-color: var(--success);
+            transition: width 0.5s ease;
+        }
+
+        .vis-value {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-weight: 600;
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+    </style>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <h1>Conditional HTTP Requests</h1>
+                <p class="subtitle">Optimize web performance with efficient caching using ETags, Last-Modified, and
+                    conditional headers</p>
+                <div style="margin-top: 1.5rem;">
+                    <a href="#demo" class="button"
+                        style="background: white; color: var(--primary); padding: 0.75rem 1.5rem; border-radius: 6px; text-decoration: none; font-weight: 600; display: inline-block;">Try
+                        Interactive Demo</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <nav>
+        <div class="container nav-container">
+            <a href="#" class="logo">Conditional<span>HTTP</span></a>
+
+            <ul class="nav-links">
+                <li><a href="#what-are"><i class="fas fa-info-circle"></i> What are Conditional Requests?</a></li>
+                <li><a href="#how-work"><i class="fas fa-cogs"></i> How They Work</a></li>
+                <li><a href="#headers"><i class="fas fa-heading"></i> Conditional Headers</a></li>
+                <li><a href="#benefits"><i class="fas fa-chart-line"></i> Benefits</a></li>
+                <li><a href="#advanced"><i class="fas fa-rocket"></i> Advanced Concepts</a></li>
+                <li><a href="#demo"><i class="fas fa-play-circle"></i> Interactive Demo</a></li>
+            </ul>
+
+            <button class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <main class="container">
+        <section id="what-are">
+            <div class="section-header">
+                <div class="section-icon">1</div>
+                <h2>What are Conditional HTTP Requests?</h2>
+            </div>
+
+            <p>Conditional HTTP requests are a mechanism that allows clients to make requests that will only be
+                fulfilled if certain conditions are met. This enables efficient caching, reduces bandwidth usage, and
+                improves web performance.</p>
+
+            <div class="card info">
+                <div class="card-header">
+                    <div class="card-icon"><i class="fas fa-lightbulb"></i></div>
+                    <h3>Analogy: Library Book Return</h3>
+                </div>
+                <p>Think of conditional requests like returning a library book:</p>
+                <ul>
+                    <li><strong>First visit</strong> = You borrow a book (full response)</li>
+                    <li><strong>Subsequent visits</strong> = You check if there's a newer edition (conditional request)
+                    </li>
+                    <li><strong>No changes</strong> = Library tells you your copy is current (304 Not Modified)</li>
+                    <li><strong>New edition</strong> = Library gives you the updated book (200 OK with new content)</li>
+                </ul>
+            </div>
+
+            <h3>The Problem Conditional Requests Solve</h3>
+            <p>Without conditional requests, browsers would need to download the entire resource every time, even if it
+                hasn't changed. This wastes bandwidth and increases page load times.</p>
+
+            <div class="visualization">
+                <div class="vis-row">
+                    <div class="vis-label">Without Conditional</div>
+                    <div class="vis-bar">
+                        <div class="vis-fill" style="width: 100%"></div>
+                        <div class="vis-value">100% Data Transfer</div>
+                    </div>
+                </div>
+                <div class="vis-row">
+                    <div class="vis-label">With Conditional</div>
+                    <div class="vis-bar">
+                        <div class="vis-fill" style="width: 15%"></div>
+                        <div class="vis-value">15% Data Transfer (avg)</div>
+                    </div>
+                </div>
+            </div>
+
+            <h3>Key Concepts</h3>
+            <div class="advanced-grid">
+                <div class="advanced-card">
+                    <h4><i class="fas fa-fingerprint"></i> Validators</h4>
+                    <p>Values that represent the state of a resource, like ETags (entity tags) or Last-Modified dates,
+                        used to check if content has changed.</p>
+                </div>
+
+                <div class="advanced-card">
+                    <h4><i class="fas fa-question-circle"></i> Conditional Headers</h4>
+                    <p>Headers like If-None-Match and If-Modified-Since that include validators to conditionally request
+                        resources.</p>
+                </div>
+
+                <div class="advanced-card">
+                    <h4><i class="fas fa-exchange-alt"></i> 304 Not Modified</h4>
+                    <p>The HTTP status code returned when a conditional request confirms the cached version is still
+                        valid.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="how-work">
+            <div class="section-header">
+                <div class="section-icon">2</div>
+                <h2>How Conditional Requests Work</h2>
+            </div>
+
+            <p>Conditional requests follow a specific flow between client and server to determine if a cached resource
+                is still valid.</p>
+
+            <div class="flow-diagram">
+                <div class="flow-step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h4>Initial Request</h4>
+                        <p>Client makes a regular request for a resource. Server responds with the content and
+                            validators (ETag, Last-Modified).</p>
+                        <div class="request-example">
+                            <div>GET /styles.css HTTP/1.1</div>
+                            <div>Host: example.com</div>
+                        </div>
+                        <div class="request-example">
+                            <div>HTTP/1.1 200 OK</div>
+                            <div>Content-Type: text/css</div>
+                            <div><span class="header-name">ETag</span>: <span
+                                    class="header-value">"33a64df551425fcc55e4d42a148795d9f25f89d4"</span></div>
+                            <div><span class="header-name">Last-Modified</span>: <span class="header-value">Wed, 21 Oct
+                                    2023 07:28:00 GMT</span></div>
+                            <div>...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flow-step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h4>Subsequent Request</h4>
+                        <p>Client makes a conditional request with the stored validators to check if the resource has
+                            changed.</p>
+                        <div class="request-example">
+                            <div>GET /styles.css HTTP/1.1</div>
+                            <div>Host: example.com</div>
+                            <div><span class="header-name">If-None-Match</span>: <span
+                                    class="header-value">"33a64df551425fcc55e4d42a148795d9f25f89d4"</span></div>
+                            <div><span class="header-name">If-Modified-Since</span>: <span class="header-value">Wed, 21
+                                    Oct 2023 07:28:00 GMT</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flow-step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h4>Server Validation</h4>
+                        <p>Server compares the provided validators with the current resource state.</p>
+                        <ul>
+                            <li><strong>If validators match</strong>: Resource hasn't changed</li>
+                            <li><strong>If validators don't match</strong>: Resource has changed</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="flow-step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h4>Server Response</h4>
+                        <p>Based on validation, server responds accordingly:</p>
+                        <div class="request-example">
+                            <div>HTTP/1.1 304 Not Modified</div>
+                            <div><span class="header-name">ETag</span>: <span
+                                    class="header-value">"33a64df551425fcc55e4d42a148795d9f25f89d4"</span></div>
+                            <div>...</div>
+                        </div>
+                        <p><strong>OR</strong></p>
+                        <div class="request-example">
+                            <div>HTTP/1.1 200 OK</div>
+                            <div>Content-Type: text/css</div>
+                            <div><span class="header-name">ETag</span>: <span
+                                    class="header-value">"a3b72df551425fcc55e4d42a148795d9f25f89e5"</span></div>
+                            <div>...</div>
+                            <div>/* Updated CSS content */</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card success">
+                <div class="card-header">
+                    <div class="card-icon"><i class="fas fa-chart-line"></i></div>
+                    <h3>Performance Impact</h3>
+                </div>
+                <p>Conditional requests dramatically reduce bandwidth usage and improve page load times:</p>
+                <ul>
+                    <li><strong>Bandwidth savings</strong>: Up to 85% for unchanged resources</li>
+                    <li><strong>Reduced server load</strong>: Fewer full resource deliveries</li>
+                    <li><strong>Faster page loads</strong>: Less data to download and process</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="headers">
+            <div class="section-header">
+                <div class="section-icon">3</div>
+                <h2>Conditional Request Headers</h2>
+            </div>
+
+            <p>Conditional requests use specific headers to communicate validation information between client and
+                server.</p>
+
+            <h3>Request Headers (Client → Server)</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Header</th>
+                            <th>Purpose</th>
+                            <th>Validator Used</th>
+                            <th>Example</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>If-None-Match</td>
+                            <td>Request content only if ETag doesn't match</td>
+                            <td>ETag</td>
+                            <td><code>If-None-Match: "33a64df551425fcc55e4d42a148795d9f25f89d4"</code></td>
+                        </tr>
+                        <tr>
+                            <td>If-Modified-Since</td>
+                            <td>Request content only if modified since date</td>
+                            <td>Last-Modified</td>
+                            <td><code>If-Modified-Since: Wed, 21 Oct 2023 07:28:00 GMT</code></td>
+                        </tr>
+                        <tr>
+                            <td>If-Match</td>
+                            <td>Request only if ETag matches (for safe operations)</td>
+                            <td>ETag</td>
+                            <td><code>If-Match: "33a64df551425fcc55e4d42a148795d9f25f89d4"</code></td>
+                        </tr>
+                        <tr>
+                            <td>If-Unmodified-Since</td>
+                            <td>Request only if not modified since date</td>
+                            <td>Last-Modified</td>
+                            <td><code>If-Unmodified-Since: Wed, 21 Oct 2023 07:28:00 GMT</code></td>
+                        </tr>
+                        <tr>
+                            <td>If-Range</td>
+                            <td>Conditional range request</td>
+                            <td>ETag or Date</td>
+                            <td><code>If-Range: "33a64df551425fcc55e4d42a148795d9f25f89d4"</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>Response Headers (Server → Client)</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Header</th>
+                            <th>Purpose</th>
+                            <th>Type</th>
+                            <th>Example</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>ETag</td>
+                            <td>Entity tag for resource version</td>
+                            <td>Strong/Weak Validator</td>
+                            <td><code>ETag: "33a64df551425fcc55e4d42a148795d9f25f89d4"</code></td>
+                        </tr>
+                        <tr>
+                            <td>Last-Modified</td>
+                            <td>Date when resource was last modified</td>
+                            <td>Date Validator</td>
+                            <td><code>Last-Modified: Wed, 21 Oct 2023 07:28:00 GMT</code></td>
+                        </tr>
+                        <tr>
+                            <td>Cache-Control</td>
+                            <td>Directives for caching mechanisms</td>
+                            <td>Cache Directive</td>
+                            <td><code>Cache-Control: max-age=3600, must-revalidate</code></td>
+                        </tr>
+                        <tr>
+                            <td>Vary</td>
+                            <td>Indicates which headers affect content</td>
+                            <td>Content Negotiation</td>
+                            <td><code>Vary: Accept-Encoding, User-Agent</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>ETag vs Last-Modified</h3>
+            <div class="table-container">
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th>ETag</th>
+                            <th>Last-Modified</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Precision</td>
+                            <td>High (exact content match)</td>
+                            <td>Low (1-second granularity)</td>
+                        </tr>
+                        <tr>
+                            <td>Reliability</td>
+                            <td>Very reliable</td>
+                            <td>Can be inaccurate if clock skew</td>
+                        </tr>
+                        <tr>
+                            <td>Generation</td>
+                            <td>Server-defined (hash, version, etc.)</td>
+                            <td>File system modification time</td>
+                        </tr>
+                        <tr>
+                            <td>Storage Overhead</td>
+                            <td>Higher (string value)</td>
+                            <td>Lower (date value)</td>
+                        </tr>
+                        <tr>
+                            <td>Use Cases</td>
+                            <td>Dynamic content, frequent updates</td>
+                            <td>Static files, infrequent updates</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card info">
+                <div class="card-header">
+                    <div class="card-icon"><i class="fas fa-code"></i></div>
+                    <h3>ETag Generation Examples</h3>
+                </div>
+                <p>ETags can be generated in various ways depending on the application:</p>
+                <pre><code>// Hash-based ETag (common for static files)
+ETag = md5(file_content)
+
+// Version-based ETag (for database content)
+ETag = "v" + resource_version
+
+// Timestamp-based ETag (simple approach)
+ETag = "t" + last_modified_timestamp
+
+// Composite ETag (multiple factors)
+ETag = md5(content + metadata)</code></pre>
+            </div>
+        </section>
+
+        <section id="benefits">
+            <div class="section-header">
+                <div class="section-icon">4</div>
+                <h2>Benefits of Conditional Requests</h2>
+            </div>
+
+            <div class="advanced-grid">
+                <div class="advanced-card">
+                    <h4><i class="fas fa-tachometer-alt"></i> Performance</h4>
+                    <p>Significantly reduce page load times by avoiding unnecessary data transfers for unchanged
+                        resources.</p>
+                    <ul>
+                        <li>Faster user experience</li>
+                        <li>Reduced Time to Interactive (TTI)</li>
+                        <li>Better Core Web Vitals scores</li>
+                    </ul>
+                </div>
+
+                <div class="advanced-card">
+                    <h4><i class="fas fa-network-wired"></i> Bandwidth Efficiency</h4>
+                    <p>Dramatically decrease data transfer for returning visitors and repeat API calls.</p>
+                    <ul>
+                        <li>Lower bandwidth costs</li>
+                        <li>Better mobile performance</li>
+                        <li>Reduced CDN costs</li>
+                    </ul>
+                </div>
+
+                <div class="advanced-card">
+                    <h4><i class="fas fa-server"></i> Server Optimization</h4>
+                    <p>Reduce server load by serving lightweight 304 responses instead of full content.</p>
+                    <ul>
+                        <li>Lower CPU usage</li>
+                        <li>Reduced I/O operations</li>
+                        <li>Better scalability</li>
+                    </ul>
+                </div>
+
+                <div class="advanced-card">
+                    <h4><i class="fas fa-user-check"></i> User Experience</h4>
+                    <p>Provide faster, more responsive applications that feel instantaneous to users.</p>
+                    <ul>
+                        <li>Perceived performance improvements</li>
+                        <li>Better engagement metrics</li>
+                        <li>Improved conversion rates</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Real-World Impact</h3>
+            <div class="visualization">
+                <div class="vis-row">
+                    <div class="vis-label">Bandwidth Saved</div>
+                    <div class="vis-bar">
+                        <div class="vis-fill" style="width: 85%"></div>
+                        <div class="vis-value">85% Reduction</div>
+                    </div>
+                </div>
+                <div class="vis-row">
+                    <div class="vis-label">Server Load</div>
+                    <div class="vis-bar">
+                        <div class="vis-fill" style="width: 70%"></div>
+                        <div class="vis-value">70% Reduction</div>
+                    </div>
+                </div>
+                <div class="vis-row">
+                    <div class="vis-label">Page Load Time</div>
+                    <div class="vis-bar">
+                        <div class="vis-fill" style="width: 60%"></div>
+                        <div class="vis-value">60% Improvement</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card success">
+                <div class="card-header">
+                    <div class="card-icon"><i class="fas fa-mobile-alt"></i></div>
+                    <h3>Mobile Performance</h3>
+                </div>
+                <p>Conditional requests are especially beneficial for mobile users:</p>
+                <ul>
+                    <li><strong>Data savings</strong>: Critical for users with limited data plans</li>
+                    <li><strong>Battery life</strong>: Less data transfer means less radio usage</li>
+                    <li><strong>Network conditions</strong>: Better performance on slow connections</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="advanced">
+            <div class="section-header">
+                <div class="section-icon">5</div>
+                <h2>Advanced Concepts</h2>
+            </div>
+
+            <h3>Strong vs Weak ETags</h3>
+            <p>ETags can be classified as strong or weak validators, indicating how strictly they represent resource
+                changes.</p>
+
+            <div class="table-container">
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Aspect</th>
+                            <th>Strong ETag</th>
+                            <th>Weak ETag</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Syntax</td>
+                            <td><code>"abc123"</code></td>
+                            <td><code>W/"abc123"</code></td>
+                        </tr>
+                        <tr>
+                            <td>Precision</td>
+                            <td>Byte-for-byte identical</td>
+                            <td>Semantically equivalent</td>
+                        </tr>
+                        <tr>
+                            <td>Use Cases</td>
+                            <td>Static files, exact matches</td>
+                            <td>Dynamic content, template changes</td>
+                        </tr>
+                        <tr>
+                            <td>Range Requests</td>
+                            <td>Fully supported</td>
+                            <td>Not supported</td>
+                        </tr>
+                        <tr>
+                            <td>Example</td>
+                            <td>File content hash</td>
+                            <td>Database record version</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>Cache Validation Strategies</h3>
+            <div class="advanced-grid">
+                <div class="advanced-card">
+                    <h4><span class="header-badge">STRONG</span> Strong Validation</h4>
+                    <p>Uses both ETag and Last-Modified for maximum accuracy. Most reliable but requires more
+                        computation.</p>
+                    <pre><code>ETag: "abc123"
+Last-Modified: Wed, 21 Oct 2023 07:28:00 GMT
+Cache-Control: max-age=3600, must-revalidate</code></pre>
+                </div>
+
+                <div class="advanced-card">
+                    <h4><span class="header-badge">WEAK</span> Weak Validation</h4>
+                    <p>Uses only Last-Modified or weak ETags. Less accurate but simpler to implement.</p>
+                    <pre><code>Last-Modified: Wed, 21 Oct 2023 07:28:00 GMT
+Cache-Control: max-age=3600</code></pre>
+                </div>
+
+                <div class="advanced-card">
+                    <h4><span class="header-badge">HEURISTIC</span> Heuristic Expiration</h4>
+                    <p>Uses algorithms to estimate freshness when no explicit directives are provided.</p>
+                    <pre><code># Common heuristic: 10% of age since last modification
+ freshness_lifetime = (current_time - last_modified) * 0.1</code></pre>
+                </div>
+            </div>
+
+            <h3>Implementation Examples</h3>
+
+            <h4>Node.js/Express Implementation</h4>
+            <pre><code>const express = require('express');
+const crypto = require('crypto');
+const app = express();
+
+// Middleware to generate ETag
+app.use((req, res, next) => {
+  const originalSend = res.send;
+  res.send = function(data) {
+    // Generate ETag from response body
+    const etag = crypto.createHash('md5').update(data).digest('hex');
+    res.set('ETag', etag);
+    
+    // Check If-None-Match header
+    const clientEtag = req.headers['if-none-match'];
+    if (clientEtag === etag) {
+      return res.status(304).end();
+    }
+    
+    originalSend.call(this, data);
+  };
+  next();
+});
+
+app.get('/api/data', (req, res) => {
+  const data = { message: 'Hello World', timestamp: Date.now() };
+  res.json(data);
+});</code></pre>
+
+            <h4>PHP Implementation</h4>
+            <pre><code><?php
+// Get the last modified time of the resource
+$lastModified = filemtime($filePath);
+$etag = md5_file($filePath);
+
+// Set validation headers
+header("Last-Modified: " . gmdate("D, d M Y H:i:s", $lastModified) . " GMT");
+header("ETag: $etag");
+
+// Check conditional headers
+if (
+    (isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) && 
+     strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE']) >= $lastModified) ||
+    (isset($_SERVER['HTTP_IF_NONE_MATCH']) && 
+     trim($_SERVER['HTTP_IF_NONE_MATCH']) === $etag)
+) {
+    header("HTTP/1.1 304 Not Modified");
+    exit;
+}
+
+// Serve full content
+header("Content-Type: text/html");
+readfile($filePath);
+?></code></pre>
+
+            <div class="card warning">
+                <div class="card-header">
+                    <div class="card-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                    <h3>Common Pitfalls</h3>
+                </div>
+                <ul>
+                    <li><strong>Weak ETags for critical content</strong>: May serve stale content</li>
+                    <li><strong>Incorrect date formats</strong>: Always use GMT for Last-Modified</li>
+                    <li><strong>Over-caching dynamic content</strong>: Use appropriate Cache-Control</li>
+                    <li><strong>Ignoring Vary header</strong>: Can serve wrong content variants</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="demo">
+            <div class="section-header">
+                <div class="section-icon">6</div>
+                <h2>Interactive Demo: Conditional Requests</h2>
+            </div>
+
+            <div class="interactive-demo">
+                <div class="demo-controls">
+                    <select id="demo-resource">
+                        <option value="static">Static Resource (CSS/JS)</option>
+                        <option value="api">API Endpoint (JSON)</option>
+                        <option value="image">Image File</option>
+                    </select>
+
+                    <select id="demo-strategy">
+                        <option value="etag">ETag Validation</option>
+                        <option value="last-modified">Last-Modified Validation</option>
+                        <option value="both">Both Validators</option>
+                        <option value="none">No Validation</option>
+                    </select>
+
+                    <button id="demo-first">
+                        <i class="fas fa-download"></i> First Request
+                    </button>
+                    <button id="demo-subsequent">
+                        <i class="fas fa-redo"></i> Subsequent Request
+                    </button>
+                    <button id="demo-update">
+                        <i class="fas fa-sync"></i> Update Resource
+                    </button>
+                </div>
+
+                <div class="demo-output" id="demo-output">
+                    <p>Click "First Request" to simulate an initial resource request.</p>
+                    <p>Then try "Subsequent Request" to see conditional request in action.</p>
+                    <p>Use "Update Resource" to modify the content and test changed responses.</p>
+                </div>
+            </div>
+
+            <h3>Understanding the Demo</h3>
+            <p>This simulation demonstrates how conditional requests work:</p>
+            <ul>
+                <li><strong>First Request</strong>: Full response with validators (ETag, Last-Modified)</li>
+                <li><strong>Subsequent Request</strong>: Conditional request with stored validators</li>
+                <li><strong>304 Response</strong>: When content hasn't changed</li>
+                <li><strong>200 Response</strong>: When content has been updated</li>
+            </ul>
+
+            <div class="card info">
+                <div class="card-header">
+                    <div class="card-icon"><i class="fas fa-flask"></i></div>
+                    <h3>Experiment with Different Strategies</h3>
+                </div>
+                <p>Try different validation strategies to see how they affect performance:</p>
+                <ul>
+                    <li><strong>ETag-only</strong>: Most reliable but requires ETag generation</li>
+                    <li><strong>Last-Modified-only</strong>: Simpler but less precise</li>
+                    <li><strong>Both validators</strong>: Maximum compatibility and reliability</li>
+                    <li><strong>No validation</strong>: Always full responses (baseline)</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="references">
+            <div class="section-header">
+                <div class="section-icon">7</div>
+                <h2>Further Reading & References</h2>
+            </div>
+
+            <div class="reference-grid">
+                <div class="reference-card">
+                    <h4>MDN Web Docs</h4>
+                    <p>Comprehensive documentation of Conditional Requests with examples and browser compatibility.</p>
+                    <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Conditional_requests" target="_blank">
+                        <i class="fas fa-external-link-alt"></i> Visit MDN
+                    </a>
+                </div>
+
+                <div class="reference-card">
+                    <h4>RFC 7232</h4>
+                    <p>Official specification for HTTP Conditional Requests (part of HTTP/1.1).</p>
+                    <a href="https://tools.ietf.org/html/rfc7232" target="_blank">
+                        <i class="fas fa-external-link-alt"></i> Read RFC 7232
+                    </a>
+                </div>
+
+                <div class="reference-card">
+                    <h4>Google Web Fundamentals</h4>
+                    <p>HTTP caching guide with best practices for conditional requests.</p>
+                    <a href="https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/http-caching"
+                        target="_blank">
+                        <i class="fas fa-external-link-alt"></i> Read Guide
+                    </a>
+                </div>
+
+                <div class="reference-card">
+                    <h4>Web.dev</h4>
+                    <p>Modern caching strategies and conditional request patterns.</p>
+                    <a href="https://web.dev/http-cache/" target="_blank">
+                        <i class="fas fa-external-link-alt"></i> Learn Caching
+                    </a>
+                </div>
+
+                <div class="reference-card">
+                    <h4>Cache-Control Explorer</h4>
+                    <p>Interactive tool to understand Cache-Control directives.</p>
+                    <a href="https://cache-control.sdgluck.now.sh/" target="_blank">
+                        <i class="fas fa-external-link-alt"></i> Try Tool
+                    </a>
+                </div>
+
+                <div class="reference-card">
+                    <h4>HTTP Toolkit</h4>
+                    <p>Intercept, debug & build with HTTP(S) requests.</p>
+                    <a href="https://httptoolkit.tech/" target="_blank">
+                        <i class="fas fa-external-link-alt"></i> Explore Toolkit
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Conditional HTTP Guide</h3>
+                    <p>A comprehensive resource for understanding and implementing conditional HTTP requests.</p>
+                    <div class="social-links">
+                        <a href="https://github.com/ritikraj07" target="_blank" title="GitHub">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="https://www.youtube.com/@Beer-with-Bugs" target="_blank" title="YouTube">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                        <a href="https://www.instagram.com/dev_ritik07/" target="_blank" title="Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/in/ritik-raj07/" target="_blank" title="LinkedIn">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="mailto:imritikraj0@gmail.com" title="Email">
+                            <i class="fas fa-envelope"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="#what-are">What are Conditional Requests?</a></li>
+                        <li><a href="#how-work">How They Work</a></li>
+                        <li><a href="#headers">Conditional Headers</a></li>
+                        <li><a href="#benefits">Benefits</a></li>
+                        <li><a href="#advanced">Advanced Concepts</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Resources</h3>
+                    <ul class="footer-links">
+                        <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Conditional_requests"
+                                target="_blank">MDN Web Docs</a></li>
+                        <li><a href="https://tools.ietf.org/html/rfc7232" target="_blank">RFC 7232</a></li>
+                        <li><a href="https://httpbin.org" target="_blank">HTTPBin - HTTP Testing</a></li>
+                        <li><a href="https://web.dev/http-cache/" target="_blank">Web.dev Caching Guide</a></li>
+                        <li><a href="https://cache-control.sdgluck.now.sh/" target="_blank">Cache-Control Explorer</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="copyright">
+                <p>&copy; 2023 Conditional HTTP Guide. Created by <a href="https://github.com/ritikraj07"
+                        target="_blank">Ritik Raj</a>.</p>
+                <p>This content is available under the Creative Commons Attribution-ShareAlike License.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Mobile menu toggle
+            const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+            const navLinks = document.querySelector('.nav-links');
+
+            mobileMenuBtn.addEventListener('click', function () {
+                navLinks.classList.toggle('active');
+            });
+
+            // Interactive Demo
+            const firstBtn = document.getElementById('demo-first');
+            const subsequentBtn = document.getElementById('demo-subsequent');
+            const updateBtn = document.getElementById('demo-update');
+            const demoOutput = document.getElementById('demo-output');
+
+            // Demo state
+            let demoState = {
+                resource: 'static',
+                strategy: 'etag',
+                etag: null,
+                lastModified: null,
+                content: 'Initial content',
+                version: 1
+            };
+
+            // Update demo state based on selects
+            document.getElementById('demo-resource').addEventListener('change', function () {
+                demoState.resource = this.value;
+                resetDemo();
+            });
+
+            document.getElementById('demo-strategy').addEventListener('change', function () {
+                demoState.strategy = this.value;
+                resetDemo();
+            });
+
+            function resetDemo() {
+                demoState.etag = null;
+                demoState.lastModified = null;
+                demoState.content = 'Initial content';
+                demoState.version = 1;
+                demoOutput.innerHTML = '<p>Demo reset. Click "First Request" to start.</p>';
+            }
+
+            function generateEtag(content) {
+                // Simple ETag generation
+                let hash = 0;
+                for (let i = 0; i < content.length; i++) {
+                    const char = content.charCodeAt(i);
+                    hash = ((hash << 5) - hash) + char;
+                    hash = hash & hash;
+                }
+                return `"${hash.toString(16)}"`;
+            }
+
+            function generateLastModified() {
+                return new Date().toUTCString();
+            }
+
+            // First request simulation
+            firstBtn.addEventListener('click', function () {
+                demoState.etag = generateEtag(demoState.content);
+                demoState.lastModified = generateLastModified();
+
+                let output = '<h4>First Request (No Cache)</h4>';
+                output += `<div class="request-example">`;
+                output += `<div>GET /${demoState.resource} HTTP/1.1</div>`;
+                output += `<div>Host: example.com</div>`;
+                output += `</div>`;
+
+                output += `<div class="request-example">`;
+                output += `<div>HTTP/1.1 200 OK</div>`;
+                output += `<div>Content-Type: ${getContentType(demoState.resource)}</div>`;
+
+                if (demoState.strategy === 'etag' || demoState.strategy === 'both') {
+                    output += `<div><span class="header-name">ETag</span>: <span class="header-value">${demoState.etag}</span></div>`;
+                }
+
+                if (demoState.strategy === 'last-modified' || demoState.strategy === 'both') {
+                    output += `<div><span class="header-name">Last-Modified</span>: <span class="header-value">${demoState.lastModified}</span></div>`;
+                }
+
+                output += `<div><span class="header-name">Content-Length</span>: <span class="header-value">${demoState.content.length}</span></div>`;
+                output += `<div>...</div>`;
+                output += `<div>${demoState.content} (v${demoState.version})</div>`;
+                output += `</div>`;
+
+                output += `<p><strong>Result:</strong> Full response with validators. Resource cached.</p>`;
+
+                demoOutput.innerHTML = output;
+            });
+
+            // Subsequent request simulation
+            subsequentBtn.addEventListener('click', function () {
+                if (!demoState.etag) {
+                    demoOutput.innerHTML = '<p style="color: var(--error)">Please make a first request before subsequent requests.</p>';
+                    return;
+                }
+
+                let output = '<h4>Subsequent Request (With Cache)</h4>';
+                output += `<div class="request-example">`;
+                output += `<div>GET /${demoState.resource} HTTP/1.1</div>`;
+                output += `<div>Host: example.com</div>`;
+
+                if (demoState.strategy === 'etag' || demoState.strategy === 'both') {
+                    output += `<div><span class="header-name">If-None-Match</span>: <span class="header-value">${demoState.etag}</span></div>`;
+                }
+
+                if (demoState.strategy === 'last-modified' || demoState.strategy === 'both') {
+                    output += `<div><span class="header-name">If-Modified-Since</span>: <span class="header-value">${demoState.lastModified}</span></div>`;
+                }
+
+                output += `</div>`;
+
+                // Check if content has changed
+                const currentEtag = generateEtag(demoState.content);
+                const contentChanged = currentEtag !== demoState.etag;
+
+                if (!contentChanged) {
+                    output += `<div class="request-example">`;
+                    output += `<div>HTTP/1.1 304 Not Modified</div>`;
+
+                    if (demoState.strategy === 'etag' || demoState.strategy === 'both') {
+                        output += `<div><span class="header-name">ETag</span>: <span class="header-value">${demoState.etag}</span></div>`;
+                    }
+
+                    output += `</div>`;
+                    output += `<p><strong>Result:</strong> 304 Not Modified. Using cached version. Bandwidth saved: ${demoState.content.length} bytes.</p>`;
+                } else {
+                    output += `<div class="request-example">`;
+                    output += `<div>HTTP/1.1 200 OK</div>`;
+                    output += `<div>Content-Type: ${getContentType(demoState.resource)}</div>`;
+
+                    if (demoState.strategy === 'etag' || demoState.strategy === 'both') {
+                        output += `<div><span class="header-name">ETag</span>: <span class="header-value">${currentEtag}</span></div>`;
+                    }
+
+                    if (demoState.strategy === 'last-modified' || demoState.strategy === 'both') {
+                        output += `<div><span class="header-name">Last-Modified</span>: <span class="header-value">${generateLastModified()}</span></div>`;
+                    }
+
+                    output += `<div><span class="header-name">Content-Length</span>: <span class="header-value">${demoState.content.length}</span></div>`;
+                    output += `<div>...</div>`;
+                    output += `<div>${demoState.content} (v${demoState.version})</div>`;
+                    output += `</div>`;
+                    output += `<p><strong>Result:</strong> 200 OK with updated content. Resource has changed.</p>`;
+
+                    // Update state
+                    demoState.etag = currentEtag;
+                    demoState.lastModified = generateLastModified();
+                }
+
+                demoOutput.innerHTML = output;
+            });
+
+            // Update resource simulation
+            updateBtn.addEventListener('click', function () {
+                demoState.version++;
+                demoState.content = `Updated content v${demoState.version}`;
+
+                let output = '<h4>Resource Updated</h4>';
+                output += `<p>Resource content has been updated to version ${demoState.version}.</p>`;
+                output += `<p>New content: <code>${demoState.content}</code></p>`;
+                output += `<p>Try making a subsequent request to see the change.</p>`;
+
+                demoOutput.innerHTML = output;
+            });
+
+            function getContentType(resource) {
+                switch (resource) {
+                    case 'static': return 'text/css';
+                    case 'api': return 'application/json';
+                    case 'image': return 'image/jpeg';
+                    default: return 'text/plain';
+                }
+            }
+
+            // Smooth scrolling for navigation links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 100,
+                            behavior: 'smooth'
+                        });
+
+                        // Close mobile menu if open
+                        if (navLinks.classList.contains('active')) {
+                            navLinks.classList.remove('active');
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

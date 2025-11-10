@@ -31,7 +31,7 @@
       "link": "blogs/deep-dive-in-put-patch-post.html",
       "category": ["web-dev", "http", "methods"],
       "date": "2025-11-08",
-      "readTime": "8 min read",
+      "readTime": "10 min read",
       "featured": false
     }, 
     {
@@ -41,7 +41,7 @@
       "link": "blogs/advantages-and-disadvantages-of-data-structures.html",
       "category": ["data-structures", "algorithms"],
       "date": "2025-11-05",
-      "readTime": "5 min read",
+      "readTime": "15 min read",
       "featured": false
     },
        {
@@ -51,10 +51,58 @@
       "link": "blogs/updated-secure-coding-practices.html",
       "category": ["devops", "security", "coding-practices"],
       "date": "2025-11-18",
-      "readTime": "15 min read",
+      "readTime": "35 min read",
       "featured": true,
       "tags": ["python", "web development", "security"],
       "referenced": []
+    },
+     {
+      "id": 6,
+      "title": "High Performance Frontend Development",
+      "description": "Learn how to optimize frontend development for high performance.",
+      "link": "blogs/high-performance-front-ends.html",
+      "category": ["frontend", "performance", "optimization"],
+      "date": "2025-11-10",
+      "readTime": "40 min read",
+      "featured": false,
+      "tags": ["css", "html", "javascript"],
+      "referenced": []
+    },
+    {
+      "id": 7,
+      "title": "HTTP Headers Complete Guide",
+      "description": "Learn about HTTP headers and their usage in web development.",
+      "link": "blogs/http-headers.html",
+      "category": ["web-dev", "http", "headers"],
+      "date": "2025-11-11",
+      "readTime": "30 min read",
+      "featured": false,
+      "tags": ["html", "css", "javascript"],
+      "referenced": []
+    },
+     {
+      "id": 8,
+      "title": "Conditional HTTP Requests",
+      "description": "Learn how to make conditional HTTP requests in web development.",
+      "link": "blogs/conditional-http-requests.html",
+      "category": ["web-dev", "http", "optimization"],
+      "date": "2025-11-11",
+      "readTime": "30 min read",
+      "featured": false,
+      "tags": ["html", "css", "javascript"],
+      "referenced": ["blogs/http-mothods-guide.html"]
+    },
+     {
+      "id": 9,
+      "title": "HTTP Status Codes Guide",
+      "description": "Learn about HTTP status codes and their usage in web development.",
+      "link": "blogs/http-status-codes.html",
+      "category": ["web-dev", "http", "optimization"],
+      "date": "2025-11-11",
+      "readTime": "5 min read",
+      "featured": true,
+      "tags": ["html", "css", "javascript"],
+      "referenced": ["blogs/http-mothods-guide.html"]
     }
     
     ]

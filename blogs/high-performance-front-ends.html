@@ -1,0 +1,1325 @@
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>High-Performance Front-Ends</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom scrollbar for code blocks if they overflow */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1e1e1e;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #555;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #777;
+        }
+        .slide-content {
+            /* Improved layout stability */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        /* Better Code Block Styling */
+        pre.code-block {
+            background-color: #1e1e1e;
+            color: #d4d4d4;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .code-header {
+            background-color: #333;
+            padding: 0.5rem 1rem;
+            display: flex;
+            align-items: center;
+        }
+        .window-dots {
+            display: flex;
+            gap: 0.4rem;
+        }
+        .dot {
+            width: 0.75rem;
+            height: 0.75rem;
+            border-radius: 50%;
+        }
+        .dot-red { background-color: #ff5f56; }
+        .dot-yellow { background-color: #ffbd2e; }
+        .dot-green { background-color: #27c93f; }
+        .code-body {
+            padding: 1rem;
+            overflow-x: auto;
+            font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        .token-comment { color: #6a9955; }
+        .token-keyword { color: #569cd6; }
+        .token-string { color: #ce9178; }
+        .token-function { color: #dcdcaa; }
+
+        /* Animation for Interactive Demo */
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .spinner {
+            animation: spin 1s linear infinite;
+        }
+    </style>
+<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.absolute{position:absolute}.relative{position:relative}.inset-0{inset:0px}.left-0{left:0px}.top-0{top:0px}.z-10{z-index:10}.mx-auto{margin-left:auto;margin-right:auto}.mb-12{margin-bottom:3rem}.mb-16{margin-bottom:4rem}.mb-2{margin-bottom:0.5rem}.mb-4{margin-bottom:1rem}.mb-6{margin-bottom:1.5rem}.mb-8{margin-bottom:2rem}.ml-2{margin-left:0.5rem}.ml-6{margin-left:1.5rem}.ml-8{margin-left:2rem}.mr-2{margin-right:0.5rem}.mr-3{margin-right:0.75rem}.mr-4{margin-right:1rem}.mr-6{margin-right:1.5rem}.mt-12{margin-top:3rem}.mt-2{margin-top:0.5rem}.mt-4{margin-top:1rem}.mt-6{margin-top:1.5rem}.mt-8{margin-top:2rem}.mt-auto{margin-top:auto}.block{display:block}.flex{display:flex}.grid{display:grid}.hidden{display:none}.h-10{height:2.5rem}.h-16{height:4rem}.h-2{height:0.5rem}.h-24{height:6rem}.h-4{height:1rem}.h-6{height:1.5rem}.h-full{height:100%}.h-screen{height:100vh}.max-h-\[60vh\]{max-height:60vh}.min-h-\[85vh\]{min-height:85vh}.w-10{width:2.5rem}.w-16{width:4rem}.w-24{width:6rem}.w-32{width:8rem}.w-4{width:1rem}.w-6{width:1.5rem}.w-full{width:100%}.w-screen{width:100vw}.min-w-full{min-width:100%}.max-w-3xl{max-width:48rem}.max-w-4xl{max-width:56rem}.max-w-5xl{max-width:64rem}.max-w-6xl{max-width:72rem}.flex-1{flex:1 1 0%}.border-collapse{border-collapse:collapse}.rotate-2{--tw-rotate:2deg;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.scale-105{--tw-scale-x:1.05;--tw-scale-y:1.05;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.transform{transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}@keyframes bounce{0%, 100%{transform:translateY(-25%);animation-timing-function:cubic-bezier(0.8,0,1,1)}50%{transform:none;animation-timing-function:cubic-bezier(0,0,0.2,1)}}.animate-bounce{animation:bounce 1s infinite}@keyframes pulse{50%{opacity:.5}}.animate-pulse{animation:pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite}.select-none{-webkit-user-select:none;user-select:none}.list-decimal{list-style-type:decimal}.list-disc{list-style-type:disc}.grid-cols-1{grid-template-columns:repeat(1, minmax(0, 1fr))}.grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}.flex-col{flex-direction:column}.items-start{align-items:flex-start}.items-center{align-items:center}.items-stretch{align-items:stretch}.justify-end{justify-content:flex-end}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-12{gap:3rem}.gap-16{gap:4rem}.gap-6{gap:1.5rem}.gap-8{gap:2rem}.space-x-4 > :not([hidden]) ~ :not([hidden]){--tw-space-x-reverse:0;margin-right:calc(1rem * var(--tw-space-x-reverse));margin-left:calc(1rem * calc(1 - var(--tw-space-x-reverse)))}.space-x-8 > :not([hidden]) ~ :not([hidden]){--tw-space-x-reverse:0;margin-right:calc(2rem * var(--tw-space-x-reverse));margin-left:calc(2rem * calc(1 - var(--tw-space-x-reverse)))}.space-y-12 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(3rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(3rem * var(--tw-space-y-reverse))}.space-y-3 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.75rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.75rem * var(--tw-space-y-reverse))}.space-y-4 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1rem * var(--tw-space-y-reverse))}.space-y-6 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1.5rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1.5rem * var(--tw-space-y-reverse))}.space-y-8 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(2rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(2rem * var(--tw-space-y-reverse))}.divide-y > :not([hidden]) ~ :not([hidden]){--tw-divide-y-reverse:0;border-top-width:calc(1px * calc(1 - var(--tw-divide-y-reverse)));border-bottom-width:calc(1px * var(--tw-divide-y-reverse))}.divide-gray-200 > :not([hidden]) ~ :not([hidden]){--tw-divide-opacity:1;border-color:rgb(229 231 235 / var(--tw-divide-opacity, 1))}.self-start{align-self:flex-start}.overflow-hidden{overflow:hidden}.overflow-y-auto{overflow-y:auto}.rounded-2xl{border-radius:1rem}.rounded-3xl{border-radius:1.5rem}.rounded-\[3rem\]{border-radius:3rem}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:0.5rem}.rounded-xl{border-radius:0.75rem}.border{border-width:1px}.border-2{border-width:2px}.border-4{border-width:4px}.border-l-8{border-left-width:8px}.border-t{border-top-width:1px}.border-t-4{border-top-width:4px}.border-t-8{border-top-width:8px}.border-blue-100{--tw-border-opacity:1;border-color:rgb(219 234 254 / var(--tw-border-opacity, 1))}.border-blue-200{--tw-border-opacity:1;border-color:rgb(191 219 254 / var(--tw-border-opacity, 1))}.border-blue-300{--tw-border-opacity:1;border-color:rgb(147 197 253 / var(--tw-border-opacity, 1))}.border-blue-400{--tw-border-opacity:1;border-color:rgb(96 165 250 / var(--tw-border-opacity, 1))}.border-blue-500{--tw-border-opacity:1;border-color:rgb(59 130 246 / var(--tw-border-opacity, 1))}.border-blue-600{--tw-border-opacity:1;border-color:rgb(37 99 235 / var(--tw-border-opacity, 1))}.border-gray-100{--tw-border-opacity:1;border-color:rgb(243 244 246 / var(--tw-border-opacity, 1))}.border-gray-200{--tw-border-opacity:1;border-color:rgb(229 231 235 / var(--tw-border-opacity, 1))}.border-gray-800{--tw-border-opacity:1;border-color:rgb(31 41 55 / var(--tw-border-opacity, 1))}.border-green-100{--tw-border-opacity:1;border-color:rgb(220 252 231 / var(--tw-border-opacity, 1))}.border-green-200{--tw-border-opacity:1;border-color:rgb(187 247 208 / var(--tw-border-opacity, 1))}.border-green-400{--tw-border-opacity:1;border-color:rgb(74 222 128 / var(--tw-border-opacity, 1))}.border-green-500{--tw-border-opacity:1;border-color:rgb(34 197 94 / var(--tw-border-opacity, 1))}.border-purple-100{--tw-border-opacity:1;border-color:rgb(243 232 255 / var(--tw-border-opacity, 1))}.border-purple-300{--tw-border-opacity:1;border-color:rgb(216 180 254 / var(--tw-border-opacity, 1))}.border-purple-500{--tw-border-opacity:1;border-color:rgb(168 85 247 / var(--tw-border-opacity, 1))}.border-red-200{--tw-border-opacity:1;border-color:rgb(254 202 202 / var(--tw-border-opacity, 1))}.border-red-400{--tw-border-opacity:1;border-color:rgb(248 113 113 / var(--tw-border-opacity, 1))}.border-red-500{--tw-border-opacity:1;border-color:rgb(239 68 68 / var(--tw-border-opacity, 1))}.border-red-600{--tw-border-opacity:1;border-color:rgb(220 38 38 / var(--tw-border-opacity, 1))}.border-yellow-400{--tw-border-opacity:1;border-color:rgb(250 204 21 / var(--tw-border-opacity, 1))}.border-yellow-500{--tw-border-opacity:1;border-color:rgb(234 179 8 / var(--tw-border-opacity, 1))}.bg-gray-900{--tw-bg-opacity:1;background-color:rgb(17 24 39 / var(--tw-bg-opacity, 1))}.bg-blue-100{--tw-bg-opacity:1;background-color:rgb(219 234 254 / var(--tw-bg-opacity, 1))}.bg-blue-50{--tw-bg-opacity:1;background-color:rgb(239 246 255 / var(--tw-bg-opacity, 1))}.bg-blue-500{--tw-bg-opacity:1;background-color:rgb(59 130 246 / var(--tw-bg-opacity, 1))}.bg-blue-600{--tw-bg-opacity:1;background-color:rgb(37 99 235 / var(--tw-bg-opacity, 1))}.bg-gray-100{--tw-bg-opacity:1;background-color:rgb(243 244 246 / var(--tw-bg-opacity, 1))}.bg-gray-50{--tw-bg-opacity:1;background-color:rgb(249 250 251 / var(--tw-bg-opacity, 1))}.bg-gray-800{--tw-bg-opacity:1;background-color:rgb(31 41 55 / var(--tw-bg-opacity, 1))}.bg-green-100{--tw-bg-opacity:1;background-color:rgb(220 252 231 / var(--tw-bg-opacity, 1))}.bg-green-200{--tw-bg-opacity:1;background-color:rgb(187 247 208 / var(--tw-bg-opacity, 1))}.bg-green-50{--tw-bg-opacity:1;background-color:rgb(240 253 244 / var(--tw-bg-opacity, 1))}.bg-green-500{--tw-bg-opacity:1;background-color:rgb(34 197 94 / var(--tw-bg-opacity, 1))}.bg-orange-50{--tw-bg-opacity:1;background-color:rgb(255 247 237 / var(--tw-bg-opacity, 1))}.bg-purple-50{--tw-bg-opacity:1;background-color:rgb(250 245 255 / var(--tw-bg-opacity, 1))}.bg-purple-500{--tw-bg-opacity:1;background-color:rgb(168 85 247 / var(--tw-bg-opacity, 1))}.bg-red-100{--tw-bg-opacity:1;background-color:rgb(254 226 226 / var(--tw-bg-opacity, 1))}.bg-red-200{--tw-bg-opacity:1;background-color:rgb(254 202 202 / var(--tw-bg-opacity, 1))}.bg-red-50{--tw-bg-opacity:1;background-color:rgb(254 242 242 / var(--tw-bg-opacity, 1))}.bg-red-500{--tw-bg-opacity:1;background-color:rgb(239 68 68 / var(--tw-bg-opacity, 1))}.bg-red-600{--tw-bg-opacity:1;background-color:rgb(220 38 38 / var(--tw-bg-opacity, 1))}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.bg-yellow-100{--tw-bg-opacity:1;background-color:rgb(254 249 195 / var(--tw-bg-opacity, 1))}.bg-yellow-200{--tw-bg-opacity:1;background-color:rgb(254 240 138 / var(--tw-bg-opacity, 1))}.bg-yellow-50{--tw-bg-opacity:1;background-color:rgb(254 252 232 / var(--tw-bg-opacity, 1))}.bg-gradient-to-b{background-image:linear-gradient(to bottom, var(--tw-gradient-stops))}.bg-gradient-to-br{background-image:linear-gradient(to bottom right, var(--tw-gradient-stops))}.bg-gradient-to-r{background-image:linear-gradient(to right, var(--tw-gradient-stops))}.bg-gradient-to-tr{background-image:linear-gradient(to top right, var(--tw-gradient-stops))}.from-blue-50{--tw-gradient-from:#eff6ff var(--tw-gradient-from-position);--tw-gradient-to:rgb(239 246 255 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-blue-500{--tw-gradient-from:#3b82f6 var(--tw-gradient-from-position);--tw-gradient-to:rgb(59 130 246 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-blue-700{--tw-gradient-from:#1d4ed8 var(--tw-gradient-from-position);--tw-gradient-to:rgb(29 78 216 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-gray-900{--tw-gradient-from:#111827 var(--tw-gradient-from-position);--tw-gradient-to:rgb(17 24 39 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-green-50{--tw-gradient-from:#f0fdf4 var(--tw-gradient-from-position);--tw-gradient-to:rgb(240 253 244 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-purple-50{--tw-gradient-from:#faf5ff var(--tw-gradient-from-position);--tw-gradient-to:rgb(250 245 255 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.to-blue-900{--tw-gradient-to:#1e3a8a var(--tw-gradient-to-position)}.to-indigo-900{--tw-gradient-to:#312e81 var(--tw-gradient-to-position)}.to-purple-500{--tw-gradient-to:#a855f7 var(--tw-gradient-to-position)}.to-white{--tw-gradient-to:#fff var(--tw-gradient-to-position)}.p-10{padding:2.5rem}.p-12{padding:3rem}.p-4{padding:1rem}.p-5{padding:1.25rem}.p-6{padding:1.5rem}.p-8{padding:2rem}.px-3{padding-left:0.75rem;padding-right:0.75rem}.px-4{padding-left:1rem;padding-right:1rem}.px-6{padding-left:1.5rem;padding-right:1.5rem}.px-8{padding-left:2rem;padding-right:2rem}.py-1{padding-top:0.25rem;padding-bottom:0.25rem}.py-2{padding-top:0.5rem;padding-bottom:0.5rem}.py-3{padding-top:0.75rem;padding-bottom:0.75rem}.py-4{padding-top:1rem;padding-bottom:1rem}.pl-8{padding-left:2rem}.pt-8{padding-top:2rem}.text-left{text-align:left}.text-center{text-align:center}.font-sans{font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"}.font-mono{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace}.text-2xl{font-size:1.5rem;line-height:2rem}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-4xl{font-size:2.25rem;line-height:2.5rem}.text-5xl{font-size:3rem;line-height:1}.text-6xl{font-size:3.75rem;line-height:1}.text-7xl{font-size:4.5rem;line-height:1}.text-9xl{font-size:8rem;line-height:1}.text-base{font-size:1rem;line-height:1.5rem}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.font-black{font-weight:900}.font-bold{font-weight:700}.font-extrabold{font-weight:800}.font-light{font-weight:300}.font-medium{font-weight:500}.font-normal{font-weight:400}.font-semibold{font-weight:600}.uppercase{text-transform:uppercase}.italic{font-style:italic}.leading-none{line-height:1}.leading-relaxed{line-height:1.625}.tracking-tight{letter-spacing:-0.025em}.tracking-wider{letter-spacing:0.05em}.tracking-widest{letter-spacing:0.1em}.text-gray-100{--tw-text-opacity:1;color:rgb(243 244 246 / var(--tw-text-opacity, 1))}.text-blue-600{--tw-text-opacity:1;color:rgb(37 99 235 / var(--tw-text-opacity, 1))}.text-blue-700{--tw-text-opacity:1;color:rgb(29 78 216 / var(--tw-text-opacity, 1))}.text-blue-800{--tw-text-opacity:1;color:rgb(30 64 175 / var(--tw-text-opacity, 1))}.text-blue-900{--tw-text-opacity:1;color:rgb(30 58 138 / var(--tw-text-opacity, 1))}.text-gray-400{--tw-text-opacity:1;color:rgb(156 163 175 / var(--tw-text-opacity, 1))}.text-gray-500{--tw-text-opacity:1;color:rgb(107 114 128 / var(--tw-text-opacity, 1))}.text-gray-600{--tw-text-opacity:1;color:rgb(75 85 99 / var(--tw-text-opacity, 1))}.text-gray-700{--tw-text-opacity:1;color:rgb(55 65 81 / var(--tw-text-opacity, 1))}.text-gray-800{--tw-text-opacity:1;color:rgb(31 41 55 / var(--tw-text-opacity, 1))}.text-gray-900{--tw-text-opacity:1;color:rgb(17 24 39 / var(--tw-text-opacity, 1))}.text-green-400{--tw-text-opacity:1;color:rgb(74 222 128 / var(--tw-text-opacity, 1))}.text-green-500{--tw-text-opacity:1;color:rgb(34 197 94 / var(--tw-text-opacity, 1))}.text-green-600{--tw-text-opacity:1;color:rgb(22 163 74 / var(--tw-text-opacity, 1))}.text-green-700{--tw-text-opacity:1;color:rgb(21 128 61 / var(--tw-text-opacity, 1))}.text-green-800{--tw-text-opacity:1;color:rgb(22 101 52 / var(--tw-text-opacity, 1))}.text-green-900{--tw-text-opacity:1;color:rgb(20 83 45 / var(--tw-text-opacity, 1))}.text-orange-700{--tw-text-opacity:1;color:rgb(194 65 12 / var(--tw-text-opacity, 1))}.text-purple-700{--tw-text-opacity:1;color:rgb(126 34 206 / var(--tw-text-opacity, 1))}.text-purple-800{--tw-text-opacity:1;color:rgb(107 33 168 / var(--tw-text-opacity, 1))}.text-purple-900{--tw-text-opacity:1;color:rgb(88 28 135 / var(--tw-text-opacity, 1))}.text-red-500{--tw-text-opacity:1;color:rgb(239 68 68 / var(--tw-text-opacity, 1))}.text-red-600{--tw-text-opacity:1;color:rgb(220 38 38 / var(--tw-text-opacity, 1))}.text-red-700{--tw-text-opacity:1;color:rgb(185 28 28 / var(--tw-text-opacity, 1))}.text-red-800{--tw-text-opacity:1;color:rgb(153 27 27 / var(--tw-text-opacity, 1))}.text-red-900{--tw-text-opacity:1;color:rgb(127 29 29 / var(--tw-text-opacity, 1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.text-yellow-600{--tw-text-opacity:1;color:rgb(202 138 4 / var(--tw-text-opacity, 1))}.text-yellow-800{--tw-text-opacity:1;color:rgb(133 77 14 / var(--tw-text-opacity, 1))}.text-yellow-900{--tw-text-opacity:1;color:rgb(113 63 18 / var(--tw-text-opacity, 1))}.underline{-webkit-text-decoration-line:underline;text-decoration-line:underline}.accent-blue-600{accent-color:#2563eb}.accent-green-600{accent-color:#16a34a}.accent-purple-600{accent-color:#9333ea}.opacity-10{opacity:0.1}.opacity-20{opacity:0.2}.opacity-40{opacity:0.4}.opacity-50{opacity:0.5}.opacity-60{opacity:0.6}.opacity-70{opacity:0.7}.opacity-75{opacity:0.75}.opacity-90{opacity:0.9}.shadow-2xl{--tw-shadow:0 25px 50px -12px rgb(0 0 0 / 0.25);--tw-shadow-colored:0 25px 50px -12px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-inner{--tw-shadow:inset 0 2px 4px 0 rgb(0 0 0 / 0.05);--tw-shadow-colored:inset 0 2px 4px 0 var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-lg{--tw-shadow:0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-md{--tw-shadow:0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-sm{--tw-shadow:0 1px 2px 0 rgb(0 0 0 / 0.05);--tw-shadow-colored:0 1px 2px 0 var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-xl{--tw-shadow:0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-blue-900\/50{--tw-shadow-color:rgb(30 58 138 / 0.5);--tw-shadow:var(--tw-shadow-colored)}.shadow-red-900\/50{--tw-shadow-color:rgb(127 29 29 / 0.5);--tw-shadow:var(--tw-shadow-colored)}.drop-shadow-xl{--tw-drop-shadow:drop-shadow(0 20px 13px rgb(0 0 0 / 0.03)) drop-shadow(0 8px 5px rgb(0 0 0 / 0.08));filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.transition{transition-property:color, background-color, border-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-all{transition-property:all;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-colors{transition-property:color, background-color, border-color, fill, stroke, -webkit-text-decoration-color;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, -webkit-text-decoration-color;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-transform{transition-property:transform;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.duration-500{transition-duration:500ms}.ease-out{transition-timing-function:cubic-bezier(0, 0, 0.2, 1)}.hover\:rotate-0:hover{--tw-rotate:0deg;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.hover\:bg-blue-50:hover{--tw-bg-opacity:1;background-color:rgb(239 246 255 / var(--tw-bg-opacity, 1))}.hover\:bg-blue-500:hover{--tw-bg-opacity:1;background-color:rgb(59 130 246 / var(--tw-bg-opacity, 1))}.hover\:bg-gray-700:hover{--tw-bg-opacity:1;background-color:rgb(55 65 81 / var(--tw-bg-opacity, 1))}.hover\:bg-red-600:hover{--tw-bg-opacity:1;background-color:rgb(220 38 38 / var(--tw-bg-opacity, 1))}.hover\:underline:hover{-webkit-text-decoration-line:underline;text-decoration-line:underline}.disabled\:cursor-not-allowed:disabled{cursor:not-allowed}.disabled\:opacity-30:disabled{opacity:0.3}@media (min-width: 768px){.md\:flex{display:flex}.md\:table-cell{display:table-cell}.md\:-translate-y-4{--tw-translate-y:-1rem;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.md\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.md\:grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}.md\:p-16{padding:4rem}.md\:p-8{padding:2rem}.md\:text-2xl{font-size:1.5rem;line-height:2rem}.md\:text-3xl{font-size:1.875rem;line-height:2.25rem}.md\:text-4xl{font-size:2.25rem;line-height:2.5rem}.md\:text-5xl{font-size:3rem;line-height:1}.md\:text-7xl{font-size:4.5rem;line-height:1}.md\:text-8xl{font-size:6rem;line-height:1}.md\:text-9xl{font-size:8rem;line-height:1}.md\:text-\[12rem\]{font-size:12rem}}@media (min-width: 1024px){.lg\:-translate-y-4{--tw-translate-y:-1rem;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.lg\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.lg\:grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}}</style></head>
+<body class="bg-gray-900 text-gray-100 font-sans overflow-hidden">
+
+    <!-- Main Container -->
+    <div id="app" class="h-screen w-screen flex flex-col">
+
+        <!-- Slide Viewport -->
+        <main class="flex-1 relative flex items-center justify-center p-4 md:p-8 overflow-y-auto bg-gray-800">
+            <div id="slide-container" class="w-full max-w-6xl mx-auto bg-white text-gray-900 rounded-xl shadow-2xl overflow-hidden min-h-[85vh] flex flex-col relative">
+
+                <!-- Header/Logo Area (Optional) -->
+                <div class="absolute top-0 left-0 p-6 opacity-50 text-sm font-semibold tracking-widest uppercase z-10">
+                    High-Performance Front-Ends
+                </div>
+
+                <!-- Slides go here -->
+
+                <!-- Slide 1 -->
+                <div class="slide flex flex-col items-center justify-center h-full text-center p-12 bg-gradient-to-br from-blue-700 to-indigo-900 text-white flex-1">
+                    <div class="mb-8">
+                        <!-- Optional Logo Placeholder -->
+                        <svg class="w-24 h-24 opacity-20" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd"></path></svg>
+                    </div>
+                    <h1 class="text-5xl md:text-7xl font-extrabold mb-6 tracking-tight">High-Performance Front-Ends</h1>
+                    <h2 class="text-2xl md:text-4xl opacity-90 mb-16 font-light">Principles, Metrics, and Modern Optimization</h2>
+                    <div class="text-xl font-semibold">
+                        <p>Tarundeep Singh &amp; Tanubhav Juneja</p>
+                        <p class="opacity-75 mt-2 font-normal">10-11-2025</p>
+                    </div>
+                </div>
+
+                <!-- Slide 2 -->
+                <div class="slide hidden p-8 md:p-16 flex flex-col h-full">
+                    <h2 class="text-4xl md:text-5xl font-bold text-blue-700 mb-12">The Business Case for Performance</h2>
+                    <div class="slide-content flex-1">
+                         <div class="bg-blue-50 p-6 rounded-xl border-l-8 border-blue-600 mb-12 shadow-sm">
+                            <strong class="text-blue-800 text-xl block mb-2">✋ Interactive Poll</strong>
+                            <p class="text-2xl">"How many of you currently have a 'performance budget' set for your main project?"</p>
+                        </div>
+
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                            <div>
+                                <h3 class="text-2xl font-bold mb-6">The Performance → Revenue Chain:</h3>
+                                <ol class="space-y-6 text-xl">
+                                    <li class="flex items-start"><span class="bg-blue-100 text-blue-800 font-bold py-1 px-3 rounded-full mr-4">1</span><div><strong>Engineering Decision:</strong> Better code (e.g. <code>rAF</code> vs <code>setTimeout</code>).</div></li>
+                                    <li class="flex items-start"><span class="bg-blue-100 text-blue-800 font-bold py-1 px-3 rounded-full mr-4">2</span><div><strong>User Perception:</strong> UI feels "smoother".</div></li>
+                                    <li class="flex items-start"><span class="bg-blue-100 text-blue-800 font-bold py-1 px-3 rounded-full mr-4">3</span><div><strong>User Behavior:</strong> Higher retention.</div></li>
+                                    <li class="flex items-start"><span class="bg-green-100 text-green-800 font-bold py-1 px-3 rounded-full mr-4">4</span><div><strong>Business Impact:</strong> Increased revenue.</div></li>
+                                </ol>
+                            </div>
+                            <div class="grid grid-cols-1 gap-6">
+                                <div class="bg-gray-100 p-6 rounded-xl text-center hover:bg-blue-50 transition-colors">
+                                    <div class="text-blue-600 font-extrabold text-3xl mb-2">Milliseconds = Millions</div>
+                                    <div class="text-gray-600">Walmart found every 1s improvement = +2% conversion.</div>
+                                </div>
+                                <div class="bg-gray-100 p-6 rounded-xl text-center hover:bg-blue-50 transition-colors">
+                                    <div class="text-blue-600 font-extrabold text-3xl mb-2">SEO Ranking</div>
+                                    <div class="text-gray-600">Core Web Vitals are a direct Google ranking factor.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 3 -->
+                <div class="slide hidden p-8 md:p-16 flex flex-col h-full">
+                    <h2 class="text-4xl md:text-5xl font-bold text-blue-700 mb-12">What is "High-Performance"?</h2>
+                    <div class="slide-content flex-1">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 h-full max-h-[60vh]">
+                            <div class="bg-gradient-to-b from-blue-50 to-white p-8 rounded-2xl shadow-sm border border-blue-100 flex flex-col">
+                                <div class="text-6xl mb-6">🚀</div>
+                                <h3 class="text-3xl font-bold mb-4 text-blue-900">1. Fast Loading</h3>
+                                <p class="text-xl mb-4 flex-1">Minimize perceived waiting time.</p>
+                                <p class="text-gray-500 font-semibold uppercase tracking-wider text-sm">Foundation of Retention</p>
+                            </div>
+                            <div class="bg-gradient-to-b from-purple-50 to-white p-8 rounded-2xl shadow-sm border border-purple-100 flex flex-col">
+                                <div class="text-6xl mb-6">🌊</div>
+                                <h3 class="text-3xl font-bold mb-4 text-purple-900">2. Smooth &amp; Stable</h3>
+                                <p class="text-xl mb-4 flex-1">Fluid interactions, no "jank" or layout shifts.</p>
+                                <p class="text-gray-500 font-semibold uppercase tracking-wider text-sm">Prevents Frustration</p>
+                            </div>
+                            <div class="bg-gradient-to-b from-green-50 to-white p-8 rounded-2xl shadow-sm border border-green-100 flex flex-col">
+                                <div class="text-6xl mb-6">👆</div>
+                                <h3 class="text-3xl font-bold mb-4 text-green-900">3. Responsive</h3>
+                                <p class="text-xl mb-4 flex-1">Immediate feedback to user input.</p>
+                                <p class="text-gray-500 font-semibold uppercase tracking-wider text-sm">Feels "Alive"</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 4 -->
+                <div class="slide hidden p-8 md:p-16 flex flex-col h-full">
+                    <h2 class="text-4xl md:text-5xl font-bold text-blue-700 mb-12">The Critical Rendering Path (CRP)</h2>
+                    <div class="slide-content flex-1 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                        <div>
+                             <p class="text-3xl mb-8 font-light text-gray-600">How browsers turn code into pixels:</p>
+                             <ol class="space-y-6 text-2xl">
+                                 <li class="flex items-center p-4 bg-blue-50 rounded-lg"><span class="text-4xl mr-4">📄</span> <div><strong class="text-blue-700">DOM Tree</strong> (HTML)</div></li>
+                                 <li class="flex items-center p-4 bg-blue-50 rounded-lg"><span class="text-4xl mr-4">🎨</span> <div><strong class="text-blue-700">CSSOM Tree</strong> (CSS)</div></li>
+                                 <li class="flex items-center p-4 bg-purple-50 rounded-lg"><span class="text-4xl mr-4">🌳</span> <div><strong class="text-purple-700">Render Tree</strong> (Visible only)</div></li>
+                                 <li class="flex items-center p-4 bg-purple-50 rounded-lg"><span class="text-4xl mr-4">📐</span> <div><strong class="text-purple-700">Layout</strong> (Geometry/Reflow)</div></li>
+                                 <li class="flex items-center p-4 bg-green-50 rounded-lg"><span class="text-4xl mr-4">🖌️</span> <div><strong class="text-green-700">Paint &amp; Composite</strong> (Pixels)</div></li>
+                             </ol>
+                        </div>
+                        <div class="flex flex-col justify-center items-center bg-gray-900 text-white p-12 rounded-3xl text-center shadow-2xl rotate-2 hover:rotate-0 transition-transform duration-500">
+                            <div class="text-6xl mb-6">🎯</div>
+                            <h3 class="text-3xl font-bold mb-4">Optimization Goal</h3>
+                            <p class="text-xl opacity-90">Speed up every single step of this process to reduce time-to-first-frame.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 5 -->
+                <div class="slide hidden p-8 md:p-16 flex flex-col h-full bg-gray-50">
+                     <h2 class="text-4xl md:text-5xl font-bold text-blue-700 mb-8">DEMO: The Rendering Pipeline</h2>
+                     <div class="slide-content flex flex-col items-center justify-center flex-1">
+                        <div class="bg-white p-12 rounded-3xl shadow-xl text-center max-w-4xl">
+                            <div class="text-9xl mb-8 animate-bounce">🛠️</div>
+                            <h3 class="text-4xl font-bold mb-8">Interactive Demo Time</h3>
+                            <div class="text-left text-2xl space-y-6 bg-gray-100 p-8 rounded-2xl">
+                                <p>Let's open <strong>Chrome DevTools</strong> → <strong>Performance Tab</strong>.</p>
+                                <p>We will record a page load and identify:</p>
+                                <ul class="ml-8 space-y-3">
+                                    <li class="flex items-center"><span class="w-4 h-4 bg-blue-500 rounded-full mr-3"></span> "Parse HTML" (Building DOM)</li>
+                                    <li class="flex items-center"><span class="w-4 h-4 bg-purple-500 rounded-full mr-3"></span> "Layout" (Calculating geometry)</li>
+                                    <li class="flex items-center"><span class="w-4 h-4 bg-green-500 rounded-full mr-3"></span> "Paint" (Drawing pixels)</li>
+                                </ul>
+                            </div>
+                        </div>
+                     </div>
+                </div>
+
+                <!-- Slide 6 -->
+                <div class="slide hidden p-8 md:p-16 flex flex-col h-full">
+                    <h2 class="text-4xl md:text-5xl font-bold text-red-600 mb-12">Critical Performance Bottlenecks</h2>
+                    <div class="slide-content flex-1 space-y-12">
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                            <div>
+                                <h3 class="text-3xl font-bold mb-6 flex items-center"><span class="text-red-600 mr-3">1.</span> Parser-Blocking JS</h3>
+                                <p class="text-xl mb-6 text-gray-600">By default, <code>&lt;script&gt;</code> stops HTML parsing entirely until it downloads &amp; executes.</p>
+                                <!-- Improved Code Block -->
+                                <pre class="code-block"><div class="code-header"><div class="window-dots"><div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div></div></div><div class="code-body"><code>&lt;!-- The "Stop the World" Problem --&gt;
+&lt;script src="app.js"&gt;&lt;/script&gt;         <span class="token-comment">&lt;!-- ❌ BLOCKS PARSING --&gt;</span>
+&lt;script src="app.js" <span class="token-keyword">defer</span>&gt;&lt;/script&gt;   <span class="token-comment">&lt;!-- ✅ FIXES IT --&gt;</span></code></div></pre>
+                            </div>
+                            <div>
+                                <h3 class="text-3xl font-bold mb-6 flex items-center"><span class="text-red-600 mr-3">2.</span> Render-Blocking CSS</h3>
+                                <p class="text-xl mb-6 text-gray-600">Browser won't paint a single pixel until ALL CSS is downloaded and parsed.</p>
+                                 <pre class="code-block"><div class="code-header"><div class="window-dots"><div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div></div></div><div class="code-body"><code>&lt;head&gt;
+  <span class="token-comment">&lt;!-- Browser waits for this before showing ANYTHING --&gt;</span>
+  &lt;link rel="stylesheet" href="styles.css"&gt;
+&lt;/head&gt;</code></div></pre>
+                            </div>
+                        </div>
+                        <div class="bg-red-50 p-8 rounded-2xl border-l-8 border-red-500 text-xl shadow-sm">
+                            <strong class="text-red-800 text-2xl block mb-2">⚠️ The Compound Effect</strong>
+                            CSS blocks rendering. CSS *also* blocks JS execution. JS blocks HTML parsing. It's a traffic jam.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 7 -->
+                <div class="slide hidden p-8 md:p-16 flex flex-col h-full">
+                    <h2 class="text-4xl md:text-5xl font-bold text-blue-700 mb-12">Core Web Vitals Overview</h2>
+                    <div class="slide-content flex-1 flex flex-col justify-center">
+                        <p class="text-3xl mb-12 text-center max-w-4xl mx-auto text-gray-700">Google's user-centric metrics. These are a direct SEO ranking factor.</p>
+                        <div class="overflow-hidden rounded-2xl shadow-lg">
+                            <table class="min-w-full text-left text-xl md:text-2xl">
+                                <thead class="bg-gray-800 text-gray-100">
+                                    <tr>
+                                        <th class="p-6">Metric</th>
+                                        <th class="p-6">Measures</th>
+                                        <th class="p-6">"Good" Threshold</th>
+                                        <th class="p-6 hidden md:table-cell">User's Question</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-200 bg-white">
+                                    <tr class="bg-blue-50">
+                                        <td class="p-6 font-bold text-blue-800">LCP <span class="text-sm opacity-60 font-normal block">(Largest Contentful Paint)</span></td>
+                                        <td class="p-6">Loading Speed</td>
+                                        <td class="p-6 font-mono font-bold text-blue-700">≤ 2.5s</td>
+                                        <td class="p-6 italic text-gray-600 hidden md:table-cell">"Is this useful?"</td>
+                                    </tr>
+                                    <tr class="bg-green-50">
+                                        <td class="p-6 font-bold text-green-800">INP <span class="text-sm opacity-60 font-normal block">(Interaction to Next Paint)</span></td>
+                                        <td class="p-6">Responsiveness</td>
+                                        <td class="p-6 font-mono font-bold text-green-700">≤ 200ms</td>
+                                        <td class="p-6 italic text-gray-600 hidden md:table-cell">"Does it work?"</td>
+                                    </tr>
+                                    <tr class="bg-purple-50">
+                                        <td class="p-6 font-bold text-purple-800">CLS <span class="text-sm opacity-60 font-normal block">(Cumulative Layout Shift)</span></td>
+                                        <td class="p-6">Visual Stability</td>
+                                        <td class="p-6 font-mono font-bold text-purple-700">≤ 0.1</td>
+                                        <td class="p-6 italic text-gray-600 hidden md:table-cell">"Is it stable?"</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 8 -->
+                <div class="slide hidden p-8 md:p-16 flex flex-col h-full">
+                    <h2 class="text-4xl md:text-5xl font-bold text-blue-700 mb-8">Deep Dive: LCP (Loading)</h2>
+                     <div class="slide-content grid grid-cols-1 md:grid-cols-2 gap-12 flex-1 items-center">
+                        <div class="space-y-8 text-xl">
+                            <div>
+                                <strong class="text-2xl block mb-2 text-blue-900">What it measures:</strong>
+                                <p class="text-gray-700">Time to render the single largest visible element (usually hero image or main heading).</p>
+                            </div>
+                             <div class="bg-gray-100 p-8 rounded-2xl">
+                                 <h4 class="font-bold mb-4 text-2xl">Common LCP Elements:</h4>
+                                 <ul class="list-disc ml-6 space-y-3 text-gray-700">
+                                     <li>Hero images (<code>&lt;img&gt;</code>)</li>
+                                     <li>Images inside <code>&lt;svg&gt;</code></li>
+                                     <li>Video posters (<code>&lt;video poster="..."&gt;</code>)</li>
+                                     <li>Background images (via CSS <code>url()</code>)</li>
+                                     <li>Block-level text nodes</li>
+                                 </ul>
+                             </div>
+                        </div>
+                        <div class="bg-blue-600 p-10 rounded-3xl text-white shadow-2xl text-xl flex flex-col justify-center h-full max-h-[60vh]">
+                            <h3 class="text-4xl font-bold mb-8 flex items-center">🚀 W Moves</h3>
+                            <ul class="space-y-6">
+                                <li class="flex items-center"><span class="text-3xl mr-4">✅</span> Preload the LCP image in <code>&lt;head&gt;</code>.</li>
+                                <li class="flex items-center"><span class="text-3xl mr-4">✅</span> Use AVIF or WebP formats.</li>
+                                <li class="flex items-center"><span class="text-3xl mr-4">✅</span> Defer non-critical JS/CSS.</li>
+                                <li class="flex items-center"><span class="text-3xl mr-4">✅</span> Use a CDN.</li>
+                            </ul>
+                        </div>
+                     </div>
+                </div>
+
+                 <!-- Slide 9 -->
+                <div class="slide hidden p-8 md:p-16 flex flex-col h-full">
+                    <h2 class="text-4xl md:text-5xl font-bold text-green-700 mb-8">Deep Dive: INP (Responsiveness)</h2>
+                    <div class="slide-content flex-1">
+                        <p class="text-3xl mb-12 max-w-4xl">Replaces First Input Delay (FID). It measures the <em class="text-green-700 font-bold">entire</em> interaction lifecycle, not just the start.</p>
+
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12">
+                            <div class="bg-gray-100 p-6 rounded-xl border-t-8 border-red-400">
+                                <h3 class="font-bold text-2xl mb-4">1. Input Delay</h3>
+                                <p class="text-gray-600">Waiting for the main thread to free up from other tasks.</p>
+                            </div>
+                            <div class="bg-gray-100 p-6 rounded-xl border-t-8 border-yellow-400">
+                                <h3 class="font-bold text-2xl mb-4">2. Processing Delay</h3>
+                                <p class="text-gray-600">Time spent running your actual JavaScript event handlers.</p>
+                            </div>
+                            <div class="bg-gray-100 p-6 rounded-xl border-t-8 border-green-400">
+                                <h3 class="font-bold text-2xl mb-4">3. Presentation Delay</h3>
+                                <p class="text-gray-600">Time for browser to calculate layout and paint the next frame.</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-green-50 p-8 rounded-2xl border-2 border-green-200 text-center">
+                            <p class="text-2xl text-green-900"><strong>Reality Check:</strong> A page can have a "Good" FID score but a "Poor" INP score if your event handlers are slow!</p>
+                        </div>
+                    </div>
+                </div>
+
+                 <!-- Slide 10 -->
+                 <div class="slide hidden p-8 md:p-16 flex flex-col h-full bg-gray-50">
+                    <h2 class="text-4xl md:text-5xl font-bold text-blue-700 mb-12">DEMO: Measuring Performance</h2>
+                    <div class="slide-content grid grid-cols-1 md:grid-cols-2 gap-12 flex-1 items-center">
+                        <div class="bg-white p-8 rounded-2xl shadow-md h-full">
+                             <h3 class="text-3xl font-bold mb-6 text-blue-900">1. Lab Data (DevTools)</h3>
+                             <p class="text-gray-600 mb-6 text-xl">Controlled environment, reproducible results.</p>
+                             <ul class="space-y-4 text-xl">
+                                 <li class="flex items-center"><span class="text-3xl mr-3">💡</span> <strong>Lighthouse:</strong> Overall audit score.</li>
+                                 <li class="flex items-center"><span class="text-3xl mr-3">⏱️</span> <strong>Performance Tab:</strong> The source of truth for debugging INP/LCP.</li>
+                             </ul>
+                        </div>
+                        <div class="bg-white p-8 rounded-2xl shadow-md h-full flex flex-col">
+                            <div>
+                                <h3 class="text-3xl font-bold mb-6 text-green-900">2. Field Data (RUM)</h3>
+                                <p class="text-gray-600 mb-6 text-xl">Real users, real devices, real networks.</p>
+                                <ul class="space-y-4 text-xl">
+                                    <li class="flex items-center"><span class="text-3xl mr-3">🌍</span> <strong>Chrome UX Report (CrUX):</strong> Data from real Chrome users.</li>
+                                    <li class="flex items-center"><span class="text-3xl mr-3">🔌</span> <strong>Web Vitals Extension:</strong> See field data while you browse.</li>
+                                </ul>
+                            </div>
+                            <div class="mt-auto pt-8">
+                                <div class="bg-yellow-100 text-yellow-900 p-4 rounded-lg text-center font-bold text-xl">
+                                    Field Data is the only data that actually counts for Google Ranking.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+               </div>
+
+               <!-- Slide 11 -->
+               <div class="slide hidden p-8 md:p-16 flex flex-col h-full">
+                    <h2 class="text-4xl md:text-5xl font-bold text-purple-700 mb-8">Deep Dive: CLS (Stability)</h2>
+                    <div class="slide-content grid grid-cols-1 lg:grid-cols-2 gap-12 flex-1 items-center">
+                        <div class="space-y-8 text-xl">
+                            <p class="text-3xl font-light text-gray-700">The "jumping page" problem. Frustrating users by moving buttons under their fingers.</p>
+                            <div class="bg-purple-50 p-8 rounded-2xl">
+                                <h3 class="font-bold text-2xl mb-4 text-purple-900">Common Culprits:</h3>
+                                <ul class="list-disc ml-6 space-y-3 text-gray-700">
+                                    <li>Images/Videos without <code>width</code> &amp; <code>height</code>.</li>
+                                    <li>Ads/Iframes injecting dynamically.</li>
+                                    <li>Web fonts swapping (FOUT/FOIT).</li>
+                                    <li>Banners animating in at the top.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-bold mb-6 text-center">The #1 Fix: Reserve Space</h3>
+                            <pre class="code-block"><div class="code-header"><div class="window-dots"><div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div></div></div><div class="code-body"><code><span class="token-comment">&lt;!-- ❌ BAD: Browser doesn't know the size until download starts --&gt;</span>
+&lt;img src="hero.jpg" alt="Hero"&gt;
+
+<span class="token-comment">&lt;!-- ✅ GOOD: Browser reserves 800x600px immediately --&gt;</span>
+&lt;img src="hero.jpg" alt="Hero" <span class="token-keyword">width</span>="800" <span class="token-keyword">height</span>="600"&gt;</code></div></pre>
+                            <p class="text-center mt-6 text-gray-600 text-lg">Modern CSS (<code>aspect-ratio</code>) also helps immensely here.</p>
+                        </div>
+                    </div>
+               </div>
+
+               <!-- Slide 12 -->
+               <div class="slide hidden p-8 md:p-16 flex flex-col h-full">
+                    <h2 class="text-4xl md:text-5xl font-bold text-blue-700 mb-12">Optimizing JS: async vs. defer</h2>
+                    <div class="slide-content flex-1 space-y-12">
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 text-center">
+                             <div class="bg-red-50 p-6 rounded-xl border-t-4 border-red-500">
+                                 <code class="text-xl font-bold block mb-4">&lt;script&gt;</code>
+                                 <p class="text-red-700 font-bold">BLOCKS PARSING</p>
+                                 <p class="text-sm text-gray-600 mt-2">Stops everything to download &amp; run.</p>
+                             </div>
+                             <div class="bg-yellow-50 p-6 rounded-xl border-t-4 border-yellow-500">
+                                <code class="text-xl font-bold block mb-4">&lt;script async&gt;</code>
+                                <p class="text-yellow-800 font-bold">PARALLEL DOWNLOAD</p>
+                                <p class="text-sm text-gray-600 mt-2">Runs as soon as it finishes. Order NOT guaranteed.</p>
+                            </div>
+                            <div class="bg-green-50 p-6 rounded-xl border-t-4 border-green-500 shadow-md transform scale-105">
+                                <code class="text-xl font-bold block mb-4">&lt;script defer&gt;</code>
+                                <p class="text-green-700 font-bold">PARALLEL + ORDERED</p>
+                                <p class="text-sm text-gray-600 mt-2">Runs after HTML parses. Respects order.</p>
+                            </div>
+                        </div>
+
+                        <div class="overflow-hidden rounded-xl shadow-lg mt-8">
+                            <table class="min-w-full text-left text-xl">
+                                <thead class="bg-gray-800 text-white">
+                                    <tr>
+                                        <th class="p-5">Attribute</th>
+                                        <th class="p-5">Execution Time</th>
+                                        <th class="p-5">Use Case</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y bg-white">
+                                    <tr>
+                                        <td class="p-5 font-mono">async</td>
+                                        <td class="p-5">Whenever it finishes downloading.</td>
+                                        <td class="p-5">Independent scripts (Analytics, Ads).</td>
+                                    </tr>
+                                    <tr class="bg-blue-50">
+                                        <td class="p-5 font-mono font-bold text-blue-800">defer</td>
+                                        <td class="p-5">After HTML parsing is complete.</td>
+                                        <td class="p-5 font-bold text-blue-900">Everything else (App logic).</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+               </div>
+
+               <!-- Slide 13 -->
+               <div class="slide hidden p-8 md:p-16 flex flex-col h-full">
+                   <h2 class="text-4xl md:text-5xl font-bold text-blue-700 mb-12">Optimizing JS: Ship Less Code</h2>
+                   <div class="slide-content flex-1 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                       <div class="space-y-8 text-xl">
+                           <p class="text-3xl font-light leading-relaxed">The fastest JavaScript is the JavaScript that is never downloaded.</p>
+                           <div class="bg-gray-100 p-8 rounded-2xl space-y-6">
+                               <h3 class="font-bold text-2xl text-gray-800">Key Techniques:</h3>
+                               <ul class="space-y-4">
+                                   <li class="flex items-start"><span class="text-2xl mr-3">✂️</span> <div><strong>Code Splitting:</strong> Break app into smaller chunks loaded on demand.</div></li>
+                                   <li class="flex items-start"><span class="text-2xl mr-3">🌳</span> <div><strong>Tree Shaking:</strong> Build tools remove unused exports.</div></li>
+                                   <li class="flex items-start"><span class="text-2xl mr-3">📦</span> <div><strong>Minification:</strong> Remove whitespace, shorten names.</div></li>
+                               </ul>
+                           </div>
+                       </div>
+                       <div>
+                           <h3 class="text-2xl font-bold mb-6">Dynamic Imports (Code Splitting)</h3>
+                           <pre class="code-block"><div class="code-header"><div class="window-dots"><div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div></div></div><div class="code-body"><code><span class="token-comment">// INSTEAD OF STATIC IMPORT:</span>
+<span class="token-comment">// import Chart from './BigChartLibrary.js';</span>
+
+<span class="token-keyword">button</span>.addEventListener(<span class="token-string">'click'</span>, <span class="token-keyword">async</span> () =&gt; {
+  <span class="token-comment">// Load it ONLY when user clicks</span>
+  <span class="token-keyword">const</span> module = <span class="token-keyword">await</span> <span class="token-function">import</span>(<span class="token-string">'./BigChartLibrary.js'</span>);
+  <span class="token-keyword">const</span> Chart = module.default;
+  <span class="token-function">renderChart</span>();
+});</code></div></pre>
+                       </div>
+                   </div>
+               </div>
+
+               <!-- Slide 14 -->
+               <div class="slide hidden p-8 md:p-16 flex flex-col h-full bg-gray-50">
+                   <h2 class="text-4xl md:text-5xl font-bold text-blue-700 mb-8">DEMO: Bundle Analysis</h2>
+                   <div class="slide-content flex flex-col items-center justify-center flex-1 text-center">
+                        <div class="text-9xl mb-8 animate-pulse">📊</div>
+                        <h3 class="text-4xl font-bold mb-8">Tool: <code>webpack-bundle-analyzer</code></h3>
+                        <div class="text-2xl space-y-8 max-w-4xl text-left mx-auto bg-white p-12 rounded-3xl shadow-xl">
+                            <p class="text-gray-500 uppercase tracking-widest font-bold text-sm mb-4">What to hunt for:</p>
+                            <ul class="space-y-6">
+                                <li class="flex items-center"><span class="text-4xl mr-6">🐘</span> <div><strong>The Elephants:</strong> Is a single library (like <code>lodash</code> or <code>moment.js</code>) taking up 50% of your bundle?</div></li>
+                                <li class="flex items-center"><span class="text-4xl mr-6">👯</span> <div><strong>The Twins:</strong> Do you accidentally have <code>lodash</code> AND <code>lodash-es</code>?</div></li>
+                                <li class="flex items-center"><span class="text-4xl mr-6">👻</span> <div><strong>The Ghosts:</strong> Old code from features you deleted last year.</div></li>
+                            </ul>
+                        </div>
+                   </div>
+               </div>
+
+               <!-- Slide 15 -->
+               <div class="slide hidden p-8 md:p-16 flex flex-col h-full">
+                   <h2 class="text-4xl md:text-5xl font-bold text-blue-700 mb-12">Critical CSS Strategy</h2>
+                   <div class="slide-content flex-1 space-y-8 text-xl">
+                       <div class="bg-blue-50 p-8 rounded-2xl border-l-8 border-blue-500">
+                           <strong class="text-2xl block mb-4 text-blue-900">The Goal</strong>
+                           Render the visible "above-the-fold" content without waiting for the main stylesheet to download.
+                       </div>
+                       <ol class="list-decimal ml-8 space-y-4 text-2xl text-gray-700 mb-8">
+                           <li>Extract minimum CSS for visible viewport.</li>
+                           <li>Inline it directly in <code>&lt;head&gt;</code>.</li>
+                           <li>Load the rest of the CSS asynchronously.</li>
+                       </ol>
+                       <pre class="code-block"><div class="code-header"><div class="window-dots"><div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div></div></div><div class="code-body"><code>&lt;head&gt;
+  &lt;style&gt;
+    <span class="token-comment">/* Critical CSS inlined here for instant render */</span>
+    header { background: blue; height: 60px; }
+    .hero-text { font-size: 3rem; font-weight: bold; }
+  &lt;/style&gt;
+
+  <span class="token-comment">&lt;!-- Load full CSS without blocking render --&gt;</span>
+  &lt;link rel="stylesheet" href="full.css" media="print" onload="this.media='all'"&gt;
+&lt;/head&gt;</code></div></pre>
+                   </div>
+               </div>
+
+               <!-- Slide 16 -->
+               <div class="slide hidden p-8 md:p-16 flex flex-col h-full">
+                   <h2 class="text-4xl md:text-5xl font-bold text-blue-700 mb-12">Optimizing CSS: Selector Performance</h2>
+                   <div class="slide-content flex-1 space-y-12">
+                       <p class="text-3xl text-center max-w-4xl mx-auto"><strong>Key Concept:</strong> Browsers match CSS selectors from <span class="text-blue-600 font-bold underline">RIGHT TO LEFT</span>.</p>
+
+                       <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                           <div class="bg-red-50 p-8 rounded-3xl border-t-8 border-red-500 shadow-sm">
+                               <h4 class="text-3xl font-bold text-red-700 mb-6">🐢 SLOW</h4>
+                               <pre class="code-block mb-6"><div class="code-body"><code>nav .menu .item a { ... }</code></div></pre>
+                               <p class="text-xl text-gray-700">Browser finds <strong>EVERY</strong> <code>&lt;a&gt;</code> tag on the page first, then checks if it's inside <code>.item</code>, then <code>.menu</code>, etc.</p>
+                           </div>
+                           <div class="bg-green-50 p-8 rounded-3xl border-t-8 border-green-500 shadow-sm">
+                               <h4 class="text-3xl font-bold text-green-700 mb-6">🐇 FAST</h4>
+                               <pre class="code-block mb-6"><div class="code-body"><code>.nav-link { ... }</code></div></pre>
+                               <p class="text-xl text-gray-700">Browser finds elements with this specific class immediately. No walking up the DOM tree.</p>
+                           </div>
+                       </div>
+                       <p class="text-center text-2xl font-semibold text-gray-600">Use flat, simple, class-based selectors (like BEM or Tailwind).</p>
+                   </div>
+               </div>
+
+               <!-- Slide 17 -->
+               <div class="slide hidden p-8 md:p-16 flex flex-col h-full">
+                    <h2 class="text-4xl md:text-5xl font-bold text-blue-700 mb-12">CSS Architecture Showdown</h2>
+                    <div class="slide-content grid grid-cols-1 md:grid-cols-2 gap-12 flex-1 items-stretch">
+                        <div class="bg-red-50 p-10 rounded-3xl border-2 border-red-200 flex flex-col">
+                            <h3 class="text-3xl font-bold mb-6 text-red-800">Runtime CSS-in-JS</h3>
+                            <p class="mb-6 text-gray-600 font-semibold">(e.g., Styled Components, Emotion)</p>
+                            <ul class="list-disc ml-6 space-y-4 text-xl flex-1">
+                                <li>JavaScript must parse and inject styles on the client.</li>
+                                <li><strong>High Cost:</strong> Increases JS bundle size and blocks main thread during rendering.</li>
+                                <li>Negatively impacts INP scores.</li>
+                            </ul>
+                            <div class="mt-8 text-red-700 font-bold text-2xl text-center">⚠️ Performance Penalty</div>
+                        </div>
+                        <div class="bg-green-50 p-10 rounded-3xl border-2 border-green-200 flex flex-col shadow-lg transform md:-translate-y-4">
+                            <h3 class="text-3xl font-bold mb-6 text-green-800">Build-Time CSS</h3>
+                            <p class="mb-6 text-gray-600 font-semibold">(e.g., Tailwind CSS, vanilla-extract, CSS Modules)</p>
+                            <ul class="list-disc ml-6 space-y-4 text-xl flex-1">
+                                <li>CSS is generated into static <code>.css</code> files during build.</li>
+                                <li><strong>Zero Cost:</strong> No JS runtime overhead in the browser.</li>
+                                <li>Browser handles it natively and fast.</li>
+                            </ul>
+                            <div class="mt-8 text-green-700 font-bold text-2xl text-center">🏆 Performance Winner</div>
+                        </div>
+                    </div>
+               </div>
+
+               <!-- Slide 18 -->
+               <div class="slide hidden p-8 md:p-16 flex flex-col h-full">
+                   <h2 class="text-4xl md:text-5xl font-bold text-blue-700 mb-12">Optimizing Assets: Modern Formats</h2>
+                   <div class="slide-content flex-1 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                       <div class="space-y-8">
+                            <p class="text-3xl font-bold text-gray-800">Stop using default JPEG/PNG for everything.</p>
+                            <div class="overflow-hidden rounded-2xl shadow-md">
+                                <table class="min-w-full text-xl text-left">
+                                    <thead class="bg-gray-800 text-gray-100">
+                                        <tr><th class="p-5">Format</th><th class="p-5">Size (Example)</th><th class="p-5">Reduction</th></tr>
+                                    </thead>
+                                    <tbody class="divide-y bg-white">
+                                        <tr><td class="p-5 font-semibold">JPEG</td><td class="p-5">100 KB</td><td class="p-5 text-gray-500">Baseline</td></tr>
+                                        <tr><td class="p-5 font-semibold">WebP</td><td class="p-5">70 KB</td><td class="p-5 text-green-600 font-bold">-30%</td></tr>
+                                        <tr class="bg-green-50"><td class="p-5 font-bold text-green-900">AVIF</td><td class="p-5 font-bold">40 KB</td><td class="p-5 text-green-700 font-extrabold">-60% 🔥</td></tr>
+                                    </tbody>
+                                </table>
+                           </div>
+                       </div>
+                       <div>
+                           <h3 class="text-2xl font-bold mb-6">The "Perfect" Image Tag</h3>
+                           <p class="text-lg text-gray-600 mb-4">Use <code>&lt;picture&gt;</code> to let the browser choose the best format it supports.</p>
+                           <pre class="code-block"><div class="code-header"><div class="window-dots"><div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div></div></div><div class="code-body"><code>&lt;picture&gt;
+  <span class="token-comment">&lt;!-- Best format first --&gt;</span>
+  &lt;source srcset="hero.avif" type="image/avif"&gt;
+  <span class="token-comment">&lt;!-- Good fallback --&gt;</span>
+  &lt;source srcset="hero.webp" type="image/webp"&gt;
+  <span class="token-comment">&lt;!-- Universal fallback for ancient browsers --&gt;</span>
+  &lt;img src="hero.jpg" alt="Description" width="800" height="600"&gt;
+&lt;/picture&gt;</code></div></pre>
+                       </div>
+                   </div>
+               </div>
+
+               <!-- Slide 19 -->
+               <div class="slide hidden p-8 md:p-16 flex flex-col h-full">
+                   <h2 class="text-4xl md:text-5xl font-bold text-blue-700 mb-12">Optimizing Assets: Responsive Images</h2>
+                   <div class="slide-content space-y-12 flex-1">
+                       <p class="text-3xl text-center text-gray-700">Don't send a 4K desktop image to a mobile phone.</p>
+
+                       <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                           <div class="bg-blue-50 p-8 rounded-3xl">
+                               <h3 class="text-2xl font-bold text-blue-800 mb-4">1. Resolution Switching (srcset)</h3>
+                               <p class="mb-6 text-lg text-gray-700">You give options, browser chooses based on screen density and current width.</p>
+                               <pre class="code-block"><div class="code-body"><code>&lt;img src="medium.jpg"
+     srcset="small.jpg 480w,
+             medium.jpg 800w,
+             large.jpg 1200w"
+     sizes="(max-width: 600px) 100vw, 800px"
+     alt="Responsive image"&gt;</code></div></pre>
+                           </div>
+
+                           <div class="bg-purple-50 p-8 rounded-3xl">
+                               <h3 class="text-2xl font-bold text-purple-800 mb-4">2. Art Direction (&lt;picture&gt;)</h3>
+                                <p class="mb-6 text-lg text-gray-700">You force a different image crop for different screens (e.g., wide banner vs square mobile).</p>
+                                <pre class="code-block"><div class="code-body"><code>&lt;picture&gt;
+   &lt;source media="(min-width: 1024px)" srcset="wide-banner.jpg"&gt;
+   &lt;source media="(max-width: 1023px)" srcset="square-mobile.jpg"&gt;
+   &lt;img src="wide-banner.jpg" alt="..."&gt;
+&lt;/picture&gt;</code></div></pre>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+
+               <!-- Slide 20 -->
+               <div class="slide hidden p-8 md:p-16 flex flex-col h-full">
+                   <h2 class="text-4xl md:text-5xl font-bold text-red-600 mb-12">The Lazy Loading Anti-Pattern</h2>
+                   <div class="slide-content flex-1 space-y-12">
+                       <div class="bg-red-100 p-8 rounded-3xl border-l-8 border-red-600 text-red-900 flex items-center shadow-sm">
+                           <span class="text-5xl mr-6">⚠️</span>
+                           <p class="text-3xl font-bold">NEVER lazy-load above-the-fold content!</p>
+                       </div>
+                       <p class="text-2xl text-gray-700">Lazy loading your hero image intentionally delays your LCP by seconds.</p>
+
+                       <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                           <div class="opacity-75">
+                               <h3 class="font-bold text-red-700 text-2xl mb-4">❌ BAD (For LCP Images)</h3>
+                               <pre class="code-block"><div class="code-body"><code>&lt;img src="hero.jpg" loading="lazy"&gt;</code></div></pre>
+                               <p class="text-sm mt-4 text-red-700 font-semibold">Result: Browser waits until layout is finished to even START downloading this.</p>
+                           </div>
+                           <div class="transform scale-105">
+                               <h3 class="font-bold text-green-700 text-2xl mb-4">✅ GOOD (For LCP Images)</h3>
+                               <pre class="code-block"><div class="code-body"><code>&lt;img src="hero.jpg"
+     loading="eager"
+     fetchpriority="high"&gt;</code></div></pre>
+                               <p class="text-sm mt-4 text-green-700 font-semibold">Result: Browser downloads this immediately, often before standard CSS.</p>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+
+               <!-- Slide 21 -->
+               <div class="slide hidden p-8 md:p-16 flex flex-col h-full">
+                   <h2 class="text-4xl md:text-5xl font-bold text-blue-700 mb-12">Web Font Optimization</h2>
+                   <div class="slide-content flex-1 flex flex-col justify-center">
+                       <div class="bg-white p-10 rounded-3xl shadow-lg border border-gray-100">
+                           <h3 class="text-3xl font-bold mb-8 text-gray-800">The Modern Font Stack Strategy:</h3>
+                           <ol class="space-y-6 text-2xl">
+                               <li class="flex items-center"><span class="bg-blue-100 text-blue-800 w-10 h-10 flex items-center justify-center rounded-full font-bold text-lg mr-4">1</span> <strong>Format:</strong> Use WOFF2 only. It's all you need now.</li>
+                               <li class="flex items-center"><span class="bg-blue-100 text-blue-800 w-10 h-10 flex items-center justify-center rounded-full font-bold text-lg mr-4">2</span> <strong>Self-Host:</strong> Eliminate the extra DNS lookup/TLS handshake to Google Fonts.</li>
+                               <li class="flex items-center"><span class="bg-blue-100 text-blue-800 w-10 h-10 flex items-center justify-center rounded-full font-bold text-lg mr-4">3</span> <strong>Preload:</strong> Tell browser about critical fonts early.</li>
+                               <li class="flex items-center"><span class="bg-blue-100 text-blue-800 w-10 h-10 flex items-center justify-center rounded-full font-bold text-lg mr-4">4</span> <strong>Subset:</strong> Don't ship Cyrillic characters if you only need Latin.</li>
+                           </ol>
+                       </div>
+                   </div>
+               </div>
+
+               <!-- Slide 22 -->
+               <div class="slide hidden p-8 md:p-16 flex flex-col h-full">
+                   <h2 class="text-4xl md:text-5xl font-bold text-purple-700 mb-12">Fixing Font-Based CLS</h2>
+                   <div class="slide-content flex-1 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                       <div class="text-xl space-y-6">
+                           <p><strong>The Problem:</strong> Custom font takes 1s to load. Fallback font (Arial) is narrower. When custom font loads, text gets wider and pushes everything down. <strong>JUMP!</strong> (CLS Penalty)</p>
+                           <p><strong>The Solution:</strong> <code>size-adjust</code> CSS descriptor. We can mathematically stretch Arial to take up the exact same space as our custom font while we wait.</p>
+                       </div>
+                       <div>
+                           <pre class="code-block"><div class="code-header"><div class="window-dots"><div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div></div></div><div class="code-body"><code><span class="token-comment">/* 1. The font we WANT */</span>
+@font-face {
+  font-family: 'Poppins';
+  src: url('poppins.woff2');
+}
+
+<span class="token-comment">/* 2. The adjusted fallback */</span>
+@font-face {
+  font-family: 'Poppins-Fallback';
+  src: local('Arial');
+  <span class="token-comment">/* Magic numbers from tools like 'fallback-font-generator' */</span>
+  ascent-override: 105%;
+  size-adjust: 102%;
+}
+
+<span class="token-comment">/* 3. Use the stack. Zero layout shift on swap! */</span>
+body {
+  font-family: 'Poppins', 'Poppins-Fallback', sans-serif;
+}</code></div></pre>
+                       </div>
+                   </div>
+               </div>
+
+               <!-- Slide 23 -->
+               <div class="slide hidden p-8 md:p-16 flex flex-col h-full">
+                   <h2 class="text-4xl md:text-5xl font-bold text-blue-700 mb-12">Network: CDN Fundamentals</h2>
+                   <div class="slide-content flex-1 grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+                        <div class="flex flex-col items-center justify-center">
+                            <div class="text-9xl mb-8 animate-pulse">🌍</div>
+                            <p class="text-2xl font-light text-gray-600 text-center">Latency is largely governed by the speed of light. We can't change physics, so we must reduce distance.</p>
+                        </div>
+                        <div class="space-y-8 text-xl bg-gray-50 p-10 rounded-3xl shadow-inner">
+                            <h3 class="text-3xl font-bold mb-6 text-blue-900">Why CDN?</h3>
+                            <ul class="space-y-6">
+                                <li class="flex items-start"><span class="text-red-500 font-bold text-2xl mr-4">❌</span> <div><strong>Without CDN:</strong> User in London requests data from New York server. <br><span class="text-gray-500 text-base">~150ms round trip minimum.</span></div></li>
+                                <li class="flex items-start"><span class="text-green-500 font-bold text-2xl mr-4">✅</span> <div><strong>With CDN:</strong> User in London hits a cached edge node in London. <br><span class="text-gray-500 text-base">~10ms round trip.</span></div></li>
+                            </ul>
+                            <div class="bg-blue-100 text-blue-900 p-4 rounded-xl text-center font-bold mt-8">
+                                The easiest + biggest global performance win.
+                            </div>
+                        </div>
+                   </div>
+               </div>
+
+               <!-- Slide 24 -->
+               <div class="slide hidden p-8 md:p-16 flex flex-col h-full">
+                   <h2 class="text-4xl md:text-5xl font-bold text-blue-700 mb-12">Network: HTTP Evolution</h2>
+                   <div class="slide-content flex-1 grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
+                       <div class="bg-gray-100 p-8 rounded-3xl flex flex-col opacity-70">
+                           <h3 class="font-bold text-3xl mb-4 text-gray-700">HTTP/1.1</h3>
+                           <p class="text-xl mb-6 flex-1">Like a single checkout lane at a grocery store. One item at a time.</p>
+                           <div class="bg-red-200 text-red-900 px-4 py-2 rounded-full text-sm font-bold self-start">Head-of-line Blocking</div>
+                       </div>
+                       <div class="bg-blue-50 p-8 rounded-3xl flex flex-col border-t-8 border-blue-400">
+                           <h3 class="font-bold text-3xl mb-4 text-blue-900">HTTP/2</h3>
+                           <p class="text-xl mb-6 flex-1">Multiplexing! Many checkout lanes open at once over one connection.</p>
+                           <div class="bg-yellow-200 text-yellow-900 px-4 py-2 rounded-full text-sm font-bold self-start">Still TCP-blocked</div>
+                       </div>
+                       <div class="bg-green-50 p-8 rounded-3xl flex flex-col border-t-8 border-green-500 shadow-xl transform lg:-translate-y-4">
+                           <h3 class="font-bold text-3xl mb-4 text-green-900">HTTP/3 (QUIC)</h3>
+                           <p class="text-xl mb-6 flex-1">Runs on UDP. Dropped packets don't stop other streams. Massive win for unstable mobile networks.</p>
+                           <div class="bg-green-200 text-green-900 px-4 py-2 rounded-full text-sm font-bold self-start">Truly Independent Streams</div>
+                       </div>
+                   </div>
+               </div>
+
+               <!-- Slide 25 -->
+               <div class="slide hidden p-8 md:p-16 flex flex-col h-full">
+                   <h2 class="text-4xl md:text-5xl font-bold text-blue-700 mb-12">Network: Caching Strategies</h2>
+                   <div class="slide-content flex-1 space-y-12 text-xl">
+                       <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                           <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-200">
+                               <h3 class="text-2xl font-bold mb-4 text-blue-900">Strategy 1: Immutable (Best)</h3>
+                               <p class="mb-4 text-gray-600">For files with hashes in filenames (e.g., <code>main.a8f3.js</code>). They never change.</p>
+                               <pre class="code-block"><div class="code-body"><code>Cache-Control: max-age=31536000, immutable</code></div></pre>
+                               <p class="mt-4 text-green-700 font-semibold">Result: Browser never asks server again for 1 year.</p>
+                           </div>
+                           <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-200">
+                               <h3 class="text-2xl font-bold mb-4 text-blue-900">Strategy 2: Revalidation</h3>
+                               <p class="mb-4 text-gray-600">For <code>index.html</code>. We must check if it changed.</p>
+                               <pre class="code-block"><div class="code-body"><code>Cache-Control: no-cache
+ETag: "v12345"</code></div></pre>
+                               <p class="mt-4 text-blue-700 font-semibold">Result: Browser asks "Is v12345 still valid?". Server says "304 Yes" (tiny response).</p>
+                           </div>
+                       </div>
+                       <div class="text-center bg-yellow-50 p-6 rounded-xl text-yellow-900">
+                           <strong>Crucial:</strong> <code>no-cache</code> means "check with server before using". <code>no-store</code> means "never save this".
+                       </div>
+                   </div>
+               </div>
+
+               <!-- Slide 26 -->
+               <div class="slide hidden p-8 md:p-16 flex flex-col h-full">
+                   <h2 class="text-4xl md:text-5xl font-bold text-blue-700 mb-12">Network: Resource Hints</h2>
+                   <div class="slide-content flex-1 space-y-8">
+                       <p class="text-2xl max-w-3xl">Resource hints tell the browser about things it will need soon, before it discovers them naturally in the HTML.</p>
+
+                       <pre class="code-block"><div class="code-body"><code>&lt;link rel="preload" as="image" href="hero.jpg"&gt;
+&lt;link rel="prefetch" href="/checkout.js"&gt;
+&lt;link rel="prerender" href="/next-page-url"&gt;</code></div></pre>
+
+                        <div class="overflow-hidden rounded-2xl shadow-lg mt-8">
+                            <table class="min-w-full text-xl text-left">
+                                <thead class="bg-gray-800 text-gray-100">
+                                    <tr><th class="p-6">Hint</th><th class="p-6">Priority</th><th class="p-6">Use Case</th></tr>
+                                </thead>
+                                <tbody class="divide-y bg-white">
+                                    <tr class="bg-red-50">
+                                        <td class="p-6 font-mono font-bold text-red-900">preload</td>
+                                        <td class="p-6 font-bold">HIGH (Current Page)</td>
+                                        <td class="p-6">Critical assets hidden deep in CSS, or the LCP image.</td>
+                                    </tr>
+                                    <tr class="bg-blue-50">
+                                        <td class="p-6 font-mono font-bold text-blue-900">prefetch</td>
+                                        <td class="p-6">LOW (Next Page)</td>
+                                        <td class="p-6">Assets for the <em>likely</em> next route (e.g., user is hovering a link).</td>
+                                    </tr>
+                                    <tr class="bg-green-50">
+                                        <td class="p-6 font-mono font-bold text-green-900">prerender</td>
+                                        <td class="p-6">LOW (Next Page)</td>
+                                        <td class="p-6">Load &amp; render entire next page in hidden tab. Extremely powerful, use with caution.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                   </div>
+               </div>
+
+               <!-- Slide 27 -->
+               <div class="slide hidden p-8 md:p-16 flex flex-col h-full">
+                   <h2 class="text-4xl md:text-5xl font-bold text-blue-700 mb-12">Architecture: The Rendering Spectrum</h2>
+                   <div class="slide-content flex-1 grid grid-cols-2 gap-8 text-xl items-stretch">
+                       <div class="bg-red-50 p-8 rounded-3xl flex flex-col">
+                           <h3 class="font-bold text-3xl mb-4 text-red-900">CSR (Client-Side)</h3>
+                           <p class="mb-4 flex-1 text-gray-700">Browser gets empty HTML, JS builds the whole app.</p>
+                           <div class="text-red-700 font-semibold">❌ Slow initial load (LCP). Bad for SEO.</div>
+                       </div>
+                       <div class="bg-blue-50 p-8 rounded-3xl flex flex-col">
+                           <h3 class="font-bold text-3xl mb-4 text-blue-900">SSR (Server-Side)</h3>
+                           <p class="mb-4 flex-1 text-gray-700">Server builds full HTML for every single request.</p>
+                           <div class="text-blue-700 font-semibold">✅ Fast LCP, Great SEO. ❌ Higher server load/latency.</div>
+                       </div>
+                       <div class="bg-green-50 p-8 rounded-3xl flex flex-col">
+                           <h3 class="font-bold text-3xl mb-4 text-green-900">SSG (Static)</h3>
+                           <p class="mb-4 flex-1 text-gray-700">HTML built once at deploy time. Served from CDN.</p>
+                           <div class="text-green-700 font-semibold">✅ Fastest possible. ❌ Data can get stale.</div>
+                       </div>
+                       <div class="bg-purple-50 p-8 rounded-3xl flex flex-col border-4 border-purple-300 shadow-md">
+                           <h3 class="font-bold text-3xl mb-4 text-purple-900">ISR (Incremental)</h3>
+                           <p class="mb-4 flex-1 text-gray-700">Static pages that regenerate in the background after a timeout.</p>
+                           <div class="text-purple-700 font-bold text-2xl">🏆 Best of both worlds.</div>
+                       </div>
+                   </div>
+               </div>
+
+               <!-- Slide 28 -->
+               <div class="slide hidden p-8 md:p-16 flex flex-col h-full">
+                   <h2 class="text-4xl md:text-5xl font-bold text-blue-700 mb-12">Architecture: Decision Matrix</h2>
+                   <div class="slide-content flex-1 flex flex-col justify-center">
+                       <div class="overflow-hidden rounded-2xl shadow-xl">
+                           <table class="min-w-full text-xl md:text-2xl text-left">
+                               <thead class="bg-gray-800 text-gray-100">
+                                   <tr><th class="p-6">Arch</th><th class="p-6">Performance (LCP)</th><th class="p-6">Data Freshness</th><th class="p-6">Best For...</th></tr>
+                               </thead>
+                               <tbody class="divide-y bg-white">
+                                   <tr><td class="font-bold p-6">CSR</td><td class="text-red-600 p-6 font-semibold">Poor</td><td class="p-6">Real-time</td><td class="p-6">Private Dashboards</td></tr>
+                                   <tr><td class="font-bold p-6">SSR</td><td class="text-green-600 p-6 font-semibold">Good</td><td class="p-6">Real-time</td><td class="p-6">User Profiles, Feeds</td></tr>
+                                   <tr><td class="font-bold p-6">SSG</td><td class="text-green-600 p-6 font-extrabold">Best 🔥</td><td class="text-red-600 p-6">Stale</td><td class="p-6">Blogs, Marketing Pages</td></tr>
+                                   <tr class="bg-purple-50"><td class="font-bold p-6 text-purple-900">ISR</td><td class="text-green-600 p-6 font-extrabold">Best 🔥</td><td class="text-green-600 p-6">Near Real-time</td><td class="p-6">E-commerce Catalogs, News</td></tr>
+                               </tbody>
+                           </table>
+                       </div>
+                       <p class="text-2xl text-center font-bold mt-12 text-gray-700">Modern Approach = Hybrid. Use the right tool for each route.</p>
+                   </div>
+               </div>
+
+               <!-- Slide 29 (Interactive Web Worker Demo) -->
+               <div class="slide hidden p-8 md:p-16 flex flex-col h-full">
+                   <h2 class="text-4xl md:text-5xl font-bold text-yellow-600 mb-8">Advanced: Web Workers &amp; The Main Thread</h2>
+                   <div class="slide-content flex-1 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                       <div class="text-xl space-y-6">
+                           <p><strong>The Problem:</strong> JavaScript is single-threaded. If you run a heavy calculation, the UI <span class="text-red-600 font-bold">completely freezes</span> until it's done.</p>
+                           <p><strong>The Solution:</strong> Web Workers. They run on a separate thread, leaving the main thread free to handle user input and animations.</p>
+
+                            <div class="bg-gray-100 p-8 rounded-2xl mt-8">
+                                <h3 class="font-bold text-2xl mb-6">👇 Live Demo</h3>
+                                <p class="mb-6">Try to freeze the spinning square below.</p>
+                                <div class="flex items-center space-x-8 mb-8 bg-white p-6 rounded-xl shadow-inner">
+                                    <div id="demo-spinner" class="w-16 h-16 bg-gradient-to-tr from-blue-500 to-purple-500 rounded-xl" style="transform: rotate(315deg);"></div>
+                                    <p class="text-gray-500 italic">I am a CSS animation on the main thread.</p>
+                                </div>
+                                <div class="flex space-x-4">
+                                    <button id="btn-block-main" class="bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-lg font-bold transition">
+                                        Run on Main Thread (Freeze UI)
+                                    </button>
+                                    <!-- NOTE: Real Web Workers can be tricky in local file:// presentations due to security policies, so we'll simulate the non-blocking aspect if needed, but let's try a real block first to prove the point. -->
+                                </div>
+                                <p id="worker-status" class="mt-4 font-mono text-sm h-6 text-gray-600"></p>
+                            </div>
+                       </div>
+                       <div>
+                            <h3 class="font-bold mb-4 text-2xl">How it works:</h3>
+                           <pre class="code-block"><div class="code-body"><code><span class="token-comment">// main.js</span>
+<span class="token-keyword">const</span> worker = <span class="token-keyword">new</span> <span class="token-function">Worker</span>(<span class="token-string">'heavy-task.js'</span>);
+worker.postMessage({ data: <span class="token-number">123</span> });
+worker.onmessage = (e) =&gt; {
+  <span class="token-function">updateUI</span>(e.data.result); <span class="token-comment">// UI stays smooth!</span>
+};
+
+<span class="token-comment">// heavy-task.js (Runs in background)</span>
+onmessage = (e) =&gt; {
+  <span class="token-keyword">const</span> result = <span class="token-function">doMassiveCalculation</span>(e.data);
+  postMessage({ result });
+}</code></div></pre>
+                       </div>
+                   </div>
+               </div>
+
+               <!-- Slide 30 -->
+               <div class="slide hidden p-8 md:p-16 flex flex-col h-full">
+                   <h2 class="text-4xl md:text-5xl font-bold text-blue-700 mb-12">Advanced: Progressive Web Apps (PWAs)</h2>
+                   <div class="slide-content flex-1 space-y-8 text-xl">
+                       <p class="text-2xl max-w-3xl">A PWA uses a <strong>Service Worker</strong> to act as a network proxy. It sits between your app and the internet.</p>
+                       <div class="bg-blue-50 p-8 rounded-3xl border-2 border-blue-200">
+                           <h3 class="text-2xl font-bold mb-6 text-blue-900">Cache-First Strategy (The "Instant Load" Secret)</h3>
+                           <pre class="code-block"><div class="code-body"><code>self.addEventListener(<span class="token-string">'fetch'</span>, (event) =&gt; {
+  <span class="token-comment">// Intercept EVERY network request</span>
+  event.respondWith(
+    <span class="token-comment">// Check cache first</span>
+    caches.match(event.request).then((cachedResponse) =&gt; {
+      <span class="token-comment">// Return cached file immediately if found, OR go to network</span>
+      <span class="token-keyword">return</span> cachedResponse || <span class="token-function">fetch</span>(event.request);
+    })
+  );
+});</code></div></pre>
+                       </div>
+                       <p class="text-center font-semibold text-gray-600">Result: Second visits load nearly instantly, even while offline.</p>
+                   </div>
+               </div>
+
+               <!-- Slide 31 -->
+               <div class="slide hidden p-8 md:p-16 flex flex-col h-full">
+                   <h2 class="text-4xl md:text-5xl font-bold text-blue-700 mb-12">Advanced: PWA Case Studies</h2>
+                   <div class="slide-content flex-1 flex flex-col items-center justify-center">
+                       <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-5xl">
+                           <div class="bg-blue-50 p-8 rounded-3xl text-center">
+                               <h3 class="text-4xl mb-2">🐦</h3>
+                               <h4 class="font-bold text-2xl mb-2">Twitter Lite</h4>
+                               <p class="text-3xl font-extrabold text-blue-700">+75%</p>
+                               <p class="text-gray-600">Tweets Sent</p>
+                           </div>
+                           <div class="bg-orange-50 p-8 rounded-3xl text-center">
+                               <h3 class="text-4xl mb-2">🛍️</h3>
+                               <h4 class="font-bold text-2xl mb-2">AliExpress</h4>
+                               <p class="text-3xl font-extrabold text-orange-700">+104%</p>
+                               <p class="text-gray-600">Conversion (New Users)</p>
+                           </div>
+                           <div class="bg-green-50 p-8 rounded-3xl text-center">
+                               <h3 class="text-4xl mb-2">☕</h3>
+                               <h4 class="font-bold text-2xl mb-2">Starbucks</h4>
+                               <p class="text-3xl font-extrabold text-green-700">2x</p>
+                               <p class="text-gray-600">Daily Active Users</p>
+                           </div>
+                           <div class="bg-purple-50 p-8 rounded-3xl text-center flex flex-col justify-center">
+                               <p class="text-xl font-bold text-purple-900">PWAs are often <span class="text-3xl">90% smaller</span> than their native iOS/Android counterparts.</p>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+
+               <!-- Slide 32 -->
+               <div class="slide hidden p-8 md:p-16 flex flex-col h-full bg-gray-900 text-white">
+                   <h2 class="text-4xl md:text-5xl font-bold text-green-400 mb-12">Synthesis: The INP Playbook</h2>
+                   <div class="slide-content flex-1 flex flex-col items-center justify-center max-w-5xl mx-auto">
+                       <div class="bg-red-600 p-6 rounded-2xl text-2xl font-bold mb-8 shadow-lg shadow-red-900/50">Problem: Slow INP (&gt; 200ms)</div>
+                       <div class="text-5xl mb-8 opacity-50">⬇️</div>
+                       <div class="grid grid-cols-3 gap-8 w-full text-center">
+                           <div class="bg-gray-800 p-8 rounded-2xl border-t-4 border-blue-500 flex flex-col">
+                               <h4 class="font-bold text-2xl mb-4">1. Input Delay</h4>
+                               <p class="text-gray-400 mb-6 flex-1">Is the main thread already busy when the user clicked?</p>
+                               <div class="bg-gray-900 p-4 rounded-xl text-green-400 font-bold">Fix: Break up long tasks</div>
+                           </div>
+                           <div class="bg-gray-800 p-8 rounded-2xl border-t-4 border-yellow-500 flex flex-col">
+                               <h4 class="font-bold text-2xl mb-4">2. Processing</h4>
+                               <p class="text-gray-400 mb-6 flex-1">Is your event handler code too slow?</p>
+                               <div class="bg-gray-900 p-4 rounded-xl text-green-400 font-bold">Fix: Web Workers</div>
+                           </div>
+                           <div class="bg-gray-800 p-8 rounded-2xl border-t-4 border-purple-500 flex flex-col">
+                               <h4 class="font-bold text-2xl mb-4">3. Presentation</h4>
+                               <p class="text-gray-400 mb-6 flex-1">Is the browser struggling to paint the next frame?</p>
+                               <div class="bg-gray-900 p-4 rounded-xl text-green-400 font-bold">Fix: Simpler CSS/DOM</div>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+
+               <!-- Slide 33 -->
+               <div class="slide hidden p-8 md:p-16 flex flex-col h-full">
+                   <h2 class="text-4xl md:text-5xl font-bold text-blue-700 mb-12">Your Quick Wins Checklist</h2>
+                   <div class="slide-content flex-1 grid grid-cols-1 md:grid-cols-3 gap-8 text-xl">
+                       <div class="bg-blue-50 p-8 rounded-3xl shadow-sm flex flex-col">
+                           <h3 class="font-bold text-3xl mb-6 text-blue-800 flex items-center">🚀 Loading</h3>
+                           <ul class="space-y-4 flex-1">
+                               <li class="flex items-center"><input type="checkbox" class="w-6 h-6 mr-4 accent-blue-600"> Add defer to all scripts</li>
+                               <li class="flex items-center"><input type="checkbox" class="w-6 h-6 mr-4 accent-blue-600"> Preload LCP image</li>
+                               <li class="flex items-center"><input type="checkbox" class="w-6 h-6 mr-4 accent-blue-600"> Convert images to AVIF</li>
+                               <li class="flex items-center"><input type="checkbox" class="w-6 h-6 mr-4 accent-blue-600"> Enable CDN</li>
+                           </ul>
+                       </div>
+                       <div class="bg-purple-50 p-8 rounded-3xl shadow-sm flex flex-col">
+                           <h3 class="font-bold text-3xl mb-6 text-purple-800 flex items-center">📐 Stability</h3>
+                           <ul class="space-y-4 flex-1">
+                               <li class="flex items-center"><input type="checkbox" class="w-6 h-6 mr-4 accent-purple-600"> Add width &amp; height to all images</li>
+                               <li class="flex items-center"><input type="checkbox" class="w-6 h-6 mr-4 accent-purple-600"> Reserve space for ads</li>
+                               <li class="flex items-center"><input type="checkbox" class="w-6 h-6 mr-4 accent-purple-600"> Use font size-adjust</li>
+                           </ul>
+                       </div>
+                       <div class="bg-green-50 p-8 rounded-3xl shadow-sm flex flex-col">
+                           <h3 class="font-bold text-3xl mb-6 text-green-800 flex items-center">⚡ Response</h3>
+                           <ul class="space-y-4 flex-1">
+                               <li class="flex items-center"><input type="checkbox" class="w-6 h-6 mr-4 accent-green-600"> Audit slow interactions</li>
+                               <li class="flex items-center"><input type="checkbox" class="w-6 h-6 mr-4 accent-green-600"> Move heavy logic to Workers</li>
+                               <li class="flex items-center"><input type="checkbox" class="w-6 h-6 mr-4 accent-green-600"> Flatten CSS selectors</li>
+                           </ul>
+                       </div>
+                   </div>
+               </div>
+
+               <!-- Slide 34 -->
+               <div class="slide hidden p-8 md:p-16 flex flex-col h-full">
+                   <h2 class="text-4xl md:text-5xl font-bold text-red-700 mb-12">Staying Fast: Performance Budget</h2>
+                   <div class="slide-content flex-1 space-y-8 text-xl">
+                       <p class="text-2xl max-w-4xl">Without a budget, performance naturally rots over time as new features are added.</p>
+                       <div class="overflow-hidden rounded-2xl shadow-lg">
+                           <table class="min-w-full text-left border-collapse text-xl">
+                               <thead class="bg-gray-800 text-white">
+                                   <tr><th class="p-6">Metric</th><th class="p-6">Budget Goal</th><th class="p-6">Current Reality</th><th class="p-6">Status</th></tr>
+                               </thead>
+                               <tbody class="bg-white">
+                                   <tr class="bg-red-50"><td class="p-6 font-bold">LCP (Loading)</td><td class="p-6">&lt; 2.5s</td><td class="p-6 font-mono">3.2s</td><td class="p-6 font-extrabold text-red-600 bg-red-100">FAIL</td></tr>
+                                   <tr class="bg-green-50"><td class="p-6 font-bold">INP (Response)</td><td class="p-6">&lt; 200ms</td><td class="p-6 font-mono">150ms</td><td class="p-6 font-extrabold text-green-600 bg-green-100">PASS</td></tr>
+                                   <tr class="bg-red-50"><td class="p-6 font-bold">JS Bundle Size</td><td class="p-6">&lt; 200KB (gzipped)</td><td class="p-6 font-mono">350KB</td><td class="p-6 font-extrabold text-red-600 bg-red-100">FAIL</td></tr>
+                               </tbody>
+                           </table>
+                       </div>
+                       <p class="font-bold text-2xl mt-8 text-gray-800">Tip: Make your CI/CD pipeline fail if the budget is exceeded.</p>
+                   </div>
+               </div>
+
+               <!-- Slide 35 -->
+               <div class="slide hidden p-8 md:p-16 flex flex-col h-full">
+                   <h2 class="text-4xl md:text-5xl font-bold text-blue-700 mb-12">Staying Fast: Monitoring</h2>
+                   <div class="slide-content flex-1 grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+                       <div class="bg-gray-100 p-10 rounded-3xl h-full flex flex-col">
+                           <h3 class="text-3xl font-bold mb-6 flex items-center">🧪 Lab Data (Dev)</h3>
+                           <p class="mb-8 text-xl text-gray-600">Debugging in a controlled environment.</p>
+                           <ul class="list-disc ml-6 text-2xl space-y-4 flex-1">
+                               <li>Lighthouse (Local)</li>
+                               <li>WebPageTest</li>
+                               <li>Chrome DevTools Profiler</li>
+                           </ul>
+                       </div>
+                       <div class="bg-blue-50 p-10 rounded-3xl h-full border-4 border-blue-300 flex flex-col shadow-lg">
+                           <h3 class="text-3xl font-bold mb-6 flex items-center text-blue-900">🌍 Field Data (RUM)</h3>
+                           <p class="mb-8 text-xl text-blue-800">Measuring real users. <strong>This is the truth.</strong></p>
+                           <ul class="list-disc ml-6 text-2xl space-y-4 flex-1 text-blue-900">
+                               <li>Google Search Console</li>
+                               <li>SpeedCurve / Sentry / Datadog</li>
+                               <li>Chrome UX Report (CrUX)</li>
+                           </ul>
+                       </div>
+                   </div>
+               </div>
+
+               <!-- Slide 36 -->
+               <div class="slide hidden p-8 md:p-16 flex flex-col h-full">
+                   <h2 class="text-4xl md:text-5xl font-bold text-blue-700 mb-12">Conclusion: Modern Perf Stack</h2>
+                   <div class="slide-content flex-1 text-xl">
+                       <p class="text-3xl mb-12 font-light text-gray-700">If you were rebuilding today, this stack gives you performance by default:</p>
+                       <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                           <div class="flex items-start p-6 bg-gray-50 rounded-2xl">
+                               <span class="text-5xl mr-6">⚛️</span>
+                               <div>
+                                   <strong class="text-2xl block mb-2">Framework: Next.js / Nuxt</strong>
+                                   <p class="text-gray-600">Automatic code-splitting, image optimization, and hybrid rendering (SSG/ISR) out of the box.</p>
+                               </div>
+                           </div>
+                           <div class="flex items-start p-6 bg-gray-50 rounded-2xl">
+                               <span class="text-5xl mr-6">🎨</span>
+                               <div>
+                                   <strong class="text-2xl block mb-2">CSS: Tailwind CSS</strong>
+                                   <p class="text-gray-600">Zero runtime overhead. Generates minimal static CSS files at build time.</p>
+                               </div>
+                           </div>
+                           <div class="flex items-start p-6 bg-gray-50 rounded-2xl">
+                               <span class="text-5xl mr-6">☁️</span>
+                               <div>
+                                   <strong class="text-2xl block mb-2">Host: Vercel / Netlify</strong>
+                                   <p class="text-gray-600">Global edge network (CDN) and HTTP/3 enabled by default.</p>
+                               </div>
+                           </div>
+                           <div class="flex items-start p-6 bg-gray-50 rounded-2xl">
+                               <span class="text-5xl mr-6">🖼️</span>
+                               <div>
+                                   <strong class="text-2xl block mb-2">Image Components</strong>
+                                   <p class="text-gray-600">Use framework <code>&lt;Image/&gt;</code> components to automate AVIF/WebP and proper sizing.</p>
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+
+               <!-- Slide 37 -->
+               <div class="slide hidden p-8 md:p-16 flex flex-col h-full">
+                   <h2 class="text-4xl md:text-5xl font-bold text-blue-700 mb-12">Common Mistakes to Avoid</h2>
+                   <div class="slide-content flex-1 grid grid-cols-1 md:grid-cols-2 gap-16 text-xl items-stretch">
+                       <div class="bg-red-50 p-10 rounded-3xl border-t-8 border-red-500 shadow-sm">
+                           <h3 class="text-4xl font-bold text-red-700 mb-8">❌ Stop doing this</h3>
+                           <ul class="space-y-6 font-medium text-red-900">
+                               <li class="flex items-start"><span class="mr-3">🚫</span> Lazy loading your hero (LCP) image.</li>
+                               <li class="flex items-start"><span class="mr-3">🚫</span> Using runtime CSS-in-JS for interactive apps.</li>
+                               <li class="flex items-start"><span class="mr-3">🚫</span> Loading standard Google Fonts (self-host instead!).</li>
+                               <li class="flex items-start"><span class="mr-3">🚫</span> Forgetting width &amp; height on images.</li>
+                           </ul>
+                       </div>
+                       <div class="bg-green-50 p-10 rounded-3xl border-t-8 border-green-500 shadow-sm">
+                           <h3 class="text-4xl font-bold text-green-700 mb-8">✅ Start doing this</h3>
+                           <ul class="space-y-6 font-medium text-green-900">
+                               <li class="flex items-start"><span class="mr-3">✨</span> Measure *before* you optimize.</li>
+                               <li class="flex items-start"><span class="mr-3">✨</span> Test on actual slow mobile devices.</li>
+                               <li class="flex items-start"><span class="mr-3">✨</span> Set and enforce a performance budget.</li>
+                               <li class="flex items-start"><span class="mr-3">✨</span> Monitor Field Data (Real User Metrics).</li>
+                           </ul>
+                       </div>
+                   </div>
+               </div>
+
+               <!-- Slide 38 -->
+               <div class="slide hidden p-8 md:p-16 flex flex-col h-full">
+                   <h2 class="text-4xl md:text-5xl font-bold text-purple-700 mb-12">The Future is fast</h2>
+                   <div class="slide-content flex-1 space-y-12 text-xl">
+                       <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                           <div>
+                               <h3 class="text-3xl font-bold mb-6 text-purple-900">New Browser APIs</h3>
+                               <ul class="space-y-4 text-gray-700">
+                                   <li class="p-4 bg-purple-50 rounded-xl"><strong>View Transitions API:</strong> Native, smooth page transitions without single-page-app complexity.</li>
+                                   <li class="p-4 bg-purple-50 rounded-xl"><strong>Speculation Rules API:</strong> Next-gen, smarter way to prefetch future pages.</li>
+                                   <li class="p-4 bg-purple-50 rounded-xl"><strong>Priority Hints:</strong> Fine-grained control with <code>fetchpriority="high/low"</code>.</li>
+                               </ul>
+                           </div>
+                           <div>
+                               <h3 class="text-3xl font-bold mb-6 text-purple-900">Emerging Patterns</h3>
+                               <ul class="space-y-4 text-gray-700">
+                                   <li class="p-4 bg-blue-50 rounded-xl"><strong>Islands Architecture (Astro):</strong> Ship 0kb of JS by default, only hydrate interactive "islands" when needed.</li>
+                                   <li class="p-4 bg-green-50 rounded-xl"><strong>Resumability (Qwik):</strong> Instant interactivity by serializing application state into HTML, eliminating standard hydration.</li>
+                               </ul>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+
+               <!-- Slide 39 -->
+               <div class="slide hidden p-8 md:p-16 flex flex-col h-full bg-gradient-to-br from-blue-50 to-white">
+                   <h2 class="text-4xl md:text-5xl font-bold text-blue-900 mb-12">Key Takeaways</h2>
+                   <div class="slide-content flex-1 flex flex-col justify-center">
+                       <ol class="space-y-8 text-2xl md:text-3xl font-semibold text-gray-800 ml-8">
+                           <li class="pl-8 border-l-8 border-blue-500">Performance = Revenue. It's a business metric.</li>
+                           <li class="pl-8 border-l-8 border-green-500">Optimize Core Web Vitals: LCP, INP, and CLS.</li>
+                           <li class="pl-8 border-l-8 border-purple-500">The fastest code is the code you don't ship.</li>
+                           <li class="pl-8 border-l-8 border-yellow-500">Keep the main thread free (INP is the new king).</li>
+                       </ol>
+                   </div>
+               </div>
+
+               <!-- Slide 40 -->
+               <div class="slide hidden p-8 md:p-16 flex flex-col h-full">
+                   <h2 class="text-4xl md:text-5xl font-bold text-blue-700 mb-12">Resources &amp; Next Steps</h2>
+                   <div class="slide-content flex-1 grid grid-cols-1 md:grid-cols-2 gap-16 text-xl items-center">
+                        <div class="space-y-8">
+                            <h3 class="font-bold text-3xl mb-6">📚 Essential Reading</h3>
+                            <ul class="space-y-4 text-2xl text-blue-600 font-semibold">
+                                <li><a href="https://web.dev/vitals" target="_blank" class="hover:underline">web.dev/vitals</a></li>
+                                <li><a href="https://web.dev/fast" target="_blank" class="hover:underline">web.dev/fast</a></li>
+                                <li><a href="https://developer.mozilla.org/en-US/docs/Web/Performance" target="_blank" class="hover:underline">MDN Performance Docs</a></li>
+                            </ul>
+                        </div>
+                        <div class="bg-gray-900 text-white p-12 rounded-[3rem] shadow-2xl transform rotate-2 hover:rotate-0 transition-all">
+                             <h3 class="font-bold text-3xl mb-8 text-green-400">👉 Your Homework</h3>
+                             <ul class="space-y-6 text-2xl">
+                                 <li class="flex items-center"><span class="mr-4">🕵️</span> Audit your current project today.</li>
+                                 <li class="flex items-center"><span class="mr-4">📉</span> Set one performance budget goal.</li>
+                                 <li class="flex items-center"><span class="mr-4">🔧</span> Fix one "low hanging fruit" (like image sizes).</li>
+                             </ul>
+                        </div>
+                   </div>
+               </div>
+
+               <!-- Slide 41 -->
+               <div class="slide hidden flex flex-col items-center justify-center h-full text-center p-12 bg-blue-50">
+                   <h2 class="text-7xl md:text-[12rem] font-black text-blue-900 opacity-10 mb-8 leading-none select-none">Q&amp;A</h2>
+                   <div class="absolute inset-0 flex flex-col items-center justify-center">
+                        <h2 class="text-6xl md:text-8xl font-bold text-blue-800 mb-8 drop-shadow-xl">Questions?</h2>
+                        <p class="text-3xl text-blue-600 font-light">Ask us anything about web performance.</p>
+                   </div>
+               </div>
+
+               <!-- Slide 42 -->
+               <div class="slide hidden flex flex-col items-center justify-center h-full text-center p-12 bg-gradient-to-br from-gray-900 to-blue-900 text-white">
+                   <h2 class="text-7xl md:text-9xl font-extrabold tracking-tight animate-pulse">Thank You!</h2>
+               </div>
+
+            </div>
+        </main>
+
+        <!-- Footer / Navigation Controls -->
+        <footer class="bg-gray-900 p-6 text-white flex justify-between items-center z-10 border-t border-gray-800">
+            <div id="slide-counter" class="text-lg opacity-60 font-mono w-32">1 / 42</div>
+            <div class="flex space-x-8">
+                <button id="prev-btn" class="bg-gray-800 hover:bg-gray-700 text-white px-8 py-4 rounded-full font-bold transition-all disabled:opacity-30 disabled:cursor-not-allowed flex items-center" disabled="">
+                    <span class="mr-2">←</span> Prev
+                </button>
+                <button id="next-btn" class="bg-blue-600 hover:bg-blue-500 text-white px-8 py-4 rounded-full font-bold transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-lg shadow-blue-900/50 flex items-center">
+                    Next <span class="ml-2">→</span>
+                </button>
+            </div>
+            <div class="w-32 flex justify-end opacity-40 text-sm hidden md:flex">
+                 Use Arrow Keys
+            </div>
+        </footer>
+
+        <!-- Progress Bar -->
+        <div class="h-2 bg-gray-800 w-full">
+            <div id="progress-bar" class="h-full bg-gradient-to-r from-blue-500 to-purple-500 transition-all duration-500 ease-out" style="width: 2.38095%;"></div>
+        </div>
+    </div>
+
+    <script>
+        // Slide State
+        let currentSlideIdx = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        // Elements
+        const progressBar = document.getElementById('progress-bar');
+        const slideCounter = document.getElementById('slide-counter');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+
+        // Core Slide Function
+        function updateSlide() {
+            slides.forEach((slide, idx) => {
+                // Using hidden class but adding a minimal fade effect could be nice, sticking to simple toggle for responsiveness
+                slide.classList.toggle('hidden', idx !== currentSlideIdx);
+                if (idx === currentSlideIdx) {
+                    // Ensure it scrolls to top when switching slides if content was previously scrolled
+                    const mainContainer = document.querySelector('main');
+                     if(mainContainer) mainContainer.scrollTop = 0;
+                }
+            });
+
+            // Update progress & counter
+            const progress = ((currentSlideIdx + 1) / totalSlides) * 100;
+            progressBar.style.width = `${progress}%`;
+            slideCounter.textContent = `${currentSlideIdx + 1} / ${totalSlides}`;
+
+            // Button states
+            prevBtn.disabled = currentSlideIdx === 0;
+            nextBtn.disabled = currentSlideIdx === totalSlides - 1;
+        }
+
+        function nextSlide() {
+            if (currentSlideIdx < totalSlides - 1) {
+                currentSlideIdx++;
+                updateSlide();
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlideIdx > 0) {
+                currentSlideIdx--;
+                updateSlide();
+            }
+        }
+
+       // Interactive Demo Logic (Slide 29)
+        const blockBtn = document.getElementById('btn-block-main');
+        const statusText = document.getElementById('worker-status');
+        const demoSpinner = document.getElementById('demo-spinner');
+
+        // 1. Switch to JS-driven animation
+        // (CSS animations often run on a separate thread and won't freeze, defeating the demo)
+        if (demoSpinner) {
+            demoSpinner.classList.remove('spinner'); // Remove CSS animation
+            let deg = 0;
+            function animate() {
+                deg = (deg + 5) % 360;
+                demoSpinner.style.transform = `rotate(${deg}deg)`;
+                requestAnimationFrame(animate);
+            }
+            requestAnimationFrame(animate);
+        }
+
+        // 2. Blocking Logic
+        if (blockBtn && statusText) {
+            blockBtn.addEventListener('click', () => {
+                // Update UI text immediately
+                statusText.textContent = "Status: MAIN THREAD BLOCKED! (Animation frozen)";
+                statusText.className = "mt-4 font-mono text-sm h-6 text-red-600 font-bold";
+
+                // Defer blocking slightly to allow the DOM to repaint the new status text
+                setTimeout(() => {
+                    const start = Date.now();
+                     // Busy wait for 3 seconds to simulate heavy JS
+                    while (Date.now() - start < 3000) {}
+
+                    // Restore UI
+                    statusText.textContent = "Status: Unblocked.";
+                    statusText.className = "mt-4 font-mono text-sm h-6 text-gray-600";
+                }, 50);
+            });
+        }
+
+
+        // Event Listeners
+        nextBtn.addEventListener('click', nextSlide);
+        prevBtn.addEventListener('click', prevSlide);
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'Enter') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                prevSlide();
+            }
+        });
+
+        // Initialize first slide
+        updateSlide();
+    </script>
+
+
+
+
+
+
+</body></html>

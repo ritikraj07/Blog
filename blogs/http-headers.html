@@ -1,0 +1,1519 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Complete guide to HTTP headers - from beginner to advanced concepts with practical examples and references">
+    <meta name="keywords" content="HTTP headers, web development, API, security headers, performance optimization">
+    <meta name="author" content="Ritik Raj">
+    <meta name="robots" content="index, follow">
+
+    <!-- Ritik Raj SEO Meta Tags -->
+    <meta name="ritik" content="ritik07, lord ritik, lord_ritik07">
+
+    <title>HTTP Headers: Complete Guide from Basics to Advanced | Ritik Raj</title>
+
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #64748b;
+            --accent: #06b6d4;
+            --background: #0f172a;
+            --surface: #1e293b;
+            --card: #1e293b;
+            --text: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --border: #334155;
+            --success: #10b981;
+            --error: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.7;
+            font-size: 16px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 3rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" preserveAspectRatio="none"><path d="M0,0 L1000,100 L0,100 Z" fill="rgba(255,255,255,0.1)"/></svg>');
+            background-size: cover;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #ffffff, #e0f2fe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            font-weight: 300;
+            max-width: 700px;
+            margin: 0 auto 1.5rem;
+        }
+
+        /* Navigation */
+        nav {
+            background-color: var(--surface);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--text);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo span {
+            color: var(--accent);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            transition: color 0.3s;
+            padding: 0.5rem 0;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--text);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--accent);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Main Content */
+        main {
+            padding: 3rem 0;
+        }
+
+        section {
+            margin: 3rem 0;
+            scroll-margin-top: 80px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .section-icon {
+            background-color: var(--primary);
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            font-weight: bold;
+        }
+
+        h2 {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            margin: 1.5rem 0 1rem;
+            color: var(--accent);
+        }
+
+        h4 {
+            font-size: 1.2rem;
+            margin: 1.2rem 0 0.8rem;
+            color: var(--text);
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+        }
+
+        /* Cards */
+        .card {
+            background-color: var(--card);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--border);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .card-icon {
+            background-color: var(--primary);
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 0.75rem;
+            font-size: 0.9rem;
+        }
+
+        .card.warning {
+            border-left: 4px solid var(--error);
+        }
+
+        .card.success {
+            border-left: 4px solid var(--success);
+        }
+
+        .card.info {
+            border-left: 4px solid var(--accent);
+        }
+
+        /* Code and Examples */
+        code {
+            background-color: rgba(30, 41, 59, 0.8);
+            color: var(--text);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            font-size: 0.9rem;
+            border: 1px solid var(--border);
+        }
+
+        pre {
+            background-color: #1a202c;
+            color: #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            line-height: 1.5;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            border: 1px solid var(--border);
+        }
+
+        .header-example {
+            background-color: #1a202c;
+            color: #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            font-size: 0.9rem;
+            border: 1px solid var(--border);
+        }
+
+        .header-example .method {
+            color: #63b3ed;
+        }
+
+        .header-example .path {
+            color: #68d391;
+        }
+
+        .header-example .header-name {
+            color: #fbb6ce;
+        }
+
+        .header-example .header-value {
+            color: #faf089;
+        }
+
+        .header-example .status {
+            color: #68d391;
+        }
+
+        /* Tables */
+        .table-container {
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: var(--surface);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        th,
+        td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background-color: var(--primary-dark);
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Interactive Demo */
+        .interactive-demo {
+            background-color: var(--surface);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+            border: 1px solid var(--border);
+        }
+
+        .demo-controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        button:hover {
+            background-color: var(--primary-dark);
+        }
+
+        button.secondary {
+            background-color: var(--secondary);
+        }
+
+        button.secondary:hover {
+            background-color: #475569;
+        }
+
+        select,
+        input {
+            background-color: var(--background);
+            color: var(--text);
+            border: 1px solid var(--border);
+            padding: 0.75rem;
+            border-radius: 6px;
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .demo-output {
+            background-color: #1a202c;
+            color: #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 8px;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            min-height: 300px;
+            overflow-y: auto;
+            border: 1px solid var(--border);
+        }
+
+        /* Reference Section */
+        .reference-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .reference-card {
+            background-color: var(--card);
+            border-radius: 8px;
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .reference-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .reference-card h4 {
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .reference-card a {
+            color: var(--primary);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            margin-top: 0.75rem;
+            font-weight: 500;
+        }
+
+        .reference-card a:hover {
+            text-decoration: underline;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--surface);
+            padding: 3rem 0;
+            margin-top: 3rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-section h3 {
+            color: var(--text);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: var(--background);
+            border-radius: 50%;
+            color: var(--text);
+            text-decoration: none;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .social-links a:hover {
+            background-color: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+
+            .subtitle {
+                font-size: 1.1rem;
+            }
+
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background-color: var(--surface);
+                flex-direction: column;
+                padding: 1rem;
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+                border-top: 1px solid var(--border);
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .demo-controls {
+                flex-direction: column;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Progress indicators */
+        .progress-container {
+            display: flex;
+            justify-content: space-between;
+            margin: 2rem 0;
+            position: relative;
+        }
+
+        .progress-container::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: var(--border);
+            z-index: 1;
+        }
+
+        .progress-item {
+            text-align: center;
+            flex: 1;
+            position: relative;
+            z-index: 2;
+        }
+
+        .progress-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 0.5rem;
+            font-weight: bold;
+            color: white;
+            box-shadow: 0 0 0 4px var(--background);
+        }
+
+        /* Advanced Section Styles */
+        .advanced-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .advanced-card {
+            background-color: var(--card);
+            border-radius: 8px;
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .advanced-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-5px);
+        }
+
+        .advanced-card h4 {
+            color: var(--accent);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .advanced-card .header-badge {
+            background-color: var(--primary);
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .rfc-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            margin-top: 0.75rem;
+            font-size: 0.9rem;
+        }
+
+        .rfc-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <h1>HTTP Headers Complete Guide</h1>
+                <p class="subtitle">From fundamental concepts to advanced implementations with practical examples and
+                    references</p>
+                <div style="margin-top: 1.5rem;">
+                    <a href="#demo" class="button"
+                        style="background: white; color: var(--primary); padding: 0.75rem 1.5rem; border-radius: 6px; text-decoration: none; font-weight: 600; display: inline-block;">Try
+                        Interactive Demo</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <nav>
+        <div class="container nav-container">
+            <a href="#" class="logo">HTTP<span>Guide</span></a>
+
+            <ul class="nav-links">
+                <li><a href="#what-are-headers"><i class="fas fa-info-circle"></i> What are Headers?</a></li>
+                <li><a href="#types"><i class="fas fa-layer-group"></i> Header Types</a></li>
+                <li><a href="#common-headers"><i class="fas fa-star"></i> Common Headers</a></li>
+                <li><a href="#security-headers"><i class="fas fa-shield-alt"></i> Security Headers</a></li>
+                <li><a href="#advanced-headers"><i class="fas fa-rocket"></i> Advanced Headers</a></li>
+                <li><a href="#custom-headers"><i class="fas fa-cog"></i> Custom Headers</a></li>
+                <li><a href="#demo"><i class="fas fa-play-circle"></i> Interactive Demo</a></li>
+            </ul>
+
+            <button class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <main class="container">
+        <section id="what-are-headers">
+            <div class="section-header">
+                <div class="section-icon">1</div>
+                <h2>What are HTTP Headers?</h2>
+            </div>
+
+            <p>HTTP headers are key-value pairs sent at the beginning of an HTTP request or response. They provide
+                essential metadata about the request or response, such as content type, caching policies, authentication
+                details, and more.</p>
+
+            <div class="card info">
+                <div class="card-header">
+                    <div class="card-icon"><i class="fas fa-lightbulb"></i></div>
+                    <h3>Analogy: Postal Mail</h3>
+                </div>
+                <p>Think of HTTP headers like the information on an envelope when you send a letter:</p>
+                <ul>
+                    <li><strong>To/From addresses</strong> = Request/Response headers</li>
+                    <li><strong>Postage stamp</strong> = Authentication headers</li>
+                    <li><strong>Priority/Fragile labels</strong> = Cache/Content headers</li>
+                    <li><strong>The actual letter</strong> = HTTP body</li>
+                </ul>
+            </div>
+
+            <h3>Basic Structure</h3>
+            <p>HTTP headers follow a simple format:</p>
+            <div class="header-example">
+                <span class="header-name">Header-Name</span>: <span class="header-value">Header Value</span>
+            </div>
+
+            <p>Headers are case-insensitive, but conventionally use title case (e.g., "Content-Type").</p>
+
+            <div class="progress-container">
+                <div class="progress-item">
+                    <div class="progress-circle">1</div>
+                    <h4>Client Request</h4>
+                    <p>Browser sends request with headers</p>
+                </div>
+                <div class="progress-item">
+                    <div class="progress-circle">2</div>
+                    <h4>Server Processing</h4>
+                    <p>Server reads request headers</p>
+                </div>
+                <div class="progress-item">
+                    <div class="progress-circle">3</div>
+                    <h4>Server Response</h4>
+                    <p>Server sends response with headers</p>
+                </div>
+                <div class="progress-item">
+                    <div class="progress-circle">4</div>
+                    <h4>Client Processing</h4>
+                    <p>Browser reads response headers</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="types">
+            <div class="section-header">
+                <div class="section-icon">2</div>
+                <h2>Types of HTTP Headers</h2>
+            </div>
+
+            <div class="advanced-grid">
+                <div class="advanced-card">
+                    <h4><i class="fas fa-exchange-alt"></i> General Headers</h4>
+                    <p>Apply to both requests and responses. They include headers like <code>Cache-Control</code>,
+                        <code>Connection</code>, and <code>Date</code>.</p>
+                    <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers#general_headers" class="rfc-link"
+                        target="_blank">
+                        <i class="fas fa-external-link-alt"></i> Learn more on MDN
+                    </a>
+                </div>
+
+                <div class="advanced-card">
+                    <h4><i class="fas fa-arrow-right"></i> Request Headers</h4>
+                    <p>Sent by the client to the server. Examples include <code>User-Agent</code>, <code>Accept</code>,
+                        and <code>Authorization</code>.</p>
+                    <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers#request_headers" class="rfc-link"
+                        target="_blank">
+                        <i class="fas fa-external-link-alt"></i> Learn more on MDN
+                    </a>
+                </div>
+
+                <div class="advanced-card">
+                    <h4><i class="fas fa-arrow-left"></i> Response Headers</h4>
+                    <p>Sent by the server to the client. Examples include <code>Server</code>, <code>Set-Cookie</code>,
+                        and <code>WWW-Authenticate</code>.</p>
+                    <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers#response_headers"
+                        class="rfc-link" target="_blank">
+                        <i class="fas fa-external-link-alt"></i> Learn more on MDN
+                    </a>
+                </div>
+
+                <div class="advanced-card">
+                    <h4><i class="fas fa-file-alt"></i> Entity Headers</h4>
+                    <p>Describe the content of the message body. Examples include <code>Content-Type</code>,
+                        <code>Content-Length</code>, and <code>Content-Encoding</code>.</p>
+                    <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers#entity_headers" class="rfc-link"
+                        target="_blank">
+                        <i class="fas fa-external-link-alt"></i> Learn more on MDN
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section id="common-headers">
+            <div class="section-header">
+                <div class="section-icon">3</div>
+                <h2>Most Common HTTP Headers</h2>
+            </div>
+
+            <h3>Essential Request Headers</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Header</th>
+                            <th>Purpose</th>
+                            <th>Example</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Host</td>
+                            <td>Specifies the domain name of the server</td>
+                            <td><code>Host: www.example.com</code></td>
+                        </tr>
+                        <tr>
+                            <td>User-Agent</td>
+                            <td>Identifies the client application</td>
+                            <td><code>User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Accept</td>
+                            <td>Indicates content types the client understands</td>
+                            <td><code>Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Cookie</td>
+                            <td>Sends stored cookies to the server</td>
+                            <td><code>Cookie: sessionId=abc123; userId=42</code></td>
+                        </tr>
+                        <tr>
+                            <td>Authorization</td>
+                            <td>Contains credentials for authentication</td>
+                            <td><code>Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>Essential Response Headers</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Header</th>
+                            <th>Purpose</th>
+                            <th>Example</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Content-Type</td>
+                            <td>Specifies the media type of the resource</td>
+                            <td><code>Content-Type: text/html; charset=UTF-8</code></td>
+                        </tr>
+                        <tr>
+                            <td>Set-Cookie</td>
+                            <td>Sets cookies in the browser</td>
+                            <td><code>Set-Cookie: sessionId=abc123; Expires=Wed, 21 Oct 2023 07:28:00 GMT</code></td>
+                        </tr>
+                        <tr>
+                            <td>Cache-Control</td>
+                            <td>Directives for caching mechanisms</td>
+                            <td><code>Cache-Control: max-age=3600</code></td>
+                        </tr>
+                        <tr>
+                            <td>Content-Encoding</td>
+                            <td>Indicates compression applied to content</td>
+                            <td><code>Content-Encoding: gzip</code></td>
+                        </tr>
+                        <tr>
+                            <td>Location</td>
+                            <td>Used in redirects to specify the new URL</td>
+                            <td><code>Location: https://example.com/new-page</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card success">
+                <div class="card-header">
+                    <div class="card-icon"><i class="fas fa-trophy"></i></div>
+                    <h3>Pro Tip: Content Negotiation</h3>
+                </div>
+                <p>Servers can use request headers like <code>Accept</code>, <code>Accept-Language</code>, and
+                    <code>Accept-Encoding</code> to serve different versions of the same resource based on client
+                    capabilities and preferences.</p>
+            </div>
+        </section>
+
+        <section id="security-headers">
+            <div class="section-header">
+                <div class="section-icon">4</div>
+                <h2>Security-Related Headers</h2>
+            </div>
+
+            <div class="card warning">
+                <div class="card-header">
+                    <div class="card-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                    <h3>Security Headers Are Critical</h3>
+                </div>
+                <p>Properly configured security headers can prevent many common web vulnerabilities like XSS,
+                    clickjacking, and MIME sniffing attacks.</p>
+            </div>
+
+            <h3>Essential Security Headers</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Header</th>
+                            <th>Purpose</th>
+                            <th>Example</th>
+                            <th>Reference</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Content-Security-Policy</td>
+                            <td>Prevents XSS by controlling resources</td>
+                            <td><code>Content-Security-Policy: default-src 'self'</code></td>
+                            <td><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP" target="_blank">MDN
+                                    Docs</a></td>
+                        </tr>
+                        <tr>
+                            <td>Strict-Transport-Security</td>
+                            <td>Forces HTTPS connections</td>
+                            <td><code>Strict-Transport-Security: max-age=31536000</code></td>
+                            <td><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Strict-Transport-Security"
+                                    target="_blank">MDN Docs</a></td>
+                        </tr>
+                        <tr>
+                            <td>X-Content-Type-Options</td>
+                            <td>Prevents MIME type sniffing</td>
+                            <td><code>X-Content-Type-Options: nosniff</code></td>
+                            <td><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Content-Type-Options"
+                                    target="_blank">MDN Docs</a></td>
+                        </tr>
+                        <tr>
+                            <td>X-Frame-Options</td>
+                            <td>Prevents clickjacking attacks</td>
+                            <td><code>X-Frame-Options: DENY</code></td>
+                            <td><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options"
+                                    target="_blank">MDN Docs</a></td>
+                        </tr>
+                        <tr>
+                            <td>Referrer-Policy</td>
+                            <td>Controls referrer information</td>
+                            <td><code>Referrer-Policy: strict-origin-when-cross-origin</code></td>
+                            <td><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referrer-Policy"
+                                    target="_blank">MDN Docs</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>Content Security Policy (CSP) Example</h3>
+            <p>CSP is a powerful security header that helps prevent XSS attacks:</p>
+            <div class="header-example">
+                <div>Content-Security-Policy: default-src 'self'; script-src 'self' https://apis.google.com; img-src
+                    'self' https://images.example.com; style-src 'self' 'unsafe-inline';</div>
+            </div>
+
+            <p>This policy:</p>
+            <ul>
+                <li>Allows resources only from the same origin by default</li>
+                <li>Allows scripts from the same origin and Google APIs</li>
+                <li>Allows images from the same origin and images.example.com</li>
+                <li>Allows inline styles (necessary for some frameworks)</li>
+            </ul>
+
+            <div class="card danger">
+                <div class="card-header">
+                    <div class="card-icon"><i class="fas fa-radiation"></i></div>
+                    <h3>Warning: Be Careful with CSP</h3>
+                </div>
+                <p>Implementing CSP incorrectly can break your website. Start with a report-only mode first:</p>
+                <div class="header-example">
+                    <div>Content-Security-Policy-Report-Only: default-src 'self'; report-uri
+                        /csp-violation-report-endpoint</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="advanced-headers">
+            <div class="section-header">
+                <div class="section-icon">5</div>
+                <h2>Advanced HTTP Headers</h2>
+            </div>
+
+            <p>These headers are used in specific scenarios and provide advanced functionality for modern web
+                applications.</p>
+
+            <div class="advanced-grid">
+                <div class="advanced-card">
+                    <h4><span class="header-badge">HTTP/2</span> HTTP/2 Specific Headers</h4>
+                    <p>Headers like <code>:method</code>, <code>:path</code>, <code>:authority</code>, and
+                        <code>:scheme</code> are pseudo-headers used in HTTP/2 requests.</p>
+                    <p><strong>Purpose:</strong> Provide request metadata in a more efficient format than traditional
+                        headers.</p>
+                    <a href="https://httpwg.org/specs/rfc7540.html#HttpHeaders" class="rfc-link" target="_blank">
+                        <i class="fas fa-external-link-alt"></i> RFC 7540
+                    </a>
+                </div>
+
+                <div class="advanced-card">
+                    <h4><span class="header-badge">CORS</span> Cross-Origin Headers</h4>
+                    <p>Headers like <code>Access-Control-Allow-Origin</code>, <code>Access-Control-Allow-Methods</code>,
+                        and <code>Access-Control-Allow-Headers</code> control cross-origin requests.</p>
+                    <p><strong>Purpose:</strong> Enable secure cross-origin requests and data transfers.</p>
+                    <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS" class="rfc-link" target="_blank">
+                        <i class="fas fa-external-link-alt"></i> MDN Docs
+                    </a>
+                </div>
+
+                <div class="advanced-card">
+                    <h4><span class="header-badge">PERF</span> Performance Headers</h4>
+                    <p>Headers like <code>ETag</code>, <code>Last-Modified</code>, <code>Vary</code>, and
+                        <code>Accept-Ranges</code> help with caching and performance optimization.</p>
+                    <p><strong>Purpose:</strong> Improve website performance through efficient caching and content
+                        delivery.</p>
+                    <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers#caching" class="rfc-link"
+                        target="_blank">
+                        <i class="fas fa-external-link-alt"></i> MDN Docs
+                    </a>
+                </div>
+
+                <div class="advanced-card">
+                    <h4><span class="header-badge">AUTH</span> Authentication Headers</h4>
+                    <p>Headers like <code>WWW-Authenticate</code>, <code>Proxy-Authenticate</code>,
+                        <code>Authorization</code>, and <code>Proxy-Authorization</code> handle authentication.</p>
+                    <p><strong>Purpose:</strong> Manage various authentication schemes like Basic, Digest, and Bearer
+                        tokens.</p>
+                    <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication" class="rfc-link"
+                        target="_blank">
+                        <i class="fas fa-external-link-alt"></i> MDN Docs
+                    </a>
+                </div>
+
+                <div class="advanced-card">
+                    <h4><span class="header-badge">COOKIE</span> Cookie Headers</h4>
+                    <p>Headers like <code>Cookie</code> (request) and <code>Set-Cookie</code> (response) manage stateful
+                        sessions.</p>
+                    <p><strong>Purpose:</strong> Maintain state between HTTP requests (stateless protocol).</p>
+                    <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cookie" class="rfc-link"
+                        target="_blank">
+                        <i class="fas fa-external-link-alt"></i> MDN Docs
+                    </a>
+                </div>
+
+                <div class="advanced-card">
+                    <h4><span class="header-badge">DOWNLOAD</span> Download Headers</h4>
+                    <p>Headers like <code>Content-Disposition</code> control whether content should be displayed inline
+                        or as an attachment.</p>
+                    <p><strong>Purpose:</strong> Instruct browsers on how to handle response content (display or
+                        download).</p>
+                    <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Disposition"
+                        class="rfc-link" target="_blank">
+                        <i class="fas fa-external-link-alt"></i> MDN Docs
+                    </a>
+                </div>
+            </div>
+
+            <h3>Lesser-Known But Useful Headers</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Header</th>
+                            <th>Category</th>
+                            <th>Purpose</th>
+                            <th>Reference</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Expect-CT</td>
+                            <td>Security</td>
+                            <td>Enables Certificate Transparency enforcement</td>
+                            <td><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Expect-CT"
+                                    target="_blank">MDN</a></td>
+                        </tr>
+                        <tr>
+                            <td>Feature-Policy</td>
+                            <td>Security</td>
+                            <td>Controls which browser features can be used</td>
+                            <td><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Feature-Policy"
+                                    target="_blank">MDN</a></td>
+                        </tr>
+                        <tr>
+                            <td>Clear-Site-Data</td>
+                            <td>Security</td>
+                            <td>Clears browsing data associated with the requesting website</td>
+                            <td><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Clear-Site-Data"
+                                    target="_blank">MDN</a></td>
+                        </tr>
+                        <tr>
+                            <td>Accept-CH</td>
+                            <td>Client Hints</td>
+                            <td>Indicates client hints the server is interested in</td>
+                            <td><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-CH"
+                                    target="_blank">MDN</a></td>
+                        </tr>
+                        <tr>
+                            <td>Critical-CH</td>
+                            <td>Client Hints</td>
+                            <td>Indicates client hints critical for the server</td>
+                            <td><a href="https://httpwg.org/http-extensions/client-hints.html#critical-ch"
+                                    target="_blank">Spec</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="custom-headers">
+            <div class="section-header">
+                <div class="section-icon">6</div>
+                <h2>Custom HTTP Headers</h2>
+            </div>
+
+            <p>You can create custom headers for your application's specific needs. Custom headers should be prefixed
+                with <code>X-</code> to avoid conflicts with standard headers.</p>
+
+            <h3>Common Custom Header Patterns</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Header</th>
+                            <th>Purpose</th>
+                            <th>Example</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>X-Request-ID</td>
+                            <td>Unique identifier for request tracing</td>
+                            <td><code>X-Request-ID: 550e8400-e29b-41d4-a716-446655440000</code></td>
+                        </tr>
+                        <tr>
+                            <td>X-API-Key</td>
+                            <td>API key for authentication</td>
+                            <td><code>X-API-Key: abc123def456ghi789</code></td>
+                        </tr>
+                        <tr>
+                            <td>X-CSRF-Token</td>
+                            <td>Prevents Cross-Site Request Forgery</td>
+                            <td><code>X-CSRF-Token: 1a2b3c4d5e6f7g8h</code></td>
+                        </tr>
+                        <tr>
+                            <td>X-RateLimit-Limit</td>
+                            <td>Indicates request limit</td>
+                            <td><code>X-RateLimit-Limit: 1000</code></td>
+                        </tr>
+                        <tr>
+                            <td>X-RateLimit-Remaining</td>
+                            <td>Shows remaining requests</td>
+                            <td><code>X-RateLimit-Remaining: 999</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>Creating Custom Headers</h3>
+            <p>In JavaScript (client-side):</p>
+            <pre><code>// Using Fetch API
+fetch('/api/data', {
+  headers: {
+    'X-API-Key': 'your-api-key',
+    'X-Custom-Header': 'custom-value'
+  }
+});
+
+// Using XMLHttpRequest
+var xhr = new XMLHttpRequest();
+xhr.open('GET', '/api/data');
+xhr.setRequestHeader('X-API-Key', 'your-api-key');
+xhr.send();</code></pre>
+
+            <p>In Node.js (server-side with Express):</p>
+            <pre><code>app.get('/api/data', (req, res) => {
+  // Set custom response headers
+  res.set({
+    'X-API-Version': '1.0.0',
+    'X-Response-Time': '125ms'
+  });
+  
+  // Read custom request headers
+  const apiKey = req.get('X-API-Key');
+  const requestId = req.get('X-Request-ID');
+  
+  res.json({ data: 'example' });
+});</code></pre>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon"><i class="fas fa-check-circle"></i></div>
+                    <h3>Best Practices for Custom Headers</h3>
+                </div>
+                <ul>
+                    <li>Prefix with <code>X-</code> to avoid conflicts with future standard headers</li>
+                    <li>Use descriptive names that indicate purpose</li>
+                    <li>Document your custom headers for API consumers</li>
+                    <li>Keep values concise and meaningful</li>
+                    <li>Be consistent with naming conventions across your application</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="demo">
+            <div class="section-header">
+                <div class="section-icon">7</div>
+                <h2>Interactive Demo: Explore HTTP Headers</h2>
+            </div>
+
+            <div class="interactive-demo">
+                <div class="demo-controls">
+                    <select id="demo-url">
+                        <option value="https://httpbin.org/headers">httpbin.org/headers</option>
+                        <option value="https://httpbin.org/user-agent">httpbin.org/user-agent</option>
+                        <option value="https://httpbin.org/gzip">httpbin.org/gzip</option>
+                        <option value="https://httpbin.org/cache">httpbin.org/cache</option>
+                        <option value="https://httpbin.org/response-headers">httpbin.org/response-headers</option>
+                    </select>
+
+                    <select id="demo-method">
+                        <option value="GET">GET</option>
+                        <option value="POST">POST</option>
+                        <option value="PUT">PUT</option>
+                        <option value="DELETE">DELETE</option>
+                    </select>
+
+                    <button id="demo-send">
+                        <i class="fas fa-paper-plane"></i> Send Request
+                    </button>
+                    <button id="demo-add-header" class="secondary">
+                        <i class="fas fa-plus"></i> Add Custom Header
+                    </button>
+                </div>
+
+                <div id="custom-headers-container">
+                    <!-- Custom headers will be added here -->
+                </div>
+
+                <div class="demo-output" id="demo-output">
+                    <p>Click "Send Request" to see HTTP headers in action.</p>
+                    <p>The demo will show request headers sent and response headers received.</p>
+                </div>
+            </div>
+
+            <h3>Understanding the Output</h3>
+            <p>The demo shows:</p>
+            <ul>
+                <li><strong>Request Headers</strong>: What your browser sends to the server</li>
+                <li><strong>Response Headers</strong>: What the server sends back</li>
+                <li><strong>Response Body</strong>: The actual data returned</li>
+            </ul>
+
+            <div class="card info">
+                <div class="card-header">
+                    <div class="card-icon"><i class="fas fa-flask"></i></div>
+                    <h3>Try This Experiment</h3>
+                </div>
+                <p>Add a custom header like <code>X-My-Custom-Header: HelloWorld</code> and see how the server echoes it
+                    back in the response.</p>
+            </div>
+        </section>
+
+        <section id="references">
+            <div class="section-header">
+                <div class="section-icon">8</div>
+                <h2>Further Reading & References</h2>
+            </div>
+
+            <div class="reference-grid">
+                <div class="reference-card">
+                    <h4>MDN Web Docs</h4>
+                    <p>Comprehensive documentation of HTTP headers with examples and browser compatibility.</p>
+                    <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers" target="_blank">
+                        <i class="fas fa-external-link-alt"></i> Visit MDN
+                    </a>
+                </div>
+
+                <div class="reference-card">
+                    <h4>HTTP Header Field Registry</h4>
+                    <p>Official IANA registry of all registered HTTP header fields.</p>
+                    <a href="https://www.iana.org/assignments/message-headers/message-headers.xhtml" target="_blank">
+                        <i class="fas fa-external-link-alt"></i> View Registry
+                    </a>
+                </div>
+
+                <div class="reference-card">
+                    <h4>HTTP/2 Specification</h4>
+                    <p>Official RFC 7540 documenting the HTTP/2 protocol and its headers.</p>
+                    <a href="https://httpwg.org/specs/rfc7540.html" target="_blank">
+                        <i class="fas fa-external-link-alt"></i> Read RFC 7540
+                    </a>
+                </div>
+
+                <div class="reference-card">
+                    <h4>Security Headers Scanner</h4>
+                    <p>Online tool to analyze your website's security headers.</p>
+                    <a href="https://securityheaders.com" target="_blank">
+                        <i class="fas fa-external-link-alt"></i> Scan Your Site
+                    </a>
+                </div>
+
+                <div class="reference-card">
+                    <h4>CORS Guide</h4>
+                    <p>Complete guide to Cross-Origin Resource Sharing and related headers.</p>
+                    <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS" target="_blank">
+                        <i class="fas fa-external-link-alt"></i> Learn CORS
+                    </a>
+                </div>
+
+                <div class="reference-card">
+                    <h4>HTTP Status Dogs</h4>
+                    <p>Fun visual reference for HTTP status codes (with dogs!).</p>
+                    <a href="https://httpstatusdogs.com" target="_blank">
+                        <i class="fas fa-external-link-alt"></i> View Status Dogs
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>HTTP Headers Guide</h3>
+                    <p>A comprehensive resource for understanding HTTP headers from basic to advanced concepts.</p>
+                    <div class="social-links">
+                        <a href="https://github.com/ritikraj07" target="_blank" title="GitHub">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="https://www.youtube.com/@Beer-with-Bugs" target="_blank" title="YouTube">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                        <a href="https://www.instagram.com/dev_ritik07/" target="_blank" title="Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/in/ritik-raj07/" target="_blank" title="LinkedIn">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="mailto:imritikraj0@gmail.com" title="Email">
+                            <i class="fas fa-envelope"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="#what-are-headers">What are HTTP Headers?</a></li>
+                        <li><a href="#types">Header Types</a></li>
+                        <li><a href="#common-headers">Common Headers</a></li>
+                        <li><a href="#security-headers">Security Headers</a></li>
+                        <li><a href="#advanced-headers">Advanced Headers</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Resources</h3>
+                    <ul class="footer-links">
+                        <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers" target="_blank">MDN Web
+                                Docs</a></li>
+                        <li><a href="https://httpbin.org" target="_blank">HTTPBin - HTTP Testing Tool</a></li>
+                        <li><a href="https://httpwg.org" target="_blank">HTTP Working Group</a></li>
+                        <li><a href="https://securityheaders.com" target="_blank">Security Headers Scanner</a></li>
+                        <li><a href="https://httpstatusdogs.com" target="_blank">HTTP Status Dogs</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="copyright">
+                <p>&copy; 2025 HTTP Headers Guide. Created by <a href="https://github.com/ritikraj07"
+                        target="_blank">Ritik Raj</a>.</p>
+                <p>This content is available under the Creative Commons Attribution-ShareAlike License.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Mobile menu toggle
+            const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+            const navLinks = document.querySelector('.nav-links');
+
+            mobileMenuBtn.addEventListener('click', function () {
+                navLinks.classList.toggle('active');
+            });
+
+            // Interactive Demo
+            const sendButton = document.getElementById('demo-send');
+            const addHeaderButton = document.getElementById('demo-add-header');
+            const customHeadersContainer = document.getElementById('custom-headers-container');
+            const demoOutput = document.getElementById('demo-output');
+            let headerCount = 0;
+
+            // Add custom header input
+            addHeaderButton.addEventListener('click', function () {
+                headerCount++;
+                const headerDiv = document.createElement('div');
+                headerDiv.className = 'demo-controls';
+                headerDiv.innerHTML = `
+                    <input type="text" placeholder="Header Name" class="header-name" value="X-Custom-Header-${headerCount}">
+                    <input type="text" placeholder="Header Value" class="header-value" value="Custom Value ${headerCount}">
+                    <button class="remove-header secondary">
+                        <i class="fas fa-trash"></i> Remove
+                    </button>
+                `;
+                customHeadersContainer.appendChild(headerDiv);
+
+                // Add remove functionality
+                headerDiv.querySelector('.remove-header').addEventListener('click', function () {
+                    customHeadersContainer.removeChild(headerDiv);
+                });
+            });
+
+            // Send request
+            sendButton.addEventListener('click', function () {
+                const url = document.getElementById('demo-url').value;
+                const method = document.getElementById('demo-method').value;
+
+                // Collect custom headers
+                const customHeaders = {};
+                const headerInputs = customHeadersContainer.querySelectorAll('.demo-controls');
+                headerInputs.forEach(div => {
+                    const name = div.querySelector('.header-name').value;
+                    const value = div.querySelector('.header-value').value;
+                    if (name && value) {
+                        customHeaders[name] = value;
+                    }
+                });
+
+                // Update output with loading message
+                demoOutput.innerHTML = '<p><i class="fas fa-spinner fa-spin"></i> Sending request...</p>';
+
+                // Make the request
+                fetch(url, {
+                    method: method,
+                    headers: customHeaders
+                })
+                    .then(response => {
+                        // Format and display response headers
+                        let output = '<h4>Response Status</h4>';
+                        output += `<p><span class="status">${response.status} ${response.statusText}</span></p>`;
+
+                        output += '<h4>Response Headers</h4>';
+                        response.headers.forEach((value, name) => {
+                            output += `<div><span class="header-name">${name}</span>: <span class="header-value">${value}</span></div>`;
+                        });
+
+                        output += '<h4>Request Headers Sent</h4>';
+                        if (Object.keys(customHeaders).length === 0) {
+                            output += '<p>No custom headers were sent.</p>';
+                        } else {
+                            Object.keys(customHeaders).forEach(name => {
+                                output += `<div><span class="header-name">${name}</span>: <span class="header-value">${customHeaders[name]}</span></div>`;
+                            });
+                        }
+
+                        return response.text().then(body => {
+                            output += '<h4>Response Body</h4>';
+                            output += `<pre>${body}</pre>`;
+                            demoOutput.innerHTML = output;
+                        });
+                    })
+                    .catch(error => {
+                        demoOutput.innerHTML = `<p style="color: var(--error)"><i class="fas fa-exclamation-circle"></i> Error: ${error.message}</p>`;
+                    });
+            });
+
+            // Smooth scrolling for navigation links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 100,
+                            behavior: 'smooth'
+                        });
+
+                        // Close mobile menu if open
+                        if (navLinks.classList.contains('active')) {
+                            navLinks.classList.remove('active');
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,1350 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Complete guide to HTTP status codes with examples, use cases, and importance for web developers">
+    <meta name="keywords"
+        content="HTTP status codes, 200 OK, 404 Not Found, 500 Internal Server Error, web development, API responses">
+    <meta name="author" content="Ritik Raj">
+    <meta name="robots" content="index, follow">
+
+    <!-- Ritik Raj SEO Meta Tags -->
+    <meta name="ritik" content="ritik07, lord ritik, lord_ritik07">
+
+    <title>Complete HTTP Status Codes Guide | Ritik Raj</title>
+
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #64748b;
+            --accent: #06b6d4;
+            --background: #0f172a;
+            --surface: #1e293b;
+            --card: #1e293b;
+            --text: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --border: #334155;
+            --success: #10b981;
+            --error: #ef4444;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.7;
+            font-size: 16px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 3rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" preserveAspectRatio="none"><path d="M0,0 L1000,100 L0,100 Z" fill="rgba(255,255,255,0.1)"/></svg>');
+            background-size: cover;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #ffffff, #e0f2fe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            font-weight: 300;
+            max-width: 700px;
+            margin: 0 auto 1.5rem;
+        }
+
+        /* Search Bar */
+        .search-container {
+            max-width: 600px;
+            margin: 2rem auto 0;
+            position: relative;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            border-radius: 50px;
+            border: none;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            color: white;
+            font-size: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-box::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .search-box:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Navigation */
+        nav {
+            background-color: var(--surface);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--text);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo span {
+            color: var(--accent);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            transition: color 0.3s;
+            padding: 0.5rem 0;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--text);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--accent);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Main Content */
+        main {
+            padding: 3rem 0;
+        }
+
+        section {
+            margin: 3rem 0;
+            scroll-margin-top: 80px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .section-icon {
+            background-color: var(--primary);
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            font-weight: bold;
+        }
+
+        h2 {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            margin: 1.5rem 0 1rem;
+            color: var(--accent);
+        }
+
+        h4 {
+            font-size: 1.2rem;
+            margin: 1.2rem 0 0.8rem;
+            color: var(--text);
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+        }
+
+        /* Status Code Cards */
+        .status-codes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .status-card {
+            background-color: var(--card);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--border);
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .status-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .status-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .status-code {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-right: 1rem;
+            min-width: 80px;
+        }
+
+        .status-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .status-description {
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+        }
+
+        .status-category {
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: 0.5rem 1rem;
+            border-bottom-left-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-card.info .status-category {
+            background-color: var(--info);
+        }
+
+        .status-card.success .status-category {
+            background-color: var(--success);
+        }
+
+        .status-card.redirect .status-category {
+            background-color: var(--warning);
+        }
+
+        .status-card.client-error .status-category {
+            background-color: var(--error);
+        }
+
+        .status-card.server-error .status-category {
+            background-color: var(--error);
+        }
+
+        .status-details {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .status-details h5 {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            color: var(--accent);
+        }
+
+        /* Code Examples */
+        code {
+            background-color: rgba(30, 41, 59, 0.8);
+            color: var(--text);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            font-size: 0.9rem;
+            border: 1px solid var(--border);
+        }
+
+        pre {
+            background-color: #1a202c;
+            color: #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            line-height: 1.5;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            border: 1px solid var(--border);
+        }
+
+        /* Quick Reference */
+        .quick-reference {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .ref-item {
+            background-color: var(--surface);
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            transition: transform 0.3s;
+            border: 1px solid var(--border);
+        }
+
+        .ref-item:hover {
+            transform: translateY(-3px);
+        }
+
+        .ref-code {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .ref-name {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--surface);
+            padding: 3rem 0;
+            margin-top: 3rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-section h3 {
+            color: var(--text);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: var(--background);
+            border-radius: 50%;
+            color: var(--text);
+            text-decoration: none;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .social-links a:hover {
+            background-color: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+
+            .subtitle {
+                font-size: 1.1rem;
+            }
+
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background-color: var(--surface);
+                flex-direction: column;
+                padding: 1rem;
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+                border-top: 1px solid var(--border);
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .status-codes-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .quick-reference {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Status Code Colors */
+        .status-1xx .status-code {
+            color: var(--info);
+        }
+
+        .status-2xx .status-code {
+            color: var(--success);
+        }
+
+        .status-3xx .status-code {
+            color: var(--warning);
+        }
+
+        .status-4xx .status-code {
+            color: var(--error);
+        }
+
+        .status-5xx .status-code {
+            color: var(--error);
+        }
+
+        /* Search Results */
+        .search-results {
+            margin-top: 2rem;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-secondary);
+        }
+
+        /* Filter Buttons */
+        .filter-buttons {
+            display: flex;
+            gap: 1rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background-color: var(--surface);
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .filter-btn.active {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .filter-btn:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+    </style>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <h1>HTTP Status Codes</h1>
+                <p class="subtitle">Complete reference guide with examples, use cases, and best practices for web
+                    developers</p>
+
+                <div class="search-container">
+                    <input type="text" class="search-box" id="searchInput"
+                        placeholder="Search status codes (e.g., 404, Not Found, redirect)">
+                    <div class="search-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <nav>
+        <div class="container nav-container">
+            <a href="#" class="logo">HTTP<span>Status</span></a>
+
+            <ul class="nav-links">
+                <li><a href="#overview"><i class="fas fa-home"></i> Overview</a></li>
+                <li><a href="#1xx"><i class="fas fa-info-circle"></i> 1xx Informational</a></li>
+                <li><a href="#2xx"><i class="fas fa-check-circle"></i> 2xx Success</a></li>
+                <li><a href="#3xx"><i class="fas fa-redo"></i> 3xx Redirection</a></li>
+                <li><a href="#4xx"><i class="fas fa-exclamation-triangle"></i> 4xx Client Errors</a></li>
+                <li><a href="#5xx"><i class="fas fa-times-circle"></i> 5xx Server Errors</a></li>
+            </ul>
+
+            <button class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <main class="container">
+        <section id="overview">
+            <div class="section-header">
+                <div class="section-icon"><i class="fas fa-home"></i></div>
+                <h2>HTTP Status Codes Overview</h2>
+            </div>
+
+            <p>HTTP status codes are three-digit numbers returned by servers to indicate the result of a client's
+                request. They are grouped into five classes, each representing a different type of response.</p>
+
+            <div class="quick-reference">
+                <div class="ref-item status-1xx">
+                    <div class="ref-code">1xx</div>
+                    <div class="ref-name">Informational</div>
+                </div>
+                <div class="ref-item status-2xx">
+                    <div class="ref-code">2xx</div>
+                    <div class="ref-name">Success</div>
+                </div>
+                <div class="ref-item status-3xx">
+                    <div class="ref-code">3xx</div>
+                    <div class="ref-name">Redirection</div>
+                </div>
+                <div class="ref-item status-4xx">
+                    <div class="ref-code">4xx</div>
+                    <div class="ref-name">Client Error</div>
+                </div>
+                <div class="ref-item status-5xx">
+                    <div class="ref-code">5xx</div>
+                    <div class="ref-name">Server Error</div>
+                </div>
+            </div>
+
+            <h3>Filter Status Codes</h3>
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">All Codes</button>
+                <button class="filter-btn" data-filter="1xx">1xx Informational</button>
+                <button class="filter-btn" data-filter="2xx">2xx Success</button>
+                <button class="filter-btn" data-filter="3xx">3xx Redirection</button>
+                <button class="filter-btn" data-filter="4xx">4xx Client Errors</button>
+                <button class="filter-btn" data-filter="5xx">5xx Server Errors</button>
+            </div>
+        </section>
+
+        <section id="1xx">
+            <div class="section-header">
+                <div class="section-icon">1xx</div>
+                <h2>Informational Responses</h2>
+            </div>
+
+            <p>These status codes indicate that the request was received and understood, and the process is continuing.
+            </p>
+
+            <div class="status-codes-grid">
+                <!-- 100 Continue -->
+                <div class="status-card info status-1xx">
+                    <div class="status-category">Informational</div>
+                    <div class="status-header">
+                        <div class="status-code">100</div>
+                        <div class="status-name">Continue</div>
+                    </div>
+                    <div class="status-description">
+                        The server has received the request headers and the client should proceed to send the request
+                        body.
+                    </div>
+                    <div class="status-details">
+                        <h5>Use Case</h5>
+                        <p>Used when the client sends a large request body and wants to check if the server will accept
+                            it before sending.</p>
+                        <h5>Example</h5>
+                        <pre>HTTP/1.1 100 Continue</pre>
+                    </div>
+                </div>
+
+                <!-- 101 Switching Protocols -->
+                <div class="status-card info status-1xx">
+                    <div class="status-category">Informational</div>
+                    <div class="status-header">
+                        <div class="status-code">101</div>
+                        <div class="status-name">Switching Protocols</div>
+                    </div>
+                    <div class="status-description">
+                        The server is switching protocols as requested by the client.
+                    </div>
+                    <div class="status-details">
+                        <h5>Use Case</h5>
+                        <p>Used when upgrading from HTTP to WebSocket or switching to a different protocol.</p>
+                        <h5>Example</h5>
+                        <pre>HTTP/1.1 101 Switching Protocols
+Upgrade: websocket
+Connection: Upgrade</pre>
+                    </div>
+                </div>
+
+                <!-- 102 Processing -->
+                <div class="status-card info status-1xx">
+                    <div class="status-category">Informational</div>
+                    <div class="status-header">
+                        <div class="status-code">102</div>
+                        <div class="status-name">Processing</div>
+                    </div>
+                    <div class="status-description">
+                        The server has received and is processing the request, but no response is available yet.
+                    </div>
+                    <div class="status-details">
+                        <h5>Use Case</h5>
+                        <p>Used for long-running requests to prevent timeouts by indicating the server is still working.
+                        </p>
+                        <h5>Example</h5>
+                        <pre>HTTP/1.1 102 Processing</pre>
+                    </div>
+                </div>
+
+                <!-- 103 Early Hints -->
+                <div class="status-card info status-1xx">
+                    <div class="status-category">Informational</div>
+                    <div class="status-header">
+                        <div class="status-code">103</div>
+                        <div class="status-name">Early Hints</div>
+                    </div>
+                    <div class="status-description">
+                        Used to return some response headers before the final HTTP message.
+                    </div>
+                    <div class="status-details">
+                        <h5>Use Case</h5>
+                        <p>Allows browsers to preload resources while the server prepares the full response.</p>
+                        <h5>Example</h5>
+                        <pre>HTTP/1.1 103 Early Hints
+Link: </style.css>; rel=preload; as=style</pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="2xx">
+            <div class="section-header">
+                <div class="section-icon">2xx</div>
+                <h2>Success Responses</h2>
+            </div>
+
+            <p>These status codes indicate that the request was successfully received, understood, and accepted.</p>
+
+            <div class="status-codes-grid">
+                <!-- 200 OK -->
+                <div class="status-card success status-2xx">
+                    <div class="status-category">Success</div>
+                    <div class="status-header">
+                        <div class="status-code">200</div>
+                        <div class="status-name">OK</div>
+                    </div>
+                    <div class="status-description">
+                        The request has succeeded. The information returned depends on the request method.
+                    </div>
+                    <div class="status-details">
+                        <h5>Use Case</h5>
+                        <p>Standard response for successful HTTP requests.</p>
+                        <h5>Example</h5>
+                        <pre>HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "status": "success",
+  "data": { ... }
+}</pre>
+                    </div>
+                </div>
+
+                <!-- 201 Created -->
+                <div class="status-card success status-2xx">
+                    <div class="status-category">Success</div>
+                    <div class="status-header">
+                        <div class="status-code">201</div>
+                        <div class="status-name">Created</div>
+                    </div>
+                    <div class="status-description">
+                        The request has been fulfilled and resulted in a new resource being created.
+                    </div>
+                    <div class="status-details">
+                        <h5>Use Case</h5>
+                        <p>Response to POST requests that create new resources.</p>
+                        <h5>Example</h5>
+                        <pre>HTTP/1.1 201 Created
+Location: /api/users/123
+Content-Type: application/json
+
+{
+  "id": 123,
+  "name": "John Doe",
+  "email": "john@example.com"
+}</pre>
+                    </div>
+                </div>
+
+                <!-- 202 Accepted -->
+                <div class="status-card success status-2xx">
+                    <div class="status-category">Success</div>
+                    <div class="status-header">
+                        <div class="status-code">202</div>
+                        <div class="status-name">Accepted</div>
+                    </div>
+                    <div class="status-description">
+                        The request has been accepted for processing, but processing is not complete.
+                    </div>
+                    <div class="status-details">
+                        <h5>Use Case</h5>
+                        <p>Used for asynchronous processing where the result will be available later.</p>
+                        <h5>Example</h5>
+                        <pre>HTTP/1.1 202 Accepted
+Content-Type: application/json
+
+{
+  "message": "Request accepted for processing",
+  "job_id": "job-12345"
+}</pre>
+                    </div>
+                </div>
+
+                <!-- 204 No Content -->
+                <div class="status-card success status-2xx">
+                    <div class="status-category">Success</div>
+                    <div class="status-header">
+                        <div class="status-code">204</div>
+                        <div class="status-name">No Content</div>
+                    </div>
+                    <div class="status-description">
+                        The server successfully processed the request but is not returning any content.
+                    </div>
+                    <div class="status-details">
+                        <h5>Use Case</h5>
+                        <p>Response to DELETE requests or when an update doesn't require returning data.</p>
+                        <h5>Example</h5>
+                        <pre>HTTP/1.1 204 No Content</pre>
+                    </div>
+                </div>
+
+                <!-- Additional 2xx codes would follow the same pattern -->
+            </div>
+        </section>
+
+        <section id="3xx">
+            <div class="section-header">
+                <div class="section-icon">3xx</div>
+                <h2>Redirection Responses</h2>
+            </div>
+
+            <p>These status codes indicate that further action needs to be taken by the client to complete the request.
+            </p>
+
+            <div class="status-codes-grid">
+                <!-- 301 Moved Permanently -->
+                <div class="status-card redirect status-3xx">
+                    <div class="status-category">Redirection</div>
+                    <div class="status-header">
+                        <div class="status-code">301</div>
+                        <div class="status-name">Moved Permanently</div>
+                    </div>
+                    <div class="status-description">
+                        The requested resource has been assigned a new permanent URI.
+                    </div>
+                    <div class="status-details">
+                        <h5>Use Case</h5>
+                        <p>Used when a page has permanently moved to a new location.</p>
+                        <h5>Example</h5>
+                        <pre>HTTP/1.1 301 Moved Permanently
+Location: https://example.com/new-page</pre>
+                    </div>
+                </div>
+
+                <!-- 302 Found -->
+                <div class="status-card redirect status-3xx">
+                    <div class="status-category">Redirection</div>
+                    <div class="status-header">
+                        <div class="status-code">302</div>
+                        <div class="status-name">Found</div>
+                    </div>
+                    <div class="status-description">
+                        The requested resource resides temporarily under a different URI.
+                    </div>
+                    <div class="status-details">
+                        <h5>Use Case</h5>
+                        <p>Temporary redirect for cases like after form submission.</p>
+                        <h5>Example</h5>
+                        <pre>HTTP/1.1 302 Found
+Location: /success-page</pre>
+                    </div>
+                </div>
+
+                <!-- 304 Not Modified -->
+                <div class="status-card redirect status-3xx">
+                    <div class="status-category">Redirection</div>
+                    <div class="status-header">
+                        <div class="status-code">304</div>
+                        <div class="status-name">Not Modified</div>
+                    </div>
+                    <div class="status-description">
+                        The resource has not been modified since the version specified by the request headers.
+                    </div>
+                    <div class="status-details">
+                        <h5>Use Case</h5>
+                        <p>Used for conditional GET requests to save bandwidth.</p>
+                        <h5>Example</h5>
+                        <pre>HTTP/1.1 304 Not Modified
+ETag: "33a64df551425fcc55e4d42a148795d9f25f89d4"</pre>
+                    </div>
+                </div>
+
+                <!-- Additional 3xx codes would follow the same pattern -->
+            </div>
+        </section>
+
+        <section id="4xx">
+            <div class="section-header">
+                <div class="section-icon">4xx</div>
+                <h2>Client Error Responses</h2>
+            </div>
+
+            <p>These status codes indicate that the client seems to have made an error in the request.</p>
+
+            <div class="status-codes-grid">
+                <!-- 400 Bad Request -->
+                <div class="status-card client-error status-4xx">
+                    <div class="status-category">Client Error</div>
+                    <div class="status-header">
+                        <div class="status-code">400</div>
+                        <div class="status-name">Bad Request</div>
+                    </div>
+                    <div class="status-description">
+                        The server cannot process the request due to a client error.
+                    </div>
+                    <div class="status-details">
+                        <h5>Use Case</h5>
+                        <p>Generic client error when the server cannot understand the request.</p>
+                        <h5>Example</h5>
+                        <pre>HTTP/1.1 400 Bad Request
+Content-Type: application/json
+
+{
+  "error": "Invalid request parameters",
+  "details": "The 'email' field is required"
+}</pre>
+                    </div>
+                </div>
+
+                <!-- 401 Unauthorized -->
+                <div class="status-card client-error status-4xx">
+                    <div class="status-category">Client Error</div>
+                    <div class="status-header">
+                        <div class="status-code">401</div>
+                        <div class="status-name">Unauthorized</div>
+                    </div>
+                    <div class="status-description">
+                        The request requires user authentication.
+                    </div>
+                    <div class="status-details">
+                        <h5>Use Case</h5>
+                        <p>The client must authenticate itself to get the requested response.</p>
+                        <h5>Example</h5>
+                        <pre>HTTP/1.1 401 Unauthorized
+WWW-Authenticate: Basic realm="Access to the staging site"</pre>
+                    </div>
+                </div>
+
+                <!-- 403 Forbidden -->
+                <div class="status-card client-error status-4xx">
+                    <div class="status-category">Client Error</div>
+                    <div class="status-header">
+                        <div class="status-code">403</div>
+                        <div class="status-name">Forbidden</div>
+                    </div>
+                    <div class="status-description">
+                        The server understood the request but refuses to authorize it.
+                    </div>
+                    <div class="status-details">
+                        <h5>Use Case</h5>
+                        <p>The client does not have access rights to the content.</p>
+                        <h5>Example</h5>
+                        <pre>HTTP/1.1 403 Forbidden
+Content-Type: application/json
+
+{
+  "error": "Access denied",
+  "message": "You don't have permission to access this resource"
+}</pre>
+                    </div>
+                </div>
+
+                <!-- 404 Not Found -->
+                <div class="status-card client-error status-4xx">
+                    <div class="status-category">Client Error</div>
+                    <div class="status-header">
+                        <div class="status-code">404</div>
+                        <div class="status-name">Not Found</div>
+                    </div>
+                    <div class="status-description">
+                        The server cannot find the requested resource.
+                    </div>
+                    <div class="status-details">
+                        <h5>Use Case</h5>
+                        <p>The most common error code for missing pages or resources.</p>
+                        <h5>Example</h5>
+                        <pre>HTTP/1.1 404 Not Found
+Content-Type: text/html
+
+<!DOCTYPE html>
+<html>
+<head><title>404 Not Found</title></head>
+<body>
+  <h1>404 - Page Not Found</h1>
+  <p>The requested URL was not found on this server.</p>
+</body>
+</html></pre>
+                    </div>
+                </div>
+
+                <!-- Additional 4xx codes would follow the same pattern -->
+            </div>
+        </section>
+
+        <section id="5xx">
+            <div class="section-header">
+                <div class="section-icon">5xx</div>
+                <h2>Server Error Responses</h2>
+            </div>
+
+            <p>These status codes indicate that the server failed to fulfill a valid request.</p>
+
+            <div class="status-codes-grid">
+                <!-- 500 Internal Server Error -->
+                <div class="status-card server-error status-5xx">
+                    <div class="status-category">Server Error</div>
+                    <div class="status-header">
+                        <div class="status-code">500</div>
+                        <div class="status-name">Internal Server Error</div>
+                    </div>
+                    <div class="status-description">
+                        The server encountered an unexpected condition that prevented it from fulfilling the request.
+                    </div>
+                    <div class="status-details">
+                        <h5>Use Case</h5>
+                        <p>Generic server error when no more specific message is suitable.</p>
+                        <h5>Example</h5>
+                        <pre>HTTP/1.1 500 Internal Server Error
+Content-Type: application/json
+
+{
+  "error": "Internal server error",
+  "message": "Something went wrong on our end"
+}</pre>
+                    </div>
+                </div>
+
+                <!-- 502 Bad Gateway -->
+                <div class="status-card server-error status-5xx">
+                    <div class="status-category">Server Error</div>
+                    <div class="status-header">
+                        <div class="status-code">502</div>
+                        <div class="status-name">Bad Gateway</div>
+                    </div>
+                    <div class="status-description">
+                        The server, while acting as a gateway or proxy, received an invalid response from the upstream
+                        server.
+                    </div>
+                    <div class="status-details">
+                        <h5>Use Case</h5>
+                        <p>When a proxy server receives an invalid response from another server.</p>
+                        <h5>Example</h5>
+                        <pre>HTTP/1.1 502 Bad Gateway
+Content-Type: text/html
+
+<!DOCTYPE html>
+<html>
+<head><title>502 Bad Gateway</title></head>
+<body>
+  <h1>502 - Bad Gateway</h1>
+  <p>The server received an invalid response from an upstream server.</p>
+</body>
+</html></pre>
+                    </div>
+                </div>
+
+                <!-- 503 Service Unavailable -->
+                <div class="status-card server-error status-5xx">
+                    <div class="status-category">Server Error</div>
+                    <div class="status-header">
+                        <div class="status-code">503</div>
+                        <div class="status-name">Service Unavailable</div>
+                    </div>
+                    <div class="status-description">
+                        The server is currently unable to handle the request due to temporary overloading or
+                        maintenance.
+                    </div>
+                    <div class="status-details">
+                        <h5>Use Case</h5>
+                        <p>Server is down for maintenance or overloaded.</p>
+                        <h5>Example</h5>
+                        <pre>HTTP/1.1 503 Service Unavailable
+Retry-After: 3600
+Content-Type: text/html
+
+<!DOCTYPE html>
+<html>
+<head><title>503 Service Unavailable</title></head>
+<body>
+  <h1>503 - Service Unavailable</h1>
+  <p>The server is temporarily unable to handle your request.</p>
+</body>
+</html></pre>
+                    </div>
+                </div>
+
+                <!-- Additional 5xx codes would follow the same pattern -->
+            </div>
+        </section>
+
+        <section id="search-results" class="search-results" style="display: none;">
+            <div class="section-header">
+                <div class="section-icon"><i class="fas fa-search"></i></div>
+                <h2>Search Results</h2>
+            </div>
+            <div id="results-container"></div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>HTTP Status Codes</h3>
+                    <p>A comprehensive reference guide for web developers and API designers.</p>
+                    <div class="social-links">
+                        <a href="https://github.com/ritikraj07" target="_blank" title="GitHub">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="https://www.youtube.com/@Beer-with-Bugs" target="_blank" title="YouTube">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                        <a href="https://www.instagram.com/dev_ritik07/" target="_blank" title="Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/in/ritik-raj07/" target="_blank" title="LinkedIn">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="mailto:imritikraj0@gmail.com" title="Email">
+                            <i class="fas fa-envelope"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="#overview">Overview</a></li>
+                        <li><a href="#1xx">1xx Informational</a></li>
+                        <li><a href="#2xx">2xx Success</a></li>
+                        <li><a href="#3xx">3xx Redirection</a></li>
+                        <li><a href="#4xx">4xx Client Errors</a></li>
+                        <li><a href="#5xx">5xx Server Errors</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Resources</h3>
+                    <ul class="footer-links">
+                        <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status" target="_blank">MDN Web
+                                Docs</a></li>
+                        <li><a href="https://httpstatusdogs.com" target="_blank">HTTP Status Dogs</a></li>
+                        <li><a href="https://http.cat" target="_blank">HTTP Cats</a></li>
+                        <li><a href="https://tools.ietf.org/html/rfc7231" target="_blank">RFC 7231</a></li>
+                        <li><a href="https://httpbin.org" target="_blank">HTTPBin</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="copyright">
+                <p>&copy; 2025 HTTP Status Codes Guide. Created by <a href="https://github.com/ritikraj07"
+                        target="_blank">Ritik Raj</a>.</p>
+                <p>This content is available under the Creative Commons Attribution-ShareAlike License.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Mobile menu toggle
+            const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+            const navLinks = document.querySelector('.nav-links');
+
+            mobileMenuBtn.addEventListener('click', function () {
+                navLinks.classList.toggle('active');
+            });
+
+            // Search functionality
+            const searchInput = document.getElementById('searchInput');
+            const searchResults = document.getElementById('search-results');
+            const resultsContainer = document.getElementById('results-container');
+            const statusCards = document.querySelectorAll('.status-card');
+
+            searchInput.addEventListener('input', function () {
+                const searchTerm = this.value.toLowerCase().trim();
+
+                if (searchTerm.length === 0) {
+                    searchResults.style.display = 'none';
+                    // Show all sections
+                    document.querySelectorAll('section').forEach(section => {
+                        if (section.id !== 'search-results') {
+                            section.style.display = 'block';
+                        }
+                    });
+                    return;
+                }
+
+                // Hide all sections except search results
+                document.querySelectorAll('section').forEach(section => {
+                    if (section.id !== 'search-results') {
+                        section.style.display = 'none';
+                    }
+                });
+
+                searchResults.style.display = 'block';
+                resultsContainer.innerHTML = '';
+
+                let foundResults = false;
+
+                statusCards.forEach(card => {
+                    const code = card.querySelector('.status-code').textContent;
+                    const name = card.querySelector('.status-name').textContent.toLowerCase();
+                    const description = card.querySelector('.status-description').textContent.toLowerCase();
+
+                    if (code.includes(searchTerm) || name.includes(searchTerm) || description.includes(searchTerm)) {
+                        foundResults = true;
+                        const cardClone = card.cloneNode(true);
+                        resultsContainer.appendChild(cardClone);
+                    }
+                });
+
+                if (!foundResults) {
+                    resultsContainer.innerHTML = `
+                        <div class="no-results">
+                            <i class="fas fa-search fa-3x" style="margin-bottom: 1rem; opacity: 0.5;"></i>
+                            <h3>No status codes found</h3>
+                            <p>Try searching with different terms like "404", "Not Found", or "redirect"</p>
+                        </div>
+                    `;
+                }
+            });
+
+            // Filter buttons
+            const filterButtons = document.querySelectorAll('.filter-btn');
+
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    // Remove active class from all buttons
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    // Add active class to clicked button
+                    this.classList.add('active');
+
+                    const filter = this.getAttribute('data-filter');
+
+                    if (filter === 'all') {
+                        // Show all status cards
+                        statusCards.forEach(card => {
+                            card.style.display = 'block';
+                        });
+                        // Show all sections
+                        document.querySelectorAll('section').forEach(section => {
+                            section.style.display = 'block';
+                        });
+                        searchResults.style.display = 'none';
+                    } else {
+                        // Hide all sections except the filtered one
+                        document.querySelectorAll('section').forEach(section => {
+                            if (section.id !== filter && section.id !== 'overview') {
+                                section.style.display = 'none';
+                            } else {
+                                section.style.display = 'block';
+                            }
+                        });
+
+                        // Show only cards that match the filter
+                        statusCards.forEach(card => {
+                            if (card.classList.contains(`status-${filter}`)) {
+                                card.style.display = 'block';
+                            } else {
+                                card.style.display = 'none';
+                            }
+                        });
+
+                        searchResults.style.display = 'none';
+                    }
+                });
+            });
+
+            // Smooth scrolling for navigation links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 100,
+                            behavior: 'smooth'
+                        });
+
+                        // Close mobile menu if open
+                        if (navLinks.classList.contains('active')) {
+                            navLinks.classList.remove('active');
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
