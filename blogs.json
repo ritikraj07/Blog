@@ -8,7 +8,7 @@
       "category": ["devops", "security", "coding-practices"],
       "date": "2025-11-08",
       "readTime": "15 min read",
-      "featured": false,
+      "featured": true,
       "tags": ["python", "web development", "security"],
       "referenced": ["blogs/updated-secure-coding-practices.html"]
     },
