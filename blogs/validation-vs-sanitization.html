@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Join Alex in defending the Code Fortress against malicious inputs. Learn validation and sanitization through an immersive cybersecurity story.">
+    <meta name="keywords"
+        content="ritik, ritik07, lord ritik, lord_ritik07, web security, input validation, sanitization, cybersecurity, frontend development, XSS prevention">
+    <meta name="author" content="Ritik Raj">
+    <title>The Code Fortress: Validation vs Sanitization</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #64748b;
+            --accent: #06b6d4;
+            --background: #0f172a;
+            --surface: #1e293b;
+            --card: #1e293b;
+            --text: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --border: #334155;
+            --success: #10b981;
+            --error: #ef4444;
+            --warning: #f59e0b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--background);
+            color: var(--text);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            padding: 5rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(255,255,255,0.1)"/></svg>');
+            background-size: cover;
+            z-index: 1;
+        }
+
+        header .container {
+            position: relative;
+            z-index: 2;
+        }
+
+        h1 {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+            background: linear-gradient(to right, #f8fafc, #cbd5e1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            max-width: 800px;
+            margin: 0 auto 2rem;
+        }
+
+        .story-intro {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(15, 23, 42, 0.7);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border-left: 4px solid var(--accent);
+        }
+
+        /* Navigation */
+        nav {
+            background: var(--surface);
+            padding: 1.2rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 30px;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            background: linear-gradient(to right, var(--accent), var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+        }
+
+        .nav-links a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Main Content */
+        main {
+            padding: 5rem 0;
+        }
+
+        .chapter {
+            margin-bottom: 6rem;
+            position: relative;
+        }
+
+        .chapter-number {
+            font-size: 6rem;
+            font-weight: 900;
+            color: rgba(30, 41, 59, 0.5);
+            position: absolute;
+            top: -2rem;
+            left: -1rem;
+            z-index: -1;
+        }
+
+        .story-section {
+            background: var(--card);
+            border-radius: 16px;
+            padding: 3.5rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .story-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary), var(--accent));
+        }
+
+        h2 {
+            font-size: 2.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent);
+            position: relative;
+            display: inline-block;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: var(--primary);
+            border-radius: 2px;
+        }
+
+        h3 {
+            font-size: 1.8rem;
+            margin: 2.5rem 0 1.2rem;
+            color: var(--primary);
+        }
+
+        p {
+            margin-bottom: 1.5rem;
+            font-size: 1.15rem;
+        }
+
+        .character {
+            display: flex;
+            align-items: center;
+            margin: 2.5rem 0;
+            padding: 2rem;
+            background: rgba(30, 41, 59, 0.7);
+            border-radius: 12px;
+            border-left: 4px solid var(--accent);
+            transition: transform 0.3s;
+        }
+
+        .character:hover {
+            transform: translateX(10px);
+        }
+
+        .character-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin-right: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            flex-shrink: 0;
+        }
+
+        .character-info h3 {
+            margin-top: 0;
+            color: var(--accent);
+        }
+
+        .character-info p {
+            font-style: italic;
+            color: var(--text-secondary);
+            margin-bottom: 0;
+        }
+
+        .code-block {
+            background: #0d1421;
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+            overflow-x: auto;
+            border-left: 4px solid var(--primary);
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        code {
+            font-family: 'Fira Code', 'Courier New', monospace;
+            font-size: 1rem;
+        }
+
+        .code-keyword {
+            color: #ff79c6;
+        }
+
+        .code-string {
+            color: #50fa7b;
+        }
+
+        .code-comment {
+            color: #6272a4;
+            font-style: italic;
+        }
+
+        .code-function {
+            color: #8be9fd;
+        }
+
+        .code-var {
+            color: #f1fa8c;
+        }
+
+        .code-operator {
+            color: #ff79c6;
+        }
+
+        /* Comparison Section */
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin: 3rem 0;
+        }
+
+        .concept-box {
+            padding: 2.5rem;
+            border-radius: 12px;
+            height: 100%;
+            transition: transform 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .concept-box:hover {
+            transform: translateY(-5px);
+        }
+
+        .validation-box {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(6, 182, 212, 0.1));
+            border: 1px solid var(--success);
+        }
+
+        .sanitization-box {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(245, 158, 11, 0.1));
+            border: 1px solid var(--error);
+        }
+
+        .box-title {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .validation-box .box-title {
+            color: var(--success);
+        }
+
+        .sanitization-box .box-title {
+            color: var(--error);
+        }
+
+        .icon {
+            margin-right: 1rem;
+            font-size: 2rem;
+        }
+
+        .feature-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            margin-bottom: 1rem;
+            padding-left: 2rem;
+            position: relative;
+        }
+
+        .feature-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--success);
+            font-weight: bold;
+        }
+
+        .sanitization-box .feature-list li::before {
+            content: '🛡️';
+            color: var(--error);
+        }
+
+        /* Interactive Demo */
+        .interactive-demo {
+            background: var(--surface);
+            border-radius: 16px;
+            padding: 3rem;
+            margin: 4rem 0;
+            border: 1px solid var(--border);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
+        }
+
+        .demo-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .demo-input-container {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+
+        .demo-input {
+            width: 100%;
+            padding: 1.2rem;
+            background: var(--background);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-size: 1.1rem;
+            font-family: 'Fira Code', monospace;
+            transition: all 0.3s;
+        }
+
+        .demo-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.2);
+        }
+
+        .demo-buttons {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        button {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .validate-btn {
+            background: var(--success);
+            color: white;
+            flex: 1;
+        }
+
+        .sanitize-btn {
+            background: var(--error);
+            color: white;
+            flex: 1;
+        }
+
+        .both-btn {
+            background: var(--primary);
+            color: white;
+            flex: 1;
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .demo-output {
+            padding: 2rem;
+            background: var(--background);
+            border-radius: 8px;
+            min-height: 200px;
+            border: 1px solid var(--border);
+            font-family: 'Fira Code', monospace;
+            white-space: pre-wrap;
+            transition: all 0.3s;
+        }
+
+        .output-success {
+            border-color: var(--success);
+            box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+        }
+
+        .output-danger {
+            border-color: var(--error);
+            box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
+        }
+
+        .output-safe {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(6, 182, 212, 0.2);
+        }
+
+        /* Alert Boxes */
+        .alert {
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+            border-left: 4px solid;
+        }
+
+        .warning {
+            background: rgba(239, 68, 68, 0.1);
+            border-left-color: var(--error);
+        }
+
+        .tip {
+            background: rgba(6, 182, 212, 0.1);
+            border-left-color: var(--accent);
+        }
+
+        .success {
+            background: rgba(16, 185, 129, 0.1);
+            border-left-color: var(--success);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--surface);
+            padding: 4rem 0 2rem;
+            margin-top: 4rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-about h3 {
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-links h3,
+        .footer-social h3 {
+            color: var(--text);
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-links ul,
+        .footer-social ul {
+            list-style: none;
+        }
+
+        .footer-links li,
+        .footer-social li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a,
+        .footer-social a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover,
+        .footer-social a:hover {
+            color: var(--accent);
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .social-icons a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--background);
+            color: var(--text);
+            transition: all 0.3s;
+        }
+
+        .social-icons a:hover {
+            background: var(--accent);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            text-align: center;
+            color: var(--text-secondary);
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 968px) {
+            .comparison {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.8rem;
+            }
+
+            .subtitle {
+                font-size: 1.2rem;
+            }
+
+            .nav-container {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+
+            .nav-links {
+                gap: 1.5rem;
+            }
+
+            .story-section {
+                padding: 2.5rem;
+            }
+
+            .demo-buttons {
+                flex-direction: column;
+            }
+
+            .character {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .character-avatar {
+                margin-right: 0;
+                margin-bottom: 1.5rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--surface);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <h1>The Code Fortress</h1>
+            <p class="subtitle">A Cybersecurity Story About Validation & Sanitization</p>
+            <div class="story-intro fade-in">
+                <p>In the digital realm of Webonia, a young developer named Alex must defend the Code Fortress against a
+                    sinister hacker. Follow Alex's journey to understand the critical difference between validation and
+                    sanitization.</p>
+            </div>
+        </div>
+    </header>
+
+    <nav>
+        <div class="container nav-container">
+            <div class="logo">CodeFortress</div>
+            <div class="nav-links">
+                <a href="#chapter1">Chapter 1</a>
+                <a href="#chapter2">Chapter 2</a>
+                <a href="#chapter3">Chapter 3</a>
+                <a href="#demo">Try It</a>
+                <a href="#conclusion">Conclusion</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <section id="chapter1" class="chapter">
+            <div class="chapter-number">01</div>
+            <div class="story-section fade-in">
+                <h2>The Midnight Intruder</h2>
+                <p>It was 2:37 AM when the alarms started blaring. Red warning lights flashed across the control room of
+                    the Code Fortress, Webonia's most secure application.</p>
+
+                <div class="character">
+                    <div class="character-avatar">
+                        <i class="fas fa-user-secret"></i>
+                    </div>
+                    <div class="character-info">
+                        <h3>Alex</h3>
+                        <p>"I was just refactoring some legacy code when the security dashboard lit up like a Christmas
+                            tree. Someone had breached our defenses."</p>
+                    </div>
+                </div>
+
+                <p>The intruder, known only as "Shadow", had discovered a vulnerability in the user registration system.
+                    He was injecting malicious scripts that executed whenever other users viewed his profile.</p>
+
+                <div class="code-block">
+                    <code>
+                        <span class="code-comment">// The malicious payload Shadow used</span><br>
+                        <span class="code-keyword">const</span> <span class="code-var">maliciousInput</span> <span class="code-operator">=</span> <span class="code-string">"Johnny&lt;script&gt;stealUserData()&lt;/script&gt;"</span>;<br><br>
+                        
+                        <span class="code-comment">// Our vulnerable code that accepted it</span><br>
+                        <span class="code-keyword">function</span> <span class="code-function">displayUsername</span>(<span class="code-var">username</span>) {<br>
+                        &nbsp;&nbsp;document.<span class="code-function">getElementById</span>(<span class="code-string">'user-profile'</span>).<span class="code-var">innerHTML</span> <span class="code-operator">=</span> <span class="code-var">username</span>;<br>
+                        &nbsp;&nbsp;<span class="code-comment">// This executed the malicious script!</span><br>
+                        }
+                    </code>
+                </div>
+
+                <div class="warning">
+                    <h3><i class="fas fa-exclamation-triangle"></i> The Vulnerability</h3>
+                    <p>The Code Fortress was accepting user input without any security checks. The application trusted
+                        users completely, and now it was paying the price with a Cross-Site Scripting (XSS) attack.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="chapter2" class="chapter">
+            <div class="chapter-number">02</div>
+            <div class="story-section fade-in">
+                <h2>The First Defense: Validation</h2>
+                <p>Alex knew the first line of defense was validation. He needed to ensure only properly formatted data
+                    could enter the system.</p>
+
+                <div class="comparison">
+                    <div class="concept-box validation-box">
+                        <h3 class="box-title"><span class="icon">🛡️</span> Input Validation</h3>
+                        <p><strong>The Bouncer at the Club Door</strong></p>
+                        <p>Validation checks if input meets specific criteria before accepting it.</p>
+                        <ul class="feature-list">
+                            <li>Checks format, length, and type</li>
+                            <li>Accepts or rejects the input</li>
+                            <li>Prevents obviously malicious data</li>
+                            <li>First line of defense</li>
+                        </ul>
+                    </div>
+
+                    <div class="code-block">
+                        <code>
+                            <span class="code-comment">// Validation Examples</span><br>
+                            <span class="code-keyword">function</span> <span class="code-function">validateUsername</span>(<span class="code-var">username</span>) {<br>
+                            &nbsp;&nbsp;<span class="code-comment">// Must be 3-20 alphanumeric characters</span><br>
+                            &nbsp;&nbsp;<span class="code-keyword">const</span> <span class="code-var">usernameRegex</span> <span class="code-operator">=</span> <span class="code-string">/^[a-zA-Z0-9]{3,20}$/</span>;<br>
+                            &nbsp;&nbsp;<span class="code-keyword">return</span> <span class="code-var">usernameRegex</span>.<span class="code-function">test</span>(<span class="code-var">username</span>);<br>
+                            }<br><br>
+                            
+                            <span class="code-keyword">function</span> <span class="code-function">validateEmail</span>(<span class="code-var">email</span>) {<br>
+                            &nbsp;&nbsp;<span class="code-keyword">const</span> <span class="code-var">emailRegex</span> <span class="code-operator">=</span> <span class="code-string">/^[^\s@]+@[^\s@]+\.[^\s@]+$/</span>;<br>
+                            &nbsp;&nbsp;<span class="code-keyword">return</span> <span class="code-var">emailRegex</span>.<span class="code-function">test</span>(<span class="code-var">email</span>);<br>
+                            }<br><br>
+                            
+                            <span class="code-comment">// Usage</span><br>
+                            <span class="code-keyword">if</span> (<span class="code-operator">!</span><span class="code-function">validateUsername</span>(<span class="code-var">userInput</span>)) {<br>
+                            &nbsp;&nbsp;<span class="code-keyword">return</span> <span class="code-string">"Invalid username format!"</span>;<br>
+                            }
+                        </code>
+                    </div>
+                </div>
+
+                <p>Alex implemented validation rules across the Code Fortress:</p>
+                <ul>
+                    <li>Usernames: 3-20 characters, alphanumeric only</li>
+                    <li>Emails: Must match standard email format</li>
+                    <li>Passwords: Minimum 8 characters with complexity requirements</li>
+                    <li>Input length limits on all text fields</li>
+                </ul>
+
+                <div class="tip">
+                    <h3><i class="fas fa-lightbulb"></i> Alex's Insight</h3>
+                    <p>"Validation stopped the obvious attacks, but I knew sophisticated hackers could craft inputs that
+                        passed validation but were still dangerous. I needed a second layer of defense."</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="chapter3" class="chapter">
+            <div class="chapter-number">03</div>
+            <div class="story-section fade-in">
+                <h2>The Ultimate Protection: Sanitization</h2>
+                <p>For data that passed validation but could still contain hidden threats, Alex implemented sanitization
+                    - the digital equivalent of a decontamination chamber.</p>
+
+                <div class="comparison">
+                    <div class="concept-box sanitization-box">
+                        <h3 class="box-title"><span class="icon">🧼</span> Input Sanitization</h3>
+                        <p><strong>The Decontamination Chamber</strong></p>
+                        <p>Sanitization cleans or modifies input to make it safe for use.</p>
+                        <ul class="feature-list">
+                            <li>Removes or neutralizes harmful content</li>
+                            <li>Modifies rather than rejects input</li>
+                            <li>Protects against hidden threats</li>
+                            <li>Essential second layer of defense</li>
+                        </ul>
+                    </div>
+
+                    <div class="code-block">
+                        <code>
+                            <span class="code-comment">// Sanitization Examples</span><br>
+                            <span class="code-keyword">function</span> <span class="code-function">sanitizeHTML</span>(<span class="code-var">input</span>) {<br>
+                            &nbsp;&nbsp;<span class="code-keyword">return</span> <span class="code-var">input</span><br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;.<span class="code-function">replace</span>(<span class="code-string">/&/g</span>, <span class="code-string">'&amp;amp;'</span>)<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;.<span class="code-function">replace</span>(<span class="code-string">/</span>/g, <span class="code-string">'&amp;lt;'</span>)<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;.<span class="code-function">replace</span>(<span class="code-string">/>/g</span>, <span class="code-string">'&amp;gt;'</span>)<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;.<span class="code-function">replace</span>(<span class="code-string">/"/g</span>, <span class="code-string">'&amp;quot;'</span>)<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;.<span class="code-function">replace</span>(<span class="code-string">/'/g</span>, <span class="code-string">'&amp;#x27;'</span>);<br>
+                            }<br><br>
+                            
+                            <span class="code-comment">// Using a library like DOMPurify is even better</span><br>
+                            <span class="code-keyword">const</span> <span class="code-var">cleanHTML</span> <span class="code-operator">=</span> DOMPurify.<span class="code-function">sanitize</span>(<span class="code-var">dirtyHTML</span>);<br><br>
+                            
+                            <span class="code-comment">// For database, use parameterized queries</span><br>
+                            <span class="code-keyword">const</span> <span class="code-var">query</span> <span class="code-operator">=</span> <span class="code-string">'SELECT * FROM users WHERE id = ?'</span>;<br>
+                            <span class="code-var">db</span>.<span class="code-function">execute</span>(<span class="code-var">query</span>, [<span class="code-var">userId</span>]);
+                        </code>
+                    </div>
+                </div>
+
+                <p>Alex implemented multiple sanitization strategies:</p>
+                <ul>
+                    <li>HTML entity encoding for content displayed on web pages</li>
+                    <li>Parameterized queries to prevent SQL injection</li>
+                    <li>Content Security Policies (CSP) as a final safety net</li>
+                    <li>Output encoding specific to context (HTML, CSS, JavaScript, URL)</li>
+                </ul>
+
+                <div class="success">
+                    <h3><i class="fas fa-shield-alt"></i> Defense in Depth</h3>
+                    <p>With both validation and sanitization in place, the Code Fortress now had multiple layers of
+                        security. Even if one layer was bypassed, others would provide protection.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="demo" class="interactive-demo fade-in">
+            <div class="demo-header">
+                <h2>Defend the Fortress Yourself</h2>
+                <p>Try out validation and sanitization with these interactive examples</p>
+            </div>
+
+            <div class="demo-input-container">
+                <label for="userInput"><strong>Enter potentially dangerous input:</strong></label>
+                <input type="text" class="demo-input" id="userInput"
+                    placeholder="Try: &lt;script&gt;alert('XSS')&lt;/script&gt; or your@email.com" value="">
+            </div>
+
+            <div class="demo-buttons">
+                <button class="validate-btn" onclick="validateInput()">
+                    <i class="fas fa-shield-check"></i> Validate Input
+                </button>
+                <button class="sanitize-btn" onclick="sanitizeInput()">
+                    <i class="fas fa-soap"></i> Sanitize Input
+                </button>
+                <button class="both-btn" onclick="validateAndSanitize()">
+                    <i class="fas fa-fort-awesome"></i> Use Both
+                </button>
+            </div>
+
+            <div class="demo-output" id="output">
+                # Defense Control Panel
+
+                Try entering different inputs and click the buttons above to see how validation and sanitization work.
+
+                Examples to try:
+                - &lt;script&gt;alert('XSS')&lt;/script&gt;
+                - John'; DROP TABLE users; --
+                - your@email.com
+                - Normal text
+            </div>
+
+            <div class="tip">
+                <h3><i class="fas fa-info-circle"></i> How It Works</h3>
+                <p><strong>Validation</strong> checks if input meets specific criteria (format, length, type).
+                    <strong>Sanitization</strong> modifies input to remove or neutralize dangerous content. For maximum
+                    security, always use both!
+                </p>
+            </div>
+        </section>
+
+        <section id="conclusion" class="chapter">
+            <div class="chapter-number">04</div>
+            <div class="story-section fade-in">
+                <h2>The Fortress Secured</h2>
+                <p>With validation and sanitization firmly in place, Alex watched as Shadow's next attack was
+                    effortlessly neutralized.</p>
+
+                <div class="code-block">
+                    <code>
+                        <span class="code-comment">// Shadow's attack</span><br>
+                        <span class="code-var">maliciousInput</span> <span class="code-operator">=</span> <span class="code-string">"&lt;script&gt;stealCookies()&lt;/script&gt;Shadow"</span>;<br><br>
+                        
+                        <span class="code-comment">// After validation (REJECTED - contains invalid characters)</span><br>
+                        <span class="code-string">"Invalid username: Contains &lt; and > characters"</span>;<br><br>
+                        
+                        <span class="code-comment">// Even if validation passed, sanitization would neutralize it</span><br>
+                        <span class="code-var">safeOutput</span> <span class="code-operator">=</span> <span class="code-string">"&amp;lt;script&amp;gt;stealCookies()&amp;lt;/script&amp;gt;Shadow"</span>;<br>
+                        <span class="code-comment">// Rendered as harmless text: &lt;script&gt;stealCookies()&lt;/script&gt;Shadow</span>
+                    </code>
+                </div>
+
+                <p>The Code Fortress was secure once again. Shadow's attacks were deflected by the dual layers of
+                    validation and sanitization.</p>
+
+                <div class="character">
+                    <div class="character-avatar">
+                        <i class="fas fa-user-tie"></i>
+                    </div>
+                    <div class="character-info">
+                        <h3>Alex, Senior Developer</h3>
+                        <p>"That night taught me the most important lesson in web security: never trust user input.
+                            Validation and sanitization aren't just best practices - they're essential survival skills
+                            in the digital world."</p>
+                    </div>
+                </div>
+
+                <div class="warning">
+                    <h3><i class="fas fa-exclamation-circle"></i> The Golden Rule</h3>
+                    <p><strong>Never trust user input. Always validate AND sanitize.</strong> Validation is your first
+                        line of defense, but sanitization protects you when validation fails or when valid inputs are
+                        still dangerous.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-about">
+                    <h3>About This Story</h3>
+                    <p>The Code Fortress is an educational story designed to teach web developers about critical
+                        security concepts. Understanding validation and sanitization is essential for building secure
+                        applications.</p>
+                    <p>Created with ❤️ by Ritik Raj</p>
+                </div>
+
+                <div class="footer-links">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#chapter1">The Midnight Intruder</a></li>
+                        <li><a href="#chapter2">Input Validation</a></li>
+                        <li><a href="#chapter3">Input Sanitization</a></li>
+                        <li><a href="#demo">Interactive Demo</a></li>
+                        <li><a href="#conclusion">Conclusion</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-social">
+                    <h3>Connect With Me</h3>
+                    <ul>
+                        <li><a href="https://github.com/ritikraj07" target="_blank"><i class="fab fa-github"></i>
+                                GitHub</a></li>
+                        <li><a href="https://www.youtube.com/@Beer-with-Bugs" target="_blank"><i
+                                    class="fab fa-youtube"></i> YouTube</a></li>
+                        <li><a href="https://www.instagram.com/dev_ritik07/" target="_blank"><i
+                                    class="fab fa-instagram"></i> Instagram</a></li>
+                        <li><a href="https://www.linkedin.com/in/ritik-raj07/" target="_blank"><i
+                                    class="fab fa-linkedin"></i> LinkedIn</a></li>
+                        <li><a href="mailto:imritikraj0@gmail.com"><i class="fas fa-envelope"></i> Email</a></li>
+                    </ul>
+
+                    <div class="social-icons">
+                        <a href="https://github.com/ritikraj07" target="_blank" title="GitHub">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="https://www.youtube.com/@Beer-with-Bugs" target="_blank" title="YouTube">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                        <a href="https://www.instagram.com/dev_ritik07/" target="_blank" title="Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/in/ritik-raj07/" target="_blank" title="LinkedIn">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                        <a href="mailto:imritikraj0@gmail.com" title="Email">
+                            <i class="fas fa-envelope"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="copyright">
+                <p>© 2025 Ritik Raj. All rights reserved. | The Code Fortress: A Story of Validation & Sanitization</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Demo functionality
+        function validateInput() {
+            const input = document.getElementById('userInput').value;
+            const output = document.getElementById('output');
+
+            // Escape input for safe display
+            const safeInput = input
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#x27;');
+
+            // Validation rules
+            const errors = [];
+            const successes = [];
+
+            // Check for script tags
+            // - & lt; script & gt; alert('XSS') & lt;/script&gt;
+            if (input.includes('<script>') || input.includes(`lt;/script>`)) {
+                errors.push('❌ Contains dangerous script tags');
+            } else {
+                successes.push('✅ No dangerous script tags detected');
+            }
+
+            // Check for SQL injection patterns
+            const sqlPatterns = ['DROP TABLE', 'DELETE FROM', 'INSERT INTO', 'UPDATE', 'UNION SELECT'];
+            let sqlFound = false;
+            sqlPatterns.forEach(pattern => {
+                if (input.toUpperCase().includes(pattern)) {
+                    errors.push(`❌ Potential SQL injection: ${pattern}`);
+                    sqlFound = true;
+                }
+            });
+            if (!sqlFound) {
+                successes.push('✅ No SQL injection patterns detected');
+            }
+
+            // Validate username format
+            const usernameRegex = /^[a-zA-Z0-9]{0,20}$/;
+            if (input.length > 0 && !usernameRegex.test(input)) {
+                errors.push('❌ Invalid characters in username (alphanumeric only, max 20 chars)');
+            } else if (input.length > 0) {
+                successes.push('✅ Username format is valid');
+            }
+
+            // Validate email format if it looks like an email
+            if (input.includes('@')) {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(input)) {
+                    errors.push('❌ Invalid email format');
+                } else {
+                    successes.push('✅ Email format is valid');
+                }
+            }
+
+            // Display results
+            let resultHTML = `<strong>VALIDATION RESULTS</strong>\n\n`;
+            resultHTML += `Input: ${safeInput}\n\n`;
+
+            if (successes.length > 0) {
+                resultHTML += `SUCCESSES:\n${successes.join('\n')}\n\n`;
+            }
+
+            if (errors.length > 0) {
+                resultHTML += `ERRORS:\n${errors.join('\n')}\n\n`;
+                resultHTML += `🚫 INPUT REJECTED - Please correct the errors above`;
+                output.classList.add('output-danger');
+                output.classList.remove('output-success', 'output-safe');
+            } else if (input.length > 0) {
+                resultHTML += `✅ INPUT ACCEPTED - Passed all validation checks`;
+                output.classList.add('output-success');
+                output.classList.remove('output-danger', 'output-safe');
+            } else {
+                resultHTML += `Please enter some input to validate`;
+                output.classList.remove('output-success', 'output-danger', 'output-safe');
+            }
+
+            output.textContent = resultHTML;
+        }
+
+        function sanitizeInput() {
+            const input = document.getElementById('userInput').value;
+            const output = document.getElementById('output');
+
+            // HTML sanitization
+            let sanitized = input
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#x27;');
+
+            // Also escape the original input for safe display
+            const safeInput = input
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#x27;');
+
+            let resultHTML = `<strong>SANITIZATION RESULTS</strong>\n\n`;
+            resultHTML += `Original input: ${safeInput}\n\n`;
+            resultHTML += `Sanitized output: ${sanitized}\n\n`;
+            resultHTML += `Rendered result:\n`;
+            resultHTML += `----------------\n`;
+            resultHTML += `${sanitized}\n\n`;
+            resultHTML += `✅ INPUT SANITIZED - Now safe to display`;
+
+            output.textContent = resultHTML;
+            output.classList.add('output-safe');
+            output.classList.remove('output-success', 'output-danger');
+        }
+
+        function validateAndSanitize() {
+            const input = document.getElementById('userInput').value;
+            const output = document.getElementById('output');
+
+            // First, validate
+            const usernameRegex = /^[a-zA-Z0-9]{0,20}$/;
+            let isValid = true;
+            let validationMessage = '';
+
+            if (input.includes('<script>') || input.includes('</>')) {
+                isValid = false;
+                validationMessage = 'Input contains script tags - would be rejected by validation';
+            } else if (!usernameRegex.test(input) && input.length > 0) {
+                isValid = false;
+                validationMessage = 'Invalid characters - would be rejected by validation';
+            } else {
+                validationMessage = 'Input passed validation checks';
+            }
+
+            // Then sanitize regardless
+            let sanitized = input
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#x27;');
+
+            const safeInput = input
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#x27;');
+
+            let resultHTML = `<strong>VALIDATION + SANITIZATION</strong>\n\n`;
+            resultHTML += `Original input: ${safeInput}\n\n`;
+            resultHTML += `Validation: ${validationMessage}\n\n`;
+
+            if (isValid) {
+                resultHTML += `Sanitized output: ${sanitized}\n\n`;
+                resultHTML += `Rendered result:\n`;
+                resultHTML += `----------------\n`;
+                resultHTML += `${sanitized}\n\n`;
+                resultHTML += `✅ INPUT ACCEPTED AND SANITIZED - Maximum security achieved!`;
+                output.classList.add('output-success');
+            } else {
+                resultHTML += `Sanitized output (if validation passed): ${sanitized}\n\n`;
+                resultHTML += `🚫 INPUT REJECTED - Validation failed, sanitization not applied`;
+                output.classList.add('output-danger');
+            }
+
+            output.textContent = resultHTML;
+        }
+
+        // Set a safe default value
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('userInput').value = "user@example.com";
+        });
+    </script>
+</body>
+
+</html>

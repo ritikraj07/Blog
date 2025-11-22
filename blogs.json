@@ -46,14 +46,14 @@
     },
        {
       "id": 5,
-      "title": "Updated Secure Coding Practices",
-      "description": "Learn how to write secure code with these best practices and tools.",
-      "link": "blogs/updated-secure-coding-practices.html",
-      "category": ["devops", "security", "coding-practices"],
-      "date": "2025-11-18",
-      "readTime": "35 min read",
+      "title": "Validation Vs Sanitization",
+      "description": "Learn about the difference between validation and sanitization in web development.",
+      "link": "blogs/validation-vs-sanitization.html",
+      "category": ["web-dev", "security", "validation"],
+      "date": "2025-11-22",
+      "readTime": "10 min read",
       "featured": true,
-      "tags": ["python", "web development", "security"],
+      "tags": ["html", "css", "javascript"],
       "referenced": []
     },
      {
