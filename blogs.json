@@ -10,7 +10,7 @@
       "readTime": "15 min read",
       "featured": true,
       "tags": ["python", "web development", "security"],
-      "referenced": ["blogs/updated-secure-coding-practices.html"]
+      "referenced": ["blogs/http-headers.html"]
     },
     {
       "id": 2,
