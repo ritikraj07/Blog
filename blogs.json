@@ -106,7 +106,7 @@
     }, {
       "id": 10,
       "title": "DSA Graph Concepts: Beginner to Advanced",
-      "description": "Learn about DSA Graph concepts and their usage in web development.",
+      "description": "Learn about DSA Graph concepts",
       "link": "blogs/graph-concepts.html",
       "category": ["DSA", "graph", "computer science"],
       "date": "2025-12-13",
@@ -120,7 +120,28 @@
                 "Shortest Path Algorithms",
                 "Dijkstra's Algorithm",
                 "Topological Sorting",
-                "Practice Problems with Solutions"]    }
+                "Practice Problems with Solutions"]   
+      },
+      {
+      "id": 11,
+      "title": "Hasing Concepts: Beginner to Advanced",
+      "description": "Learn about Hashing concepts and algorithms",
+      "link": "blogs/hashing-concepts.html",
+      "category": ["DSA", "hashing", "computer science"],
+      "date": "2025-12-14",
+      "readTime": "40 min read",
+      "featured": true,
+      "tags": [ "Hash Table Fundamentals",
+    "Hash Function Design",
+    "Collision Resolution Strategies",
+    "Separate Chaining Implementation",
+    "Open Addressing Methods",
+    "Linear, Quadratic, Double Hashing",
+    "Load Factor Analysis",
+    "Rehashing Techniques",
+    "Real-World Applications",
+    "Practice Problems & Solutions"]
+    }
     
     ]
 }

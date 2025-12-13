@@ -1,0 +1,1579 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Ritik Raj">
+    <meta name="description"
+        content="Complete guide to Hash Tables and Hashing Algorithms. Learn hash functions, collision resolution, separate chaining, open addressing, linear/quadratic probing, double hashing, and practice problems.">
+    <meta name="keywords"
+        content="hash tables, hashing, data structures, algorithms, DSA, ritik, ritik07, lord ritik, lord_ritik07, computer science, programming, collision resolution">
+    <title>Hash Tables Complete Guide | TechBlog by Ritik</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #64748b;
+            --accent: #06b6d4;
+            --background: #0f172a;
+            --surface: #1e293b;
+            --card: #1e293b;
+            --text: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --border: #334155;
+            --success: #10b981;
+            --error: #ef4444;
+            --warning: #f59e0b;
+            --code-bg: #0d1424;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background-color: var(--background);
+            padding: 0;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background-color: var(--surface);
+            padding: 1.5rem 0;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .blog-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text);
+            text-decoration: none;
+        }
+
+        .blog-title span {
+            color: var(--accent);
+        }
+
+        .blog-subtitle {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-top: 0.2rem;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+        }
+
+        nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--accent);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Main Content */
+        main {
+            padding: 2rem 0;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--surface) 100%);
+            border-radius: 10px;
+            border: 1px solid var(--border);
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--text);
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 800px;
+            margin: 0 auto 1.5rem;
+        }
+
+        .author-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background-color: var(--card);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+        }
+
+        /* Content Sections */
+        .content-section {
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background-color: var(--card);
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent);
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-title i {
+            color: var(--primary);
+        }
+
+        .subsection-title {
+            font-size: 1.4rem;
+            margin: 1.5rem 0 1rem;
+            color: var(--text);
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+        }
+
+        /* Lists */
+        ul,
+        ol {
+            margin-bottom: 1rem;
+            padding-left: 1.5rem;
+            color: var(--text-secondary);
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Code Blocks */
+        .code-block {
+            background-color: var(--code-bg);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-left: 4px solid var(--accent);
+            overflow-x: auto;
+        }
+
+        code {
+            font-family: 'Courier New', Courier, monospace;
+            color: var(--accent);
+        }
+
+        pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            background-color: var(--surface);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th,
+        td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background-color: var(--background);
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* Hash Table Visualizations */
+        .hash-visual {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .hash-table {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .hash-row {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .hash-index {
+            width: 60px;
+            padding: 0.8rem;
+            background-color: var(--surface);
+            border-radius: 4px;
+            text-align: center;
+            font-weight: bold;
+            color: var(--accent);
+        }
+
+        .hash-cell {
+            flex: 1;
+            padding: 0.8rem;
+            background-color: var(--background);
+            border-radius: 4px;
+            min-height: 50px;
+            border: 1px solid var(--border);
+        }
+
+        .hash-cell.filled {
+            background-color: rgba(37, 99, 235, 0.2);
+            border-color: var(--primary);
+        }
+
+        .hash-cell.collision {
+            background-color: rgba(239, 68, 68, 0.2);
+            border-color: var(--error);
+        }
+
+        /* Practice Questions */
+        .practice-section {
+            background-color: var(--surface);
+            border-radius: 10px;
+            padding: 2rem;
+            margin: 2rem 0;
+            border-left: 5px solid var(--success);
+        }
+
+        .question {
+            background-color: var(--card);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border);
+        }
+
+        .question-title {
+            font-size: 1.2rem;
+            margin-bottom: 0.8rem;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .question-title i {
+            color: var(--warning);
+        }
+
+        .difficulty {
+            display: inline-block;
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-right: 1rem;
+        }
+
+        .easy {
+            background-color: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+        }
+
+        .medium {
+            background-color: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+        }
+
+        .hard {
+            background-color: rgba(239, 68, 68, 0.2);
+            color: var(--error);
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--surface);
+            padding: 3rem 0 2rem;
+            border-top: 1px solid var(--border);
+            margin-top: 3rem;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .footer-title {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            color: var(--text);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: var(--background);
+            border-radius: 50%;
+            color: var(--text);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .social-link:hover {
+            background-color: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            nav ul {
+                flex-direction: column;
+                gap: 1rem;
+                width: 100%;
+                display: none;
+            }
+
+            nav.active ul {
+                display: flex;
+                margin-top: 1rem;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+                position: absolute;
+                top: 1.5rem;
+                right: 20px;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+            }
+
+            .content-section {
+                padding: 1.5rem;
+            }
+
+            .hash-row {
+                flex-wrap: wrap;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .footer-content {
+                flex-direction: column;
+            }
+        }
+
+        /* Additional Styling */
+        .highlight {
+            background-color: rgba(37, 99, 235, 0.1);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        .definition {
+            background-color: rgba(6, 182, 212, 0.1);
+            border-left: 4px solid var(--accent);
+            padding: 1rem;
+            margin: 1.5rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .definition-title {
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .algorithm-step {
+            counter-increment: step;
+            margin-bottom: 1rem;
+            padding-left: 2.5rem;
+            position: relative;
+        }
+
+        .algorithm-step:before {
+            content: counter(step);
+            position: absolute;
+            left: 0;
+            top: 0;
+            background-color: var(--primary);
+            color: white;
+            width: 1.8rem;
+            height: 1.8rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .algorithm-container {
+            counter-reset: step;
+            margin: 1.5rem 0;
+        }
+
+        .complexity-table {
+            max-width: 600px;
+            margin: 1.5rem auto;
+        }
+
+        .comparison-table {
+            max-width: 800px;
+            margin: 1.5rem auto;
+        }
+
+        .tip-box {
+            background-color: rgba(16, 185, 129, 0.1);
+            border-left: 4px solid var(--success);
+            padding: 1rem;
+            margin: 1.5rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .tip-title {
+            font-weight: 600;
+            color: var(--success);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .note-box {
+            background-color: rgba(245, 158, 11, 0.1);
+            border-left: 4px solid var(--warning);
+            padding: 1rem;
+            margin: 1.5rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .note-title {
+            font-weight: 600;
+            color: var(--warning);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .visualization-title {
+            font-size: 1.1rem;
+            margin: 1.5rem 0 0.5rem;
+            color: var(--accent);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div>
+                    <a href="#" class="blog-title">Tech<span>Blog</span> by Ritik</a>
+                    <div class="blog-subtitle">Master Data Structures & Algorithms</div>
+                </div>
+                <button class="mobile-menu-btn" id="menuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <nav id="mainNav">
+                    <ul>
+                        <li><a href="#intro"><i class="fas fa-home"></i> Intro</a></li>
+                        <li><a href="#basics"><i class="fas fa-book"></i> Basics</a></li>
+                        <li><a href="#functions"><i class="fas fa-function"></i> Hash Functions</a></li>
+                        <li><a href="#collision"><i class="fas fa-exclamation-triangle"></i> Collision</a></li>
+                        <li><a href="#chaining"><i class="fas fa-link"></i> Separate Chaining</a></li>
+                        <li><a href="#addressing"><i class="fas fa-search"></i> Open Addressing</a></li>
+                        <li><a href="#practice"><i class="fas fa-pen"></i> Practice</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <h1>Hash Tables: Complete Guide</h1>
+            <p>Master hashing techniques, collision resolution strategies, and implement efficient hash tables for O(1)
+                average-time operations. Learn separate chaining, linear/quadratic probing, double hashing, and solve
+                real-world problems.</p>
+            <div class="author-badge">
+                <i class="fas fa-user-graduate"></i>
+                <span>Senior Professor of Data Structures</span>
+            </div>
+        </section>
+
+        <!-- Introduction -->
+        <section id="intro" class="content-section">
+            <h2 class="section-title"><i class="fas fa-info-circle"></i> Introduction to Hash Tables</h2>
+            <p>A <span class="highlight">hash table</span> is one of the most important and widely used data structures
+                in computer science. It provides average O(1) time complexity for insert, delete, and search operations,
+                making it incredibly efficient for many applications.</p>
+
+            <div class="definition">
+                <div class="definition-title">Formal Definition:</div>
+                <p>A hash table is an abstract data type that maps keys to values using a hash function. It consists of:
+                </p>
+                <ul>
+                    <li><span class="highlight">Keys:</span> Unique identifiers for data elements</li>
+                    <li><span class="highlight">Values:</span> The actual data stored</li>
+                    <li><span class="highlight">Hash Function:</span> Maps keys to array indices</li>
+                    <li><span class="highlight">Table/Array:</span> Underlying storage structure</li>
+                </ul>
+            </div>
+
+            <div class="tip-box">
+                <div class="tip-title"><i class="fas fa-lightbulb"></i> Key Characteristics:</div>
+                <ul>
+                    <li><span class="highlight">Average-case O(1)</span> for insert, delete, find</li>
+                    <li><span class="highlight">Worst-case O(n)</span> when many collisions occur</li>
+                    <li>Not efficient for ordered operations (findMin, findMax, sorted traversal)</li>
+                    <li>Space-time tradeoff: More space reduces collisions</li>
+                </ul>
+            </div>
+
+            <h3 class="subsection-title">How Hash Tables Work</h3>
+
+            <div class="hash-visual">
+                <div class="visualization-title">Basic Hash Table Operation:</div>
+                <div class="hash-table">
+                    <div class="hash-row">
+                        <div class="hash-index">0</div>
+                        <div class="hash-cell"></div>
+                    </div>
+                    <div class="hash-row">
+                        <div class="hash-index">1</div>
+                        <div class="hash-cell"></div>
+                    </div>
+                    <div class="hash-row">
+                        <div class="hash-index">2</div>
+                        <div class="hash-cell filled">"Alice" → 95</div>
+                    </div>
+                    <div class="hash-row">
+                        <div class="hash-index">3</div>
+                        <div class="hash-cell"></div>
+                    </div>
+                    <div class="hash-row">
+                        <div class="hash-index">4</div>
+                        <div class="hash-cell filled">"Bob" → 87</div>
+                    </div>
+                </div>
+            </div>
+
+            <p>Keys ("Alice", "Bob") are passed through a hash function that computes an index. The value is stored at
+                that index in the array. When searching for "Alice", the same hash function computes index 2, giving
+                direct access to the value.</p>
+        </section>
+
+        <!-- Hash Table Basics -->
+        <section id="basics" class="content-section">
+            <h2 class="section-title"><i class="fas fa-book"></i> Hash Table Fundamentals</h2>
+
+            <div class="definition">
+                <div class="definition-title">Key Terms:</div>
+                <ul>
+                    <li><span class="highlight">Key:</span> The identifier used to look up data (e.g., name, ID number)
+                    </li>
+                    <li><span class="highlight">Hash Function:</span> Function that maps keys to array indices</li>
+                    <li><span class="highlight">Hash Value/Index:</span> The result of hash function (0 to TableSize-1)
+                    </li>
+                    <li><span class="highlight">Collision:</span> When two different keys hash to the same index</li>
+                    <li><span class="highlight">Load Factor (λ):</span> Ratio of occupied slots to total slots
+                        (n/TableSize)</li>
+                    <li><span class="highlight">Perfect Hash Function:</span> A hash function with no collisions</li>
+                </ul>
+            </div>
+
+            <h3 class="subsection-title">Ideal Hash Function Properties</h3>
+            <ul>
+                <li><span class="highlight">Deterministic:</span> Same key always produces same hash value</li>
+                <li><span class="highlight">Uniform Distribution:</span> Keys distributed evenly across table</li>
+                <li><span class="highlight">Fast Computation:</span> Should be O(1) time complexity</li>
+                <li><span class="highlight">Minimal Collisions:</span> Should minimize probability of different keys
+                    hashing to same index</li>
+            </ul>
+
+            <div class="note-box">
+                <div class="note-title"><i class="fas fa-exclamation-circle"></i> Important Notes:</div>
+                <ul>
+                    <li>Load factor (λ) critically affects performance</li>
+                    <li>TableSize should be prime for better distribution</li>
+                    <li>For separate chaining: λ can be > 1</li>
+                    <li>For open addressing: λ should be ≤ 0.5</li>
+                    <li>Rehashing is needed when load factor becomes too high</li>
+                </ul>
+            </div>
+
+            <div class="practice-section">
+                <h3 class="subsection-title"><i class="fas fa-question-circle"></i> Practice Questions: Basics</h3>
+
+                <div class="question">
+                    <div class="question-title">
+                        <i class="fas fa-puzzle-piece"></i>
+                        <span>Question 1: Load Factor Analysis</span>
+                        <span class="difficulty easy">Easy</span>
+                    </div>
+                    <p>A hash table has 100 slots and currently contains 75 elements. What is the current load factor?
+                        If we're using separate chaining, can we insert 30 more elements without rehashing? What about
+                        open addressing with linear probing?</p>
+                    <p><strong>Solution Approach:</strong> λ = n/TableSize. For separate chaining, λ can exceed 1. For
+                        open addressing with linear probing, λ should stay below 0.5 for good performance.</p>
+                </div>
+
+                <div class="question">
+                    <div class="question-title">
+                        <i class="fas fa-puzzle-piece"></i>
+                        <span>Question 2: Hash Table vs Binary Search Tree</span>
+                        <span class="difficulty medium">Medium</span>
+                    </div>
+                    <p>Compare hash tables and binary search trees. When would you choose one over the other? Consider
+                        operations like findMin, findMax, range queries, and ordered traversal.</p>
+                    <p><strong>LeetCode Connection:</strong> Understanding this helps in problems like designing data
+                        structures with specific operation requirements.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Hash Functions -->
+        <section id="functions" class="content-section">
+            <h2 class="section-title"><i class="fas fa-function"></i> Hash Functions</h2>
+            <p>A good hash function is crucial for hash table performance. It should distribute keys uniformly across
+                the table to minimize collisions.</p>
+
+            <h3 class="subsection-title">Common Hash Function Techniques</h3>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Technique</th>
+                        <th>Description</th>
+                        <th>Example</th>
+                        <th>Pros & Cons</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="highlight">Division Method</span></td>
+                        <td>key % TableSize</td>
+                        <td>12345 % 97 = 18</td>
+                        <td>Simple, fast; TableSize should be prime</td>
+                    </tr>
+                    <tr>
+                        <td><span class="highlight">Multiplication Method</span></td>
+                        <td>⌊TableSize * (key * A mod 1)⌋ where 0 < A < 1</td>
+                        <td>With A=0.618, TableSize=100</td>
+                        <td>Good distribution; slower than division</td>
+                    </tr>
+                    <tr>
+                        <td><span class="highlight">Folding Method</span></td>
+                        <td>Split key into parts, add them</td>
+                        <td>123456 → 12+34+56 = 102</td>
+                        <td>Good for long keys; may cluster</td>
+                    </tr>
+                    <tr>
+                        <td><span class="highlight">Mid-Square Method</span></td>
+                        <td>Square key, take middle digits</td>
+                        <td>123²=15129 → middle 512</td>
+                        <td>Good distribution; computationally heavy</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 class="subsection-title">String Hash Functions</h3>
+
+            <div class="code-block">
+                <pre><code>// Simple string hash - sum of ASCII values
+int hashSimple(const string &key, int tableSize) {
+    int hashVal = 0;
+    for (char ch : key) {
+        hashVal += ch;
+    }
+    return hashVal % tableSize;
+}
+
+// Polynomial hash function (better)
+int hashPolynomial(const string &key, int tableSize) {
+    int hashVal = 0;
+    for (char ch : key) {
+        hashVal = 37 * hashVal + ch; // 37 is a prime
+    }
+    hashVal %= tableSize;
+    if (hashVal < 0) hashVal += tableSize; // Handle overflow
+    return hashVal;
+}</code></pre>
+            </div>
+
+            <div class="note-box">
+                <div class="note-title"><i class="fas fa-exclamation-circle"></i> Important: Polynomial Hash Function
+                </div>
+                <p>The polynomial hash function (hashPolynomial) is widely used because:</p>
+                <ul>
+                    <li>Uses Horner's method for efficient computation</li>
+                    <li>Prime base (37) helps distribute keys uniformly</li>
+                    <li>Consider all characters in the string</li>
+                    <li>Less likely to have collisions than simple summation</li>
+                </ul>
+            </div>
+
+            <h3 class="subsection-title">Example: Computing Hash for "ali"</h3>
+
+            <div class="algorithm-container">
+                <div class="algorithm-step">String: "ali" → ASCII: a=97, l=108, i=105</div>
+                <div class="algorithm-step">Using polynomial hash with base 37: hash = 0</div>
+                <div class="algorithm-step">hash = 37*0 + 97 = 97</div>
+                <div class="algorithm-step">hash = 37*97 + 108 = 3697</div>
+                <div class="algorithm-step">hash = 37*3697 + 105 = 136,894</div>
+                <div class="algorithm-step">hash % 10007 = 136894 % 10007 = 8172</div>
+                <div class="algorithm-step">Final hash index: 8172</div>
+            </div>
+
+            <div class="practice-section">
+                <h3 class="subsection-title"><i class="fas fa-question-circle"></i> Practice Questions: Hash Functions
+                </h3>
+
+                <div class="question">
+                    <div class="question-title">
+                        <i class="fas fa-puzzle-piece"></i>
+                        <span>Question 3: Hash Function Design</span>
+                        <span class="difficulty medium">Medium</span>
+                    </div>
+                    <p>Design a hash function for a dictionary of English words (average length 8 characters). The table
+                        size is 10,007 (a prime). Compare the performance of:</p>
+                    <ol type="a">
+                        <li>Simple sum of ASCII values</li>
+                        <li>First three characters only: key[0] + 27*key[1] + 729*key[2]</li>
+                        <li>Polynomial hash with base 37</li>
+                    </ol>
+                    <p>Which would you choose and why?</p>
+                </div>
+
+                <div class="question">
+                    <div class="question-title">
+                        <i class="fas fa-puzzle-piece"></i>
+                        <span>Question 4: Birthday Paradox & Hash Functions</span>
+                        <span class="difficulty hard">Hard</span>
+                    </div>
+                    <p>The birthday paradox states that with 23 people, there's a 50% chance two share a birthday. How
+                        does this relate to hash functions? For a hash table with TableSize=365, about how many random
+                        keys do we need to insert for a 50% chance of collision?</p>
+                    <p><strong>Hint:</strong> Use the approximation: √(2 * TableSize * ln(2)).</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Collision Resolution -->
+        <section id="collision" class="content-section">
+            <h2 class="section-title"><i class="fas fa-exclamation-triangle"></i> Collision Resolution</h2>
+            <p>When two different keys hash to the same index, we have a <span class="highlight">collision</span>.
+                Collision resolution strategies determine how to handle this situation.</p>
+
+            <div class="definition">
+                <div class="definition-title">Two Main Approaches:</div>
+                <ol>
+                    <li><span class="highlight">Separate Chaining:</span> Each table entry points to a linked list of
+                        elements</li>
+                    <li><span class="highlight">Open Addressing:</span> All elements stored in the table itself; find
+                        another slot when collision occurs</li>
+                </ol>
+            </div>
+
+            <h3 class="subsection-title">Separate Chaining Visualization</h3>
+
+            <div class="hash-visual">
+                <div class="hash-table">
+                    <div class="hash-row">
+                        <div class="hash-index">0</div>
+                        <div class="hash-cell">NULL</div>
+                    </div>
+                    <div class="hash-row">
+                        <div class="hash-index">1</div>
+                        <div class="hash-cell">→ 81 → 1</div>
+                    </div>
+                    <div class="hash-row">
+                        <div class="hash-index">2</div>
+                        <div class="hash-cell">→ 2</div>
+                    </div>
+                    <div class="hash-row">
+                        <div class="hash-index">3</div>
+                        <div class="hash-cell">NULL</div>
+                    </div>
+                    <div class="hash-row">
+                        <div class="hash-index">4</div>
+                        <div class="hash-cell">→ 4 → 64</div>
+                    </div>
+                    <div class="hash-row">
+                        <div class="hash-index">9</div>
+                        <div class="hash-cell">→ 9 → 49</div>
+                    </div>
+                </div>
+                <p>Keys: 0, 1, 4, 9, 16, 25, 36, 49, 64, 81 with hash(key) = key % 10</p>
+            </div>
+
+            <h3 class="subsection-title">Open Addressing Methods</h3>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Method</th>
+                        <th>Probe Sequence</th>
+                        <th>Formula</th>
+                        <th>Advantages</th>
+                        <th>Disadvantages</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="highlight">Linear Probing</span></td>
+                        <td>h, h+1, h+2, ...</td>
+                        <td>h(k,i) = (h'(k) + i) mod m</td>
+                        <td>Simple, cache-friendly</td>
+                        <td>Primary clustering</td>
+                    </tr>
+                    <tr>
+                        <td><span class="highlight">Quadratic Probing</span></td>
+                        <td>h, h+1², h+2², ...</td>
+                        <td>h(k,i) = (h'(k) + c₁i + c₂i²) mod m</td>
+                        <td>No primary clustering</td>
+                        <td>Secondary clustering</td>
+                    </tr>
+                    <tr>
+                        <td><span class="highlight">Double Hashing</span></td>
+                        <td>h, h+h₂(k), h+2h₂(k), ...</td>
+                        <td>h(k,i) = (h₁(k) + i·h₂(k)) mod m</td>
+                        <td>No clustering, good distribution</td>
+                        <td>More computation</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Separate Chaining -->
+        <section id="chaining" class="content-section">
+            <h2 class="section-title"><i class="fas fa-link"></i> Separate Chaining</h2>
+            <p>In separate chaining, each bucket (array entry) contains a linked list of all elements that hash to that
+                index.</p>
+
+            <div class="code-block">
+                <pre><code>// Hash Table with Separate Chaining (Simplified)
+template <typename K, typename V>
+class HashTable {
+private:
+    vector<list<pair<K, V>>> table;
+    int capacity;
+    
+    int hashFunction(const K& key) {
+        return hash<K>{}(key) % capacity;
+    }
+    
+public:
+    HashTable(int size = 101) : capacity(size) {
+        table.resize(capacity);
+    }
+    
+    void insert(const K& key, const V& value) {
+        int index = hashFunction(key);
+        // Check if key already exists
+        for (auto& pair : table[index]) {
+            if (pair.first == key) {
+                pair.second = value; // Update
+                return;
+            }
+        }
+        // Insert new key-value pair
+        table[index].push_back({key, value});
+    }
+    
+    V* find(const K& key) {
+        int index = hashFunction(key);
+        for (auto& pair : table[index]) {
+            if (pair.first == key) {
+                return &pair.second;
+            }
+        }
+        return nullptr; // Not found
+    }
+    
+    void remove(const K& key) {
+        int index = hashFunction(key);
+        auto& list = table[index];
+        for (auto it = list.begin(); it != list.end(); ++it) {
+            if (it->first == key) {
+                list.erase(it);
+                return;
+            }
+        }
+    }
+};</code></pre>
+            </div>
+
+            <h3 class="subsection-title">Analysis of Separate Chaining</h3>
+
+            <div class="algorithm-container">
+                <div class="algorithm-step">Load Factor: λ = n / TableSize (can be > 1)</div>
+                <div class="algorithm-step">Average list length = λ</div>
+                <div class="algorithm-step">Unsuccessful search: Examine entire list → λ comparisons</div>
+                <div class="algorithm-step">Successful search: 1 + λ/2 comparisons on average</div>
+            </div>
+
+            <div class="tip-box">
+                <div class="tip-title"><i class="fas fa-lightbulb"></i> Performance Tips:</div>
+                <ul>
+                    <li>Keep λ close to 1 for good performance</li>
+                    <li>TableSize should be prime for even distribution</li>
+                    <li>Consider using balanced BSTs instead of linked lists for large λ</li>
+                    <li>Rehash when λ exceeds threshold (e.g., 2)</li>
+                </ul>
+            </div>
+
+            <div class="practice-section">
+                <h3 class="subsection-title"><i class="fas fa-question-circle"></i> Practice Questions: Separate
+                    Chaining</h3>
+
+                <div class="question">
+                    <div class="question-title">
+                        <i class="fas fa-puzzle-piece"></i>
+                        <span>Question 5: Separate Chaining Analysis</span>
+                        <span class="difficulty medium">Medium</span>
+                    </div>
+                    <p>Given a hash table with separate chaining, TableSize = 101, and 150 elements inserted:</p>
+                    <ol type="a">
+                        <li>What is the load factor?</li>
+                        <li>What is the average number of comparisons for successful search?</li>
+                        <li>What is the average number of comparisons for unsuccessful search?</li>
+                        <li>If we double the table size to 202 (prime), how does performance change?</li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+
+        <!-- Open Addressing -->
+        <section id="addressing" class="content-section">
+            <h2 class="section-title"><i class="fas fa-search"></i> Open Addressing</h2>
+            <p>In open addressing, all elements are stored directly in the hash table array. When a collision occurs,
+                the algorithm probes for the next available slot.</p>
+
+            <h3 class="subsection-title">1. Linear Probing</h3>
+            <p>Probe sequence: h, h+1, h+2, ... mod TableSize</p>
+
+            <div class="code-block">
+                <pre><code>// Linear Probing Implementation
+class LinearProbingHashTable {
+private:
+    vector<pair<int, string>> table; // Key-value pairs
+    vector<bool> occupied;
+    int capacity;
+    
+    int hashFunction(int key) {
+        return key % capacity;
+    }
+    
+public:
+    LinearProbingHashTable(int size) : capacity(size) {
+        table.resize(capacity);
+        occupied.resize(capacity, false);
+    }
+    
+    void insert(int key, const string& value) {
+        int index = hashFunction(key);
+        int original = index;
+        
+        while (occupied[index]) {
+            if (table[index].first == key) {
+                table[index].second = value; // Update
+                return;
+            }
+            index = (index + 1) % capacity;
+            if (index == original) {
+                // Table is full
+                rehash();
+                insert(key, value);
+                return;
+            }
+        }
+        
+        table[index] = {key, value};
+        occupied[index] = true;
+    }
+    
+    string* find(int key) {
+        int index = hashFunction(key);
+        int original = index;
+        
+        while (occupied[index]) {
+            if (table[index].first == key) {
+                return &table[index].second;
+            }
+            index = (index + 1) % capacity;
+            if (index == original) break;
+        }
+        
+        return nullptr;
+    }
+};</code></pre>
+            </div>
+
+            <h3 class="subsection-title">Linear Probing Example</h3>
+
+            <div class="hash-visual">
+                <div class="visualization-title">Insert: 89, 18, 49, 58, 9 with TableSize=10, h(x)=x%10</div>
+                <div class="hash-table">
+                    <div class="hash-row">
+                        <div class="hash-index">0</div>
+                        <div class="hash-cell filled">49</div>
+                    </div>
+                    <div class="hash-row">
+                        <div class="hash-index">1</div>
+                        <div class="hash-cell filled">58</div>
+                    </div>
+                    <div class="hash-row">
+                        <div class="hash-index">8</div>
+                        <div class="hash-cell filled">18</div>
+                    </div>
+                    <div class="hash-row">
+                        <div class="hash-index">9</div>
+                        <div class="hash-cell filled">89</div>
+                    </div>
+                    <div class="hash-row">
+                        <div class="hash-index">... after 9: 9→9 (collision)→0 (collision)→1 (collision)→2</div>
+                        <div class="hash-cell filled">9</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="note-box">
+                <div class="note-title"><i class="fas fa-exclamation-circle"></i> Primary Clustering Problem:</div>
+                <p>Linear probing suffers from <span class="highlight">primary clustering</span> - consecutive groups of
+                    occupied cells form. Keys that hash into the cluster require multiple probes, making the cluster
+                    grow larger.</p>
+            </div>
+
+            <h3 class="subsection-title">2. Quadratic Probing</h3>
+            <p>Probe sequence: h, h+1², h+2², h+3², ... mod TableSize</p>
+
+            <div class="code-block">
+                <pre><code>// Quadratic Probing Implementation
+int quadraticProbe(int key, int i, int capacity) {
+    int hash = key % capacity;
+    return (hash + i * i) % capacity;
+}
+
+// Theorem: If TableSize is prime and λ ≤ 0.5, 
+// quadratic probing will find an empty slot</code></pre>
+            </div>
+
+            <h3 class="subsection-title">3. Double Hashing</h3>
+            <p>Use two hash functions: h₁(k) for initial position, h₂(k) for step size</p>
+
+            <div class="code-block">
+                <pre><code>// Double Hashing Implementation
+int doubleHash(int key, int i, int capacity) {
+    int h1 = key % capacity;
+    int h2 = 7 - (key % 7); // Second hash function, 7 is prime < capacity
+    return (h1 + i * h2) % capacity;
+}</code></pre>
+            </div>
+
+            <h3 class="subsection-title">Performance Comparison</h3>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Method</th>
+                        <th>Avg. Probes (Unsuccessful)</th>
+                        <th>Avg. Probes (Successful)</th>
+                        <th>Clustering</th>
+                        <th>Load Factor Limit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Linear Probing</td>
+                        <td>½(1 + 1/(1-λ)²)</td>
+                        <td>½(1 + 1/(1-λ))</td>
+                        <td>Primary</td>
+                        <td>λ < 0.5 (practical)</td>
+                    </tr>
+                    <tr>
+                        <td>Quadratic Probing</td>
+                        <td>½(1 + 1/(1-λ)²)</td>
+                        <td>-ln(1-λ)/λ</td>
+                        <td>Secondary</td>
+                        <td>λ < 0.5 (theoretical)</td>
+                    </tr>
+                    <tr>
+                        <td>Double Hashing</td>
+                        <td>1/(1-λ)</td>
+                        <td>-ln(1-λ)/λ</td>
+                        <td>None</td>
+                        <td>λ < 0.8 (practical)</td>
+                    </tr>
+                    <tr>
+                        <td>Separate Chaining</td>
+                        <td>λ</td>
+                        <td>1 + λ/2</td>
+                        <td>None</td>
+                        <td>Any (but λ≈1 optimal)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="practice-section">
+                <h3 class="subsection-title"><i class="fas fa-question-circle"></i> Practice Questions: Open Addressing
+                </h3>
+
+                <div class="question">
+                    <div class="question-title">
+                        <i class="fas fa-puzzle-piece"></i>
+                        <span>Question 6: Linear Probing Analysis</span>
+                        <span class="difficulty medium">Medium</span>
+                    </div>
+                    <p>Insert keys: 89, 18, 49, 58, 9 into an empty hash table of size 10 using linear probing with
+                        h(x)=x%10. Show the table after each insertion. How many probes are needed to find 58? How many
+                        for 19 (not in table)?</p>
+                </div>
+
+                <div class="question">
+                    <div class="question-title">
+                        <i class="fas fa-puzzle-piece"></i>
+                        <span>Question 7: Quadratic Probing Theorem</span>
+                        <span class="difficulty hard">Hard</span>
+                    </div>
+                    <p>Prove or justify: If quadratic probing is used and the table size is prime, then a new element
+                        can always be inserted if the table is at least half empty. Why does the table size need to be
+                        prime?</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Applications & Advanced Topics -->
+        <section class="content-section">
+            <h2 class="section-title"><i class="fas fa-cogs"></i> Applications & Advanced Topics</h2>
+
+            <h3 class="subsection-title">Real-World Applications</h3>
+            <ul>
+                <li><span class="highlight">Symbol Tables:</span> Compilers use hash tables for variable names</li>
+                <li><span class="highlight">Database Indexing:</span> Hash indexes for fast lookups</li>
+                <li><span class="highlight">Caching:</span> Memoization, browser cache, CPU cache</li>
+                <li><span class="highlight">Cryptography:</span> Hash functions for data integrity</li>
+                <li><span class="highlight">Spell Checkers:</span> Dictionary lookups</li>
+                <li><span class="highlight">Network Routing:</span> IP address to MAC address mapping</li>
+            </ul>
+
+            <h3 class="subsection-title">Consecutive Numbers Problem</h3>
+            <p>Find the largest subset with consecutive numbers from an unsorted array.</p>
+
+            <div class="algorithm-container">
+                <div class="algorithm-step">Insert all numbers into hash table: O(n)</div>
+                <div class="algorithm-step">For each number x:</div>
+                <div class="algorithm-step">If x-1 not in hash table → x is start of sequence</div>
+                <div class="algorithm-step">Count consecutive numbers from x: x, x+1, x+2, ...</div>
+                <div class="algorithm-step">Track the longest sequence</div>
+            </div>
+
+            <div class="code-block">
+                <pre><code>// Find longest consecutive sequence
+int longestConsecutive(vector<int>& nums) {
+    unordered_set<int> numSet(nums.begin(), nums.end());
+    int longest = 0;
+    
+    for (int num : numSet) {
+        // Check if num is start of sequence
+        if (numSet.find(num - 1) == numSet.end()) {
+            int current = num;
+            int streak = 1;
+            
+            while (numSet.find(current + 1) != numSet.end()) {
+                current++;
+                streak++;
+            }
+            
+            longest = max(longest, streak);
+        }
+    }
+    
+    return longest;
+}</code></pre>
+            </div>
+
+            <div class="practice-section">
+                <h3 class="subsection-title"><i class="fas fa-question-circle"></i> Comprehensive Practice Problems</h3>
+
+                <div class="question">
+                    <div class="question-title">
+                        <i class="fas fa-puzzle-piece"></i>
+                        <span>Problem 8: Design HashMap</span>
+                        <span class="difficulty medium">Medium</span>
+                    </div>
+                    <p>Design a HashMap without using any built-in hash table libraries. Implement:</p>
+                    <ul>
+                        <li>put(key, value)</li>
+                        <li>get(key)</li>
+                        <li>remove(key)</li>
+                    </ul>
+                    <p><strong>LeetCode:</strong> <a href="https://leetcode.com/problems/design-hashmap/"
+                            target="_blank">Design HashMap (706)</a></p>
+                </div>
+
+                <div class="question">
+                    <div class="question-title">
+                        <i class="fas fa-puzzle-piece"></i>
+                        <span>Problem 9: Two Sum</span>
+                        <span class="difficulty easy">Easy</span>
+                    </div>
+                    <p>Given an array of integers nums and an integer target, return indices of the two numbers that add
+                        up to target.</p>
+                    <p><strong>LeetCode:</strong> <a href="https://leetcode.com/problems/two-sum/" target="_blank">Two
+                            Sum (1)</a> - Classic hash table problem</p>
+                </div>
+
+                <div class="question">
+                    <div class="question-title">
+                        <i class="fas fa-puzzle-piece"></i>
+                        <span>Problem 10: LRU Cache</span>
+                        <span class="difficulty medium">Medium</span>
+                    </div>
+                    <p>Design and implement a Least Recently Used (LRU) cache. Use a hash table + doubly linked list.
+                    </p>
+                    <p><strong>LeetCode:</strong> <a href="https://leetcode.com/problems/lru-cache/" target="_blank">LRU
+                            Cache (146)</a></p>
+                </div>
+
+                <div class="question">
+                    <div class="question-title">
+                        <i class="fas fa-puzzle-piece"></i>
+                        <span>Problem 11: Subarray Sum Equals K</span>
+                        <span class="difficulty medium">Medium</span>
+                    </div>
+                    <p>Given an array of integers nums and an integer k, return the total number of subarrays whose sum
+                        equals to k.</p>
+                    <p><strong>LeetCode:</strong> <a href="https://leetcode.com/problems/subarray-sum-equals-k/"
+                            target="_blank">Subarray Sum Equals K (560)</a></p>
+                    <p><strong>Hint:</strong> Use prefix sums with hash table for O(n) solution.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Final Practice Section -->
+        <section id="practice" class="content-section">
+            <h2 class="section-title"><i class="fas fa-pen"></i> Exam Preparation & Summary</h2>
+
+            <div class="tip-box">
+                <div class="tip-title"><i class="fas fa-graduation-cap"></i> Hash Table Summary:</div>
+                <ul>
+                    <li><span class="highlight">Average O(1)</span> operations, worst-case O(n)</li>
+                    <li><span class="highlight">Load Factor (λ)</span> is critical for performance</li>
+                    <li><span class="highlight">Separate Chaining:</span> Linked lists, λ can be > 1</li>
+                    <li><span class="highlight">Open Addressing:</span> All in table, λ should be ≤ 0.5</li>
+                    <li><span class="highlight">Linear Probing:</span> Simple but has primary clustering</li>
+                    <li><span class="highlight">Quadratic Probing:</span> No primary clustering, but secondary</li>
+                    <li><span class="highlight">Double Hashing:</span> Best open addressing method</li>
+                    <li><span class="highlight">Rehashing:</span> Required when λ gets too high</li>
+                </ul>
+            </div>
+
+            <h3 class="subsection-title">Time Complexities</h3>
+
+            <table class="complexity-table">
+                <thead>
+                    <tr>
+                        <th>Operation</th>
+                        <th>Average Case</th>
+                        <th>Worst Case</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Insert</td>
+                        <td>O(1)</td>
+                        <td>O(n)</td>
+                        <td>Depends on λ and collision resolution</td>
+                    </tr>
+                    <tr>
+                        <td>Search</td>
+                        <td>O(1)</td>
+                        <td>O(n)</td>
+                        <td>Same as insert</td>
+                    </tr>
+                    <tr>
+                        <td>Delete</td>
+                        <td>O(1)</td>
+                        <td>O(n)</td>
+                        <td>Lazy deletion for open addressing</td>
+                    </tr>
+                    <tr>
+                        <td>Space</td>
+                        <td>O(n)</td>
+                        <td>O(n)</td>
+                        <td>Extra for pointers in separate chaining</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="practice-section">
+                <h3 class="subsection-title"><i class="fas fa-question-circle"></i> Final Challenge Problems</h3>
+
+                <div class="question">
+                    <div class="question-title">
+                        <i class="fas fa-puzzle-piece"></i>
+                        <span>Challenge 12: Rehashing Implementation</span>
+                        <span class="difficulty hard">Hard</span>
+                    </div>
+                    <p>Implement a hash table with automatic rehashing. When λ exceeds 0.75, double the table size (to
+                        the next prime) and reinsert all elements.</p>
+                    <p>Implement for both separate chaining and linear probing.</p>
+                </div>
+
+                <div class="question">
+                    <div class="question-title">
+                        <i class="fas fa-puzzle-piece"></i>
+                        <span>Challenge 13: Design HashSet</span>
+                        <span class="difficulty medium">Medium</span>
+                    </div>
+                    <p>Design a HashSet without using any built-in hash table libraries. Implement:</p>
+                    <ul>
+                        <li>add(key)</li>
+                        <li>contains(key)</li>
+                        <li>remove(key)</li>
+                    </ul>
+                    <p><strong>LeetCode:</strong> <a href="https://leetcode.com/problems/design-hashset/"
+                            target="_blank">Design HashSet (705)</a></p>
+                </div>
+            </div>
+
+            <div class="note-box">
+                <div class="note-title"><i class="fas fa-exclamation-circle"></i> Exam Tips:</div>
+                <ul>
+                    <li>Memorize formulas for average probes in different collision methods</li>
+                    <li>Know when to use each collision resolution strategy</li>
+                    <li>Understand the impact of load factor on performance</li>
+                    <li>Practice implementing hash tables from scratch</li>
+                    <li>Know how to handle rehashing</li>
+                    <li>Be familiar with common applications of hash tables</li>
+                </ul>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3 class="footer-title">TechBlog by Ritik</h3>
+                    <p>Master Data Structures & Algorithms through comprehensive guides, visual explanations, and
+                        practice problems.</p>
+                    <div class="social-links">
+                        <a href="https://github.com/ritikraj07" class="social-link" target="_blank" title="GitHub">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="https://www.youtube.com/@Beer-with-Bugs" class="social-link" target="_blank"
+                            title="YouTube">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                        <a href="https://www.instagram.com/dev_ritik07/" class="social-link" target="_blank"
+                            title="Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/in/ritik-raj07/" class="social-link" target="_blank"
+                            title="LinkedIn">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="mailto:imritikraj0@gmail.com" class="social-link" title="Email">
+                            <i class="fas fa-envelope"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="footer-section">
+                    <h3 class="footer-title">Hash Table Topics</h3>
+                    <ul>
+                        <li><a href="#basics">Hash Table Basics</a></li>
+                        <li><a href="#functions">Hash Functions</a></li>
+                        <li><a href="#collision">Collision Resolution</a></li>
+                        <li><a href="#chaining">Separate Chaining</a></li>
+                        <li><a href="#addressing">Open Addressing</a></li>
+                        <li><a href="#practice">Practice Problems</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h3 class="footer-title">Quick Links</h3>
+                    <ul>
+                        <li><a href="https://leetcode.com/tag/hash-table/" target="_blank">LeetCode Hash Table
+                                Problems</a></li>
+                        <li><a href="https://www.geeksforgeeks.org/hashing-data-structure/" target="_blank">GFG Hashing
+                                Tutorial</a></li>
+                        <li><a href="https://visualgo.net/en/hashtable" target="_blank">Hash Table Visualization</a>
+                        </li>
+                        <li><a href="https://cp-algorithms.com/string/string-hashing.html" target="_blank">String
+                                Hashing Algorithms</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="copyright">
+                <p>© 2025 TechBlog by Ritik. All rights reserved.</p>
+                <p>Designed and developed with <i class="fas fa-heart" style="color: #ef4444;"></i> by Ritik Raj</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        document.getElementById('menuToggle').addEventListener('click', function () {
+            document.getElementById('mainNav').classList.toggle('active');
+        });
+
+        // Close mobile menu when clicking a link
+        document.querySelectorAll('#mainNav a').forEach(link => {
+            link.addEventListener('click', function () {
+                document.getElementById('mainNav').classList.remove('active');
+            });
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Dynamic hash table visualization
+        document.addEventListener('DOMContentLoaded', function () {
+            // Create interactive hash table example
+            const hashCells = document.querySelectorAll('.hash-cell');
+
+            // Simple example: fill some cells based on hash function
+            const exampleKeys = [89, 18, 49, 58, 9];
+            const tableSize = 10;
+
+            // Calculate positions for linear probing example
+            exampleKeys.forEach(key => {
+                let index = key % tableSize;
+                let probes = 0;
+
+                // Simulate linear probing until empty cell
+                while (probes < tableSize) {
+                    const cellIndex = (index + probes) % tableSize;
+                    const cell = hashCells[cellIndex];
+                    if (cell && !cell.classList.contains('filled')) {
+                        cell.classList.add('filled');
+                        cell.textContent = key;
+                        break;
+                    }
+                    probes++;
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
