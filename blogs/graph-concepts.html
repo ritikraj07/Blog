@@ -1,0 +1,1408 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Ritik Raj">
+    <meta name="description"
+        content="Complete guide to Graph Theory and Data Structures for students. Learn graph fundamentals, implementations, traversals, shortest path algorithms, topological sorting, and practice problems.">
+    <meta name="keywords"
+        content="graph theory, data structures, algorithms, DSA, ritik, ritik07, lord ritik, lord_ritik07, computer science, programming">
+    <title>Graph Theory Complete Guide | TechBlog by Ritik</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #64748b;
+            --accent: #06b6d4;
+            --background: #0f172a;
+            --surface: #1e293b;
+            --card: #1e293b;
+            --text: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --border: #334155;
+            --success: #10b981;
+            --error: #ef4444;
+            --warning: #f59e0b;
+            --code-bg: #0d1424;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background-color: var(--background);
+            padding: 0;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background-color: var(--surface);
+            padding: 1.5rem 0;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .blog-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text);
+            text-decoration: none;
+        }
+
+        .blog-title span {
+            color: var(--accent);
+        }
+
+        .blog-subtitle {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-top: 0.2rem;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+        }
+
+        nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--accent);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Main Content */
+        main {
+            padding: 2rem 0;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--surface) 100%);
+            border-radius: 10px;
+            border: 1px solid var(--border);
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--text);
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 800px;
+            margin: 0 auto 1.5rem;
+        }
+
+        .author-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background-color: var(--card);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+        }
+
+        .author-badge img {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        /* Content Sections */
+        .content-section {
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background-color: var(--card);
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent);
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-title i {
+            color: var(--primary);
+        }
+
+        .subsection-title {
+            font-size: 1.4rem;
+            margin: 1.5rem 0 1rem;
+            color: var(--text);
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+        }
+
+        /* Lists */
+        ul,
+        ol {
+            margin-bottom: 1rem;
+            padding-left: 1.5rem;
+            color: var(--text-secondary);
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Code Blocks */
+        .code-block {
+            background-color: var(--code-bg);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-left: 4px solid var(--accent);
+            overflow-x: auto;
+        }
+
+        code {
+            font-family: 'Courier New', Courier, monospace;
+            color: var(--accent);
+        }
+
+        pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            background-color: var(--surface);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th,
+        td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background-color: var(--background);
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* Figures and Visualizations */
+        .graph-visual {
+            display: flex;
+            justify-content: center;
+            margin: 2rem 0;
+        }
+
+        .graph-box {
+            width: 300px;
+            height: 300px;
+            position: relative;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            background-color: var(--surface);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .graph-node {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .graph-edge {
+            position: absolute;
+            height: 2px;
+            background-color: var(--accent);
+            transform-origin: 0 0;
+        }
+
+        /* Practice Questions */
+        .practice-section {
+            background-color: var(--surface);
+            border-radius: 10px;
+            padding: 2rem;
+            margin: 2rem 0;
+            border-left: 5px solid var(--success);
+        }
+
+        .question {
+            background-color: var(--card);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border);
+        }
+
+        .question-title {
+            font-size: 1.2rem;
+            margin-bottom: 0.8rem;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .question-title i {
+            color: var(--warning);
+        }
+
+        .difficulty {
+            display: inline-block;
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-right: 1rem;
+        }
+
+        .easy {
+            background-color: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+        }
+
+        .medium {
+            background-color: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+        }
+
+        .hard {
+            background-color: rgba(239, 68, 68, 0.2);
+            color: var(--error);
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--surface);
+            padding: 3rem 0 2rem;
+            border-top: 1px solid var(--border);
+            margin-top: 3rem;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .footer-title {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            color: var(--text);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: var(--background);
+            border-radius: 50%;
+            color: var(--text);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .social-link:hover {
+            background-color: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            nav ul {
+                flex-direction: column;
+                gap: 1rem;
+                width: 100%;
+                display: none;
+            }
+
+            nav.active ul {
+                display: flex;
+                margin-top: 1rem;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+                position: absolute;
+                top: 1.5rem;
+                right: 20px;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+            }
+
+            .content-section {
+                padding: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .graph-box {
+                width: 250px;
+                height: 250px;
+            }
+
+            .footer-content {
+                flex-direction: column;
+            }
+        }
+
+        /* Additional Styling */
+        .highlight {
+            background-color: rgba(37, 99, 235, 0.1);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        .definition {
+            background-color: rgba(6, 182, 212, 0.1);
+            border-left: 4px solid var(--accent);
+            padding: 1rem;
+            margin: 1.5rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .definition-title {
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .algorithm-step {
+            counter-increment: step;
+            margin-bottom: 1rem;
+            padding-left: 2.5rem;
+            position: relative;
+        }
+
+        .algorithm-step:before {
+            content: counter(step);
+            position: absolute;
+            left: 0;
+            top: 0;
+            background-color: var(--primary);
+            color: white;
+            width: 1.8rem;
+            height: 1.8rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .algorithm-container {
+            counter-reset: step;
+            margin: 1.5rem 0;
+        }
+
+        .complexity-table {
+            max-width: 600px;
+            margin: 1.5rem auto;
+        }
+
+        .comparison-table {
+            max-width: 800px;
+            margin: 1.5rem auto;
+        }
+
+        .tip-box {
+            background-color: rgba(16, 185, 129, 0.1);
+            border-left: 4px solid var(--success);
+            padding: 1rem;
+            margin: 1.5rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .tip-title {
+            font-weight: 600;
+            color: var(--success);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div>
+                    <a href="#" class="blog-title">Tech<span>Blog</span> by Ritik</a>
+                    <div class="blog-subtitle">Master Data Structures & Algorithms</div>
+                </div>
+                <button class="mobile-menu-btn" id="menuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <nav id="mainNav">
+                    <ul>
+                        <li><a href="#intro"><i class="fas fa-home"></i> Intro</a></li>
+                        <li><a href="#definitions"><i class="fas fa-book"></i> Definitions</a></li>
+                        <li><a href="#implementations"><i class="fas fa-code"></i> Implementations</a></li>
+                        <li><a href="#traversals"><i class="fas fa-sitemap"></i> Traversals</a></li>
+                        <li><a href="#algorithms"><i class="fas fa-cogs"></i> Algorithms</a></li>
+                        <li><a href="#practice"><i class="fas fa-pen"></i> Practice</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <h1>Graph Theory: From Beginner to Advanced</h1>
+            <p>A complete guide to understanding graphs, their implementations, traversal algorithms, shortest path
+                problems, and topological sorting. Master graph concepts for your DSA exams and coding interviews.</p>
+            <div class="author-badge">
+                <i class="fas fa-user-graduate"></i>
+                <span>Senior Professor of Data Structures</span>
+            </div>
+        </section>
+
+        <!-- Introduction -->
+        <section id="intro" class="content-section">
+            <h2 class="section-title"><i class="fas fa-info-circle"></i> Introduction to Graphs</h2>
+            <p>Graphs are one of the most important and versatile data structures in computer science. Unlike linear
+                data structures (arrays, linked lists) or hierarchical ones (trees), graphs can represent complex
+                relationships between objects.</p>
+
+            <div class="definition">
+                <div class="definition-title">Why Graphs Matter:</div>
+                <ul>
+                    <li><span class="highlight">Networks:</span> Social networks, computer networks</li>
+                    <li><span class="highlight">Maps:</span> GPS navigation, route optimization</li>
+                    <li><span class="highlight">Dependencies:</span> Task scheduling, build systems</li>
+                    <li><span class="highlight">State Machines:</span> AI, game development</li>
+                    <li><span class="highlight">Recommendation Systems:</span> Amazon, Netflix</li>
+                </ul>
+            </div>
+
+            <p>In this guide, we'll cover everything from basic definitions to advanced algorithms, with practice
+                problems to reinforce your learning.</p>
+        </section>
+
+        <!-- Graph Definitions -->
+        <section id="definitions" class="content-section">
+            <h2 class="section-title"><i class="fas fa-book"></i> Graph Definitions & Fundamentals</h2>
+
+            <div class="definition">
+                <div class="definition-title">Formal Definition:</div>
+                <p>A graph <code>G = (V, E)</code> consists of:</p>
+                <ul>
+                    <li><span class="highlight">V:</span> Set of vertices (nodes)</li>
+                    <li><span class="highlight">E:</span> Set of edges (arcs) where each edge is a pair (v,w) such that
+                        v,w ∈ V</li>
+                </ul>
+            </div>
+
+            <h3 class="subsection-title">Types of Graphs</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>Description</th>
+                        <th>Example Use Case</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="highlight">Undirected Graph</span></td>
+                        <td>Edges have no direction; (u,v) = (v,u)</td>
+                        <td>Facebook friendships</td>
+                    </tr>
+                    <tr>
+                        <td><span class="highlight">Directed Graph (Digraph)</span></td>
+                        <td>Edges have direction; (u,v) ≠ (v,u)</td>
+                        <td>Twitter follow relationships</td>
+                    </tr>
+                    <tr>
+                        <td><span class="highlight">Weighted Graph</span></td>
+                        <td>Edges have weights/costs</td>
+                        <td>Road networks with distances</td>
+                    </tr>
+                    <tr>
+                        <td><span class="highlight">Connected Graph</span></td>
+                        <td>Path exists between every pair of vertices</td>
+                        <td>Fully reachable network</td>
+                    </tr>
+                    <tr>
+                        <td><span class="highlight">Complete Graph</span></td>
+                        <td>Edge exists between every pair of vertices</td>
+                        <td>Fully connected network</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 class="subsection-title">Key Terminology</h3>
+            <ul>
+                <li><span class="highlight">Adjacent:</span> Two vertices connected by an edge</li>
+                <li><span class="highlight">Path:</span> Sequence of edges connecting two vertices</li>
+                <li><span class="highlight">Simple Path:</span> Path with no repeated vertices</li>
+                <li><span class="highlight">Cycle:</span> Path that starts and ends at same vertex</li>
+                <li><span class="highlight">Degree:</span> Number of edges incident to a vertex</li>
+                <li><span class="highlight">In-degree/Out-degree:</span> For directed graphs, number of
+                    incoming/outgoing edges</li>
+            </ul>
+
+            <!-- Graph Visualization -->
+            <div class="graph-visual">
+                <div class="graph-box" id="graphDemo">
+                    <!-- Graph nodes and edges will be positioned with JavaScript -->
+                </div>
+            </div>
+
+            <div class="practice-section">
+                <h3 class="subsection-title"><i class="fas fa-question-circle"></i> Practice Questions: Definitions</h3>
+
+                <div class="question">
+                    <div class="question-title">
+                        <i class="fas fa-puzzle-piece"></i>
+                        <span>Question 1: Graph Terminology</span>
+                        <span class="difficulty easy">Easy</span>
+                    </div>
+                    <p>In an undirected graph with 10 vertices, what is the maximum number of edges possible if the
+                        graph is:</p>
+                    <ol type="a">
+                        <li>Simple (no self-loops, no multiple edges)?</li>
+                        <li>Complete?</li>
+                    </ol>
+                    <p><strong>Solution Approach:</strong> For a simple undirected graph with n vertices, maximum edges
+                        = n(n-1)/2. For complete graph, all possible edges exist.</p>
+                </div>
+
+                <div class="question">
+                    <div class="question-title">
+                        <i class="fas fa-puzzle-piece"></i>
+                        <span>Question 2: Directed vs Undirected</span>
+                        <span class="difficulty medium">Medium</span>
+                    </div>
+                    <p>Given a directed graph G with n vertices and e edges, what is the relationship between the sum of
+                        in-degrees and the sum of out-degrees of all vertices?</p>
+                    <p><strong>LeetCode Connection:</strong> This concept is fundamental for problems like <a
+                            href="https://leetcode.com/problems/find-the-town-judge/" target="_blank">Find the Town
+                            Judge (997)</a>.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Graph Implementations -->
+        <section id="implementations" class="content-section">
+            <h2 class="section-title"><i class="fas fa-code"></i> Graph Implementations</h2>
+            <p>There are two primary ways to represent graphs in memory: <span class="highlight">Adjacency Matrix</span>
+                and <span class="highlight">Adjacency List</span>. Each has its own trade-offs.</p>
+
+            <h3 class="subsection-title">1. Adjacency Matrix</h3>
+            <p>A 2D array of size V×V where <code>matrix[i][j] = 1</code> if there's an edge from vertex i to j (or
+                weight for weighted graphs).</p>
+
+            <div class="code-block">
+                <pre><code>// Adjacency Matrix for unweighted graph
+int adjMatrix[V][V];
+
+// Initialize with 0 (no edge)
+for(int i = 0; i < V; i++)
+    for(int j = 0; j < V; j++)
+        adjMatrix[i][j] = 0;
+
+// Add edge from u to v
+adjMatrix[u][v] = 1;
+// For undirected graph, also add
+adjMatrix[v][u] = 1;</code></pre>
+            </div>
+
+            <div class="tip-box">
+                <div class="tip-title"><i class="fas fa-lightbulb"></i> When to Use Adjacency Matrix:</div>
+                <ul>
+                    <li>Graph is dense (many edges compared to vertices)</li>
+                    <li>Frequent edge existence checks are needed (O(1) time)</li>
+                    <li>Space is not a constraint (O(V²) space)</li>
+                </ul>
+            </div>
+
+            <h3 class="subsection-title">2. Adjacency List</h3>
+            <p>An array of lists (usually linked lists or vectors). Each list contains vertices adjacent to the vertex
+                at that index.</p>
+
+            <div class="code-block">
+                <pre><code>// Adjacency List using vector in C++
+vector<int> adjList[V];
+
+// Add edge from u to v
+adjList[u].push_back(v);
+// For undirected graph, also add
+adjList[v].push_back(u);
+
+// In Java, using ArrayList
+// ArrayList<Integer>[] adjList = new ArrayList[V];</code></pre>
+            </div>
+
+            <div class="tip-box">
+                <div class="tip-title"><i class="fas fa-lightbulb"></i> When to Use Adjacency List:</div>
+                <ul>
+                    <li>Graph is sparse (few edges compared to vertices)</li>
+                    <li>Memory efficiency is important (O(V+E) space)</li>
+                    <li>Need to iterate through all edges/neighbors</li>
+                </ul>
+            </div>
+
+            <h3 class="subsection-title">Comparison</h3>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Operation</th>
+                        <th>Adjacency Matrix</th>
+                        <th>Adjacency List</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Space Complexity</td>
+                        <td>O(V²)</td>
+                        <td>O(V+E)</td>
+                    </tr>
+                    <tr>
+                        <td>Check if edge (u,v) exists</td>
+                        <td>O(1)</td>
+                        <td>O(degree(u))</td>
+                    </tr>
+                    <tr>
+                        <td>Find all neighbors of u</td>
+                        <td>O(V)</td>
+                        <td>O(degree(u))</td>
+                    </tr>
+                    <tr>
+                        <td>Add edge (u,v)</td>
+                        <td>O(1)</td>
+                        <td>O(1)</td>
+                    </tr>
+                    <tr>
+                        <td>Remove edge (u,v)</td>
+                        <td>O(1)</td>
+                        <td>O(degree(u))</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="practice-section">
+                <h3 class="subsection-title"><i class="fas fa-question-circle"></i> Practice Questions: Implementations
+                </h3>
+
+                <div class="question">
+                    <div class="question-title">
+                        <i class="fas fa-puzzle-piece"></i>
+                        <span>Question 3: Choosing Implementation</span>
+                        <span class="difficulty medium">Medium</span>
+                    </div>
+                    <p>You're designing a social network with 1 million users where each user has an average of 500
+                        friends. Which graph representation would you choose and why?</p>
+                    <p><strong>Think about:</strong> Space requirements, typical operations (finding friends, checking
+                        if two users are friends).</p>
+                </div>
+
+                <div class="question">
+                    <div class="question-title">
+                        <i class="fas fa-puzzle-piece"></i>
+                        <span>Question 4: Graph Representation</span>
+                        <span class="difficulty easy">Easy</span>
+                    </div>
+                    <p>Convert the following adjacency list to an adjacency matrix:</p>
+                    <p>0: 1, 2<br>1: 0, 2, 3<br>2: 0, 1<br>3: 1</p>
+                    <p><strong>LeetCode Practice:</strong> Try <a
+                            href="https://leetcode.com/problems/find-if-path-exists-in-graph/" target="_blank">Find if
+                            Path Exists in Graph (1971)</a> using both representations.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Graph Traversals -->
+        <section id="traversals" class="content-section">
+            <h2 class="section-title"><i class="fas fa-sitemap"></i> Graph Traversal Algorithms</h2>
+            <p>Traversal algorithms visit all vertices reachable from a starting vertex. The two fundamental approaches
+                are Depth-First Search (DFS) and Breadth-First Search (BFS).</p>
+
+            <h3 class="subsection-title">1. Depth-First Search (DFS)</h3>
+            <p>DFS explores as far as possible along each branch before backtracking. It uses a stack (either explicitly
+                or via recursion).</p>
+
+            <div class="algorithm-container">
+                <div class="algorithm-step">Mark the current vertex as visited</div>
+                <div class="algorithm-step">For each unvisited neighbor of the current vertex</div>
+                <div class="algorithm-step">Recursively call DFS on that neighbor</div>
+            </div>
+
+            <div class="code-block">
+                <pre><code>// DFS Recursive Implementation
+void dfs(int node, vector<int> adj[], vector<bool>& visited) {
+    visited[node] = true;
+    cout << node << " "; // Process the node
+    
+    for(int neighbor : adj[node]) {
+        if(!visited[neighbor]) {
+            dfs(neighbor, adj, visited);
+        }
+    }
+}
+
+// DFS Iterative Implementation (using stack)
+void dfsIterative(int start, vector<int> adj[], int V) {
+    vector<bool> visited(V, false);
+    stack<int> st;
+    st.push(start);
+    
+    while(!st.empty()) {
+        int node = st.top();
+        st.pop();
+        
+        if(!visited[node]) {
+            visited[node] = true;
+            cout << node << " ";
+            
+            // Push all unvisited neighbors
+            for(int i = adj[node].size()-1; i >= 0; i--) {
+                if(!visited[adj[node][i]]) {
+                    st.push(adj[node][i]);
+                }
+            }
+        }
+    }
+}</code></pre>
+            </div>
+
+            <h3 class="subsection-title">2. Breadth-First Search (BFS)</h3>
+            <p>BFS explores all neighbors at the present depth before moving to nodes at the next depth level. It uses a
+                queue.</p>
+
+            <div class="algorithm-container">
+                <div class="algorithm-step">Mark start vertex as visited and enqueue it</div>
+                <div class="algorithm-step">While queue is not empty</div>
+                <div class="algorithm-step">Dequeue a vertex and process it</div>
+                <div class="algorithm-step">Enqueue all unvisited neighbors of this vertex</div>
+            </div>
+
+            <div class="code-block">
+                <pre><code>// BFS Implementation
+void bfs(int start, vector<int> adj[], int V) {
+    vector<bool> visited(V, false);
+    queue<int> q;
+    
+    visited[start] = true;
+    q.push(start);
+    
+    while(!q.empty()) {
+        int node = q.front();
+        q.pop();
+        cout << node << " "; // Process the node
+        
+        for(int neighbor : adj[node]) {
+            if(!visited[neighbor]) {
+                visited[neighbor] = true;
+                q.push(neighbor);
+            }
+        }
+    }
+}</code></pre>
+            </div>
+
+            <h3 class="subsection-title">DFS vs BFS Comparison</h3>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Aspect</th>
+                        <th>Depth-First Search (DFS)</th>
+                        <th>Breadth-First Search (BFS)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Data Structure</td>
+                        <td>Stack (recursion uses call stack)</td>
+                        <td>Queue</td>
+                    </tr>
+                    <tr>
+                        <td>Memory Usage</td>
+                        <td>O(h) where h = max depth</td>
+                        <td>O(w) where w = max width</td>
+                    </tr>
+                    <tr>
+                        <td>Finds Shortest Path</td>
+                        <td>No (in unweighted graphs)</td>
+                        <td>Yes (in unweighted graphs)</td>
+                    </tr>
+                    <tr>
+                        <td>Applications</td>
+                        <td>Topological sort, cycle detection, path finding</td>
+                        <td>Shortest path, connected components, level order</td>
+                    </tr>
+                    <tr>
+                        <td>Time Complexity</td>
+                        <td colspan="2">O(V+E) for both (adjacency list)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="practice-section">
+                <h3 class="subsection-title"><i class="fas fa-question-circle"></i> Practice Questions: Traversals</h3>
+
+                <div class="question">
+                    <div class="question-title">
+                        <i class="fas fa-puzzle-piece"></i>
+                        <span>Question 5: DFS Traversal Order</span>
+                        <span class="difficulty easy">Easy</span>
+                    </div>
+                    <p>Given the following graph (adjacency list):<br>
+                        0: 1, 2<br>
+                        1: 0, 3, 4<br>
+                        2: 0, 5<br>
+                        3: 1<br>
+                        4: 1, 5<br>
+                        5: 2, 4</p>
+                    <p>What is the DFS traversal order starting from vertex 0? (Assume neighbors are visited in
+                        increasing order)</p>
+                    <p><strong>LeetCode Practice:</strong> <a href="https://leetcode.com/problems/number-of-islands/"
+                            target="_blank">Number of Islands (200)</a> uses DFS/BFS.</p>
+                </div>
+
+                <div class="question">
+                    <div class="question-title">
+                        <i class="fas fa-puzzle-piece"></i>
+                        <span>Question 6: BFS for Shortest Path</span>
+                        <span class="difficulty medium">Medium</span>
+                    </div>
+                    <p>Why does BFS guarantee the shortest path in unweighted graphs but DFS doesn't? Explain with an
+                        example.</p>
+                    <p><strong>Follow-up:</strong> Implement BFS to find shortest path between two nodes and return the
+                        path.</p>
+                    <p><strong>LeetCode Practice:</strong> <a href="https://leetcode.com/problems/word-ladder/"
+                            target="_blank">Word Ladder (127)</a> is a classic BFS problem.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Graph Algorithms -->
+        <section id="algorithms" class="content-section">
+            <h2 class="section-title"><i class="fas fa-cogs"></i> Advanced Graph Algorithms</h2>
+
+            <h3 class="subsection-title">1. Shortest Path Algorithms</h3>
+
+            <h4>Unweighted Graphs: BFS-based</h4>
+            <p>For unweighted graphs, BFS finds the shortest path in terms of number of edges.</p>
+
+            <div class="code-block">
+                <pre><code>// Shortest path in unweighted graph using BFS
+vector<int> shortestPathBFS(int start, int target, vector<int> adj[], int V) {
+    vector<bool> visited(V, false);
+    vector<int> parent(V, -1);
+    queue<int> q;
+    
+    visited[start] = true;
+    q.push(start);
+    
+    while(!q.empty()) {
+        int node = q.front();
+        q.pop();
+        
+        if(node == target) break;
+        
+        for(int neighbor : adj[node]) {
+            if(!visited[neighbor]) {
+                visited[neighbor] = true;
+                parent[neighbor] = node;
+                q.push(neighbor);
+            }
+        }
+    }
+    
+    // Reconstruct path from target to start
+    vector<int> path;
+    for(int v = target; v != -1; v = parent[v]) {
+        path.push_back(v);
+    }
+    reverse(path.begin(), path.end());
+    
+    if(path[0] != start) return {}; // No path exists
+    return path;
+}</code></pre>
+            </div>
+
+            <h4>Weighted Graphs: Dijkstra's Algorithm</h4>
+            <p>For weighted graphs with non-negative weights, Dijkstra's algorithm finds the shortest path.</p>
+
+            <div class="algorithm-container">
+                <div class="algorithm-step">Initialize distance to all vertices as INFINITY, distance to source as 0
+                </div>
+                <div class="algorithm-step">Create a priority queue (min-heap) of (distance, vertex)</div>
+                <div class="algorithm-step">While priority queue is not empty</div>
+                <div class="algorithm-step">Extract vertex with minimum distance</div>
+                <div class="algorithm-step">For each neighbor of this vertex, relax the edge if a shorter path is found
+                </div>
+            </div>
+
+            <div class="code-block">
+                <pre><code>// Dijkstra's Algorithm using priority queue
+vector<int> dijkstra(int source, vector<vector<pair<int, int>>>& adj, int V) {
+    vector<int> dist(V, INT_MAX);
+    dist[source] = 0;
+    
+    // Min-heap: (distance, vertex)
+    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+    pq.push({0, source});
+    
+    while(!pq.empty()) {
+        int currentDist = pq.top().first;
+        int u = pq.top().second;
+        pq.pop();
+        
+        // Skip if we found a better distance already
+        if(currentDist > dist[u]) continue;
+        
+        for(auto& edge : adj[u]) {
+            int v = edge.first;
+            int weight = edge.second;
+            
+            if(dist[u] + weight < dist[v]) {
+                dist[v] = dist[u] + weight;
+                pq.push({dist[v], v});
+            }
+        }
+    }
+    
+    return dist;
+}</code></pre>
+            </div>
+
+            <table class="complexity-table">
+                <thead>
+                    <tr>
+                        <th>Algorithm</th>
+                        <th>Time Complexity</th>
+                        <th>Space Complexity</th>
+                        <th>Use Case</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>BFS (Unweighted)</td>
+                        <td>O(V+E)</td>
+                        <td>O(V)</td>
+                        <td>Unweighted graphs, few edges</td>
+                    </tr>
+                    <tr>
+                        <td>Dijkstra (Binary Heap)</td>
+                        <td>O((V+E) log V)</td>
+                        <td>O(V)</td>
+                        <td>Weighted graphs, non-negative weights</td>
+                    </tr>
+                    <tr>
+                        <td>Dijkstra (Fibonacci Heap)</td>
+                        <td>O(E + V log V)</td>
+                        <td>O(V)</td>
+                        <td>Large dense graphs</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 class="subsection-title">2. Topological Sorting</h3>
+            <p>Topological sorting is a linear ordering of vertices in a Directed Acyclic Graph (DAG) such that for
+                every directed edge (u → v), u comes before v in the ordering.</p>
+
+            <div class="code-block">
+                <pre><code>// Topological Sort using DFS (Kahn's algorithm also exists)
+void topologicalSortDFS(int node, vector<int> adj[], vector<bool>& visited, stack<int>& st) {
+    visited[node] = true;
+    
+    for(int neighbor : adj[node]) {
+        if(!visited[neighbor]) {
+            topologicalSortDFS(neighbor, adj, visited, st);
+        }
+    }
+    
+    st.push(node);
+}
+
+vector<int> topologicalSort(int V, vector<int> adj[]) {
+    vector<bool> visited(V, false);
+    stack<int> st;
+    
+    for(int i = 0; i < V; i++) {
+        if(!visited[i]) {
+            topologicalSortDFS(i, adj, visited, st);
+        }
+    }
+    
+    vector<int> result;
+    while(!st.empty()) {
+        result.push_back(st.top());
+        st.pop();
+    }
+    
+    return result;
+}</code></pre>
+            </div>
+
+            <div class="practice-section">
+                <h3 class="subsection-title"><i class="fas fa-question-circle"></i> Practice Questions: Algorithms</h3>
+
+                <div class="question">
+                    <div class="question-title">
+                        <i class="fas fa-puzzle-piece"></i>
+                        <span>Question 7: Dijkstra's Algorithm</span>
+                        <span class="difficulty medium">Medium</span>
+                    </div>
+                    <p>Apply Dijkstra's algorithm to find shortest paths from vertex A to all other vertices:</p>
+                    <p>Edges with weights: A-B:4, A-C:2, B-C:1, B-D:5, C-D:8, C-E:10, D-E:2, D-F:6, E-F:3</p>
+                    <p>Show each step and the final distance array.</p>
+                    <p><strong>LeetCode Practice:</strong> <a href="https://leetcode.com/problems/network-delay-time/"
+                            target="_blank">Network Delay Time (743)</a></p>
+                </div>
+
+                <div class="question">
+                    <div class="question-title">
+                        <i class="fas fa-puzzle-piece"></i>
+                        <span>Question 8: Topological Sort</span>
+                        <span class="difficulty medium">Medium</span>
+                    </div>
+                    <p>Given the following course prerequisites:</p>
+                    <p>CSC300 → CSC100, CSC200<br>
+                        CSC200 → CSC100<br>
+                        CSC100 → (no prerequisites)<br>
+                        MTH200 → MTH100<br>
+                        CSC400 → CSC300, MTH200</p>
+                    <p>Find a valid course schedule using topological sort.</p>
+                    <p><strong>LeetCode Practice:</strong> <a href="https://leetcode.com/problems/course-schedule/"
+                            target="_blank">Course Schedule (207)</a> and <a
+                            href="https://leetcode.com/problems/course-schedule-ii/" target="_blank">Course Schedule II
+                            (210)</a></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Final Practice Section -->
+        <section id="practice" class="content-section">
+            <h2 class="section-title"><i class="fas fa-pen"></i> Comprehensive Practice Problems</h2>
+
+            <div class="practice-section">
+                <h3 class="subsection-title"><i class="fas fa-question-circle"></i> Advanced Problems</h3>
+
+                <div class="question">
+                    <div class="question-title">
+                        <i class="fas fa-puzzle-piece"></i>
+                        <span>Problem 9: Clone Graph</span>
+                        <span class="difficulty medium">Medium</span>
+                    </div>
+                    <p>Given a reference of a node in a connected undirected graph, return a deep copy (clone) of the
+                        graph.</p>
+                    <p><strong>LeetCode:</strong> <a href="https://leetcode.com/problems/clone-graph/"
+                            target="_blank">Clone Graph (133)</a></p>
+                    <p><strong>Hint:</strong> Use BFS/DFS with a hash map to map original nodes to their copies.</p>
+                </div>
+
+                <div class="question">
+                    <div class="question-title">
+                        <i class="fas fa-puzzle-piece"></i>
+                        <span>Problem 10: Minimum Spanning Tree</span>
+                        <span class="difficulty medium">Medium</span>
+                    </div>
+                    <p>Given a connected, undirected, weighted graph, find the Minimum Spanning Tree (MST) using Prim's
+                        or Kruskal's algorithm.</p>
+                    <p><strong>LeetCode:</strong> <a
+                            href="https://leetcode.com/problems/min-cost-to-connect-all-points/" target="_blank">Min
+                            Cost to Connect All Points (1584)</a></p>
+                    <p><strong>Hint:</strong> Prim's algorithm is similar to Dijkstra's but you add the minimum weight
+                        edge connecting to the MST.</p>
+                </div>
+
+                <div class="question">
+                    <div class="question-title">
+                        <i class="fas fa-puzzle-piece"></i>
+                        <span>Problem 11: Graph Coloring</span>
+                        <span class="difficulty hard">Hard</span>
+                    </div>
+                    <p>Given an undirected graph, color its vertices with the minimum number of colors such that no two
+                        adjacent vertices share the same color.</p>
+                    <p><strong>LeetCode:</strong> <a href="https://leetcode.com/problems/is-graph-bipartite/"
+                            target="_blank">Is Graph Bipartite? (785)</a></p>
+                    <p><strong>Hint:</strong> A graph is bipartite (2-colorable) if and only if it contains no
+                        odd-length cycles.</p>
+                </div>
+            </div>
+
+            <div class="tip-box">
+                <div class="tip-title"><i class="fas fa-graduation-cap"></i> Exam Preparation Tips:</div>
+                <ul>
+                    <li>Memorize time complexities of all algorithms</li>
+                    <li>Practice drawing graphs and tracing algorithms step-by-step</li>
+                    <li>Understand when to use DFS vs BFS vs Dijkstra</li>
+                    <li>Know how to detect cycles in directed and undirected graphs</li>
+                    <li>Practice converting problems into graph representations</li>
+                </ul>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3 class="footer-title">TechBlog by Ritik</h3>
+                    <p>Master Data Structures & Algorithms through comprehensive guides, visual explanations, and
+                        practice problems.</p>
+                    <div class="social-links">
+                        <a href="https://github.com/ritikraj07" class="social-link" target="_blank" title="GitHub">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="https://www.youtube.com/@Beer-with-Bugs" class="social-link" target="_blank"
+                            title="YouTube">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                        <a href="https://www.instagram.com/dev_ritik07/" class="social-link" target="_blank"
+                            title="Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/in/ritik-raj07/" class="social-link" target="_blank"
+                            title="LinkedIn">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="mailto:imritikraj0@gmail.com" class="social-link" title="Email">
+                            <i class="fas fa-envelope"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="footer-section">
+                    <h3 class="footer-title">Graph Theory Topics</h3>
+                    <ul>
+                        <li><a href="#definitions">Definitions & Fundamentals</a></li>
+                        <li><a href="#implementations">Graph Implementations</a></li>
+                        <li><a href="#traversals">DFS & BFS Traversals</a></li>
+                        <li><a href="#algorithms">Shortest Path Algorithms</a></li>
+                        <li><a href="#practice">Practice Problems</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h3 class="footer-title">Quick Links</h3>
+                    <ul>
+                        <li><a href="https://leetcode.com/tag/graph/" target="_blank">LeetCode Graph Problems</a></li>
+                        <li><a href="https://www.geeksforgeeks.org/graph-data-structure-and-algorithms/"
+                                target="_blank">GFG Graph Tutorial</a></li>
+                        <li><a href="https://visualgo.net/en/graphds" target="_blank">Graph Visualization Tool</a></li>
+                        <li><a href="https://cp-algorithms.com/graph/breadth-first-search.html" target="_blank">Advanced
+                                Algorithms</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="copyright">
+                <p>© 2025 TechBlog by Ritik. All rights reserved.</p>
+                <p>Designed and developed with <i class="fas fa-heart" style="color: #ef4444;"></i> by Ritik Raj</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        document.getElementById('menuToggle').addEventListener('click', function () {
+            document.getElementById('mainNav').classList.toggle('active');
+        });
+
+        // Close mobile menu when clicking a link
+        document.querySelectorAll('#mainNav a').forEach(link => {
+            link.addEventListener('click', function () {
+                document.getElementById('mainNav').classList.remove('active');
+            });
+        });
+
+        // Graph visualization
+        document.addEventListener('DOMContentLoaded', function () {
+            const graphBox = document.getElementById('graphDemo');
+
+            // Define positions for nodes in the visualization
+            const nodes = [
+                { id: 0, x: 150, y: 150, label: 'A' },
+                { id: 1, x: 250, y: 100, label: 'B' },
+                { id: 2, x: 250, y: 200, label: 'C' },
+                { id: 3, x: 50, y: 100, label: 'D' },
+                { id: 4, x: 50, y: 200, label: 'E' }
+            ];
+
+            // Define edges for the visualization
+            const edges = [
+                { from: 0, to: 1 },
+                { from: 0, to: 2 },
+                { from: 1, to: 2 },
+                { from: 3, to: 0 },
+                { from: 4, to: 0 },
+                { from: 1, to: 3 }
+            ];
+
+            // Create edges
+            edges.forEach(edge => {
+                const fromNode = nodes[edge.from];
+                const toNode = nodes[edge.to];
+
+                // Calculate length and angle
+                const dx = toNode.x - fromNode.x;
+                const dy = toNode.y - fromNode.y;
+                const length = Math.sqrt(dx * dx + dy * dy);
+                const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+
+                // Create edge element
+                const edgeElement = document.createElement('div');
+                edgeElement.className = 'graph-edge';
+                edgeElement.style.width = length + 'px';
+                edgeElement.style.left = fromNode.x + 'px';
+                edgeElement.style.top = fromNode.y + 'px';
+                edgeElement.style.transform = `rotate(${angle}deg)`;
+
+                graphBox.appendChild(edgeElement);
+            });
+
+            // Create nodes
+            nodes.forEach(node => {
+                const nodeElement = document.createElement('div');
+                nodeElement.className = 'graph-node';
+                nodeElement.style.left = (node.x - 20) + 'px';
+                nodeElement.style.top = (node.y - 20) + 'px';
+                nodeElement.textContent = node.label;
+
+                graphBox.appendChild(nodeElement);
+            });
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

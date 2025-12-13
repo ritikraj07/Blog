@@ -20,7 +20,7 @@
       "category": ["web-dev", "http", "methods"],
       "date": "2025-11-10",
       "readTime": "10 min read",
-      "featured": true,
+      "featured": false,
       "tags": ["html", "css", "javascript"],
       "referenced": ["blogs/deep-dive-in-put-patch-post.html"]
     },
@@ -52,7 +52,7 @@
       "category": ["web-dev", "security", "validation"],
       "date": "2025-11-22",
       "readTime": "10 min read",
-      "featured": true,
+      "featured": false,
       "tags": ["html", "css", "javascript"],
       "referenced": []
     },
@@ -100,10 +100,27 @@
       "category": ["web-dev", "http", "optimization"],
       "date": "2025-11-11",
       "readTime": "5 min read",
-      "featured": true,
+      "featured": false,
       "tags": ["html", "css", "javascript"],
       "referenced": ["blogs/http-mothods-guide.html"]
-    }
+    }, {
+      "id": 10,
+      "title": "DSA Graph Concepts: Beginner to Advanced",
+      "description": "Learn about DSA Graph concepts and their usage in web development.",
+      "link": "blogs/graph-concepts.html",
+      "category": ["DSA", "graph", "computer science"],
+      "date": "2025-12-13",
+      "readTime": "45 min read",
+      "featured": true,
+      "tags": ["graph", "dsa", "Graph Definitions & Terminology",
+                "Directed vs Undirected Graphs",
+                "Adjacency Matrix vs Adjacency List",
+                "Depth-First Search (DFS)",
+                "Breadth-First Search (BFS)",
+                "Shortest Path Algorithms",
+                "Dijkstra's Algorithm",
+                "Topological Sorting",
+                "Practice Problems with Solutions"]    }
     
     ]
 }
