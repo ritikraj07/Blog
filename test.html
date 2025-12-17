@@ -5,11 +5,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description"
-        content="Join Ritik on TechBlog as we explore the sneaky world of Man-in-the-Middle attacks - the digital equivalent of someone reading your postcards before they reach their destination.">
+        content="Complete exam-focused guide covering every topic from Web Technologies PDF including HTTP, Same Origin Policy, Referrer Policy, DOM manipulation, Virtual DOM, React Fiber, Shadow DOM, SPA vs MPA, and browser architecture for comprehensive exam preparation.">
     <meta name="keywords"
-        content="ritik, ritik07, lord ritik, lord_ritik07, cybersecurity, man in the middle attack, network security, hacking, encryption">
-    <meta name="author" content="Ritik Raj">
-    <title>Man in the Middle Attack: The Digital Eavesdropper | TechBlog by Ritik</title>
+        content="web technologies exam guide, complete web development study material, HTTP detailed guide, DOM manipulation exam, Virtual DOM vs Shadow DOM, React Fiber architecture, SPA MPA comparison, browser rendering engine, web security policies, exam preparation">
+    <meta name="author" content="Professor Ritik">
+    <meta name="robots" content="index, follow">
+    <title>Complete Web Technologies Exam Study Guide | TechBlog by Ritik</title>
+
+    <!-- Primary Meta Tags for SEO -->
+    <meta name="title" content="Complete Web Technologies Exam Study Guide">
+    <meta name="description"
+        content="Exhaustive exam preparation guide covering 100% of Web Technologies syllabus - HTTP, Security Policies, DOM, Virtual DOM, React Fiber, Browser Architecture, SPA/MPA with detailed examples.">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Complete Web Technologies Exam Study Guide">
+    <meta property="og:description"
+        content="Exhaustive exam preparation guide covering 100% of Web Technologies syllabus.">
+    <meta property="og:site_name" content="TechBlog by Ritik">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Complete Web Technologies Exam Study Guide">
+    <meta name="twitter:description"
+        content="Exhaustive exam preparation guide covering 100% of Web Technologies syllabus.">
+
+    <!-- Additional author/creator tags -->
+    <meta name="creator" content="ritik, ritik07, lord ritik, lord_ritik07">
+
     <style>
         :root {
             --primary: #2563eb;
@@ -23,7 +46,12 @@
             --text-secondary: #cbd5e1;
             --border: #334155;
             --success: #10b981;
+            --warning: #f59e0b;
             --error: #ef4444;
+            --radius: 8px;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --transition: all 0.3s ease;
+            --code-bg: #1a202c;
         }
 
         * {
@@ -33,258 +61,798 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--background);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.7;
             color: var(--text);
-            line-height: 1.6;
-        }
-
-        .container {
-            max-width: 1200px;
+            background-color: var(--background);
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 20px;
+            counter-reset: section subsection subsubsection;
         }
 
         header {
-            background-color: var(--surface);
-            padding: 1rem 0;
-            border-bottom: 1px solid var(--border);
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            text-align: center;
+            padding: 3rem 1.5rem;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, var(--surface) 0%, var(--background) 100%);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
         }
 
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        header::before {
+            content: "📚 EXAM GUIDE";
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--primary);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: bold;
         }
 
         #blog_site_name {
-            font-size: 1.8rem;
-            font-weight: bold;
             color: var(--accent);
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 1rem;
         }
 
-        nav ul {
-            display: flex;
-            list-style: none;
-        }
-
-        nav ul li {
-            margin-left: 1.5rem;
-        }
-
-        nav ul li a {
-            color: var(--text);
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-
-        nav ul li a:hover {
-            color: var(--accent);
-        }
-
-        .hero {
-            background: linear-gradient(135deg, var(--surface) 0%, var(--background) 100%);
-            padding: 4rem 0;
-            text-align: center;
-        }
-
-        .hero h1 {
+        h1 {
             font-size: 2.5rem;
             margin-bottom: 1rem;
+            color: var(--text);
+            line-height: 1.2;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
 
-        .hero p {
-            font-size: 1.2rem;
+        .subtitle {
+            font-size: 1.1rem;
             color: var(--text-secondary);
-            max-width: 700px;
-            margin: 0 auto;
+            max-width: 900px;
+            margin: 0 auto 1.5rem;
+            line-height: 1.6;
         }
 
-        .article-content {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 2rem;
-            padding: 3rem 0;
-        }
-
-        .main-content {
-            background-color: var(--card);
-            padding: 2rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .main-content h2 {
-            color: var(--accent);
-            margin-bottom: 1.5rem;
-            font-size: 1.8rem;
-        }
-
-        .main-content h3 {
-            color: var(--primary);
-            margin: 1.5rem 0 1rem;
-        }
-
-        .main-content p {
-            margin-bottom: 1rem;
-        }
-
-        .main-content blockquote {
-            border-left: 4px solid var(--accent);
-            padding-left: 1rem;
-            margin: 1.5rem 0;
-            font-style: italic;
-            color: var(--text-secondary);
-        }
-
-        .side-content {
-            display: flex;
-            flex-direction: column;
-            gap: 2rem;
-        }
-
-        .author-card,
-        .related-topics {
-            background-color: var(--card);
-            padding: 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .author-card img {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-bottom: 1rem;
-            border: 2px solid var(--accent);
+        .exam-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--warning), #d97706);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin: 0.5rem 0;
+            font-size: 0.8rem;
         }
 
         .social-links {
             display: flex;
+            justify-content: center;
             gap: 1rem;
-            margin-top: 1rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
         }
 
         .social-links a {
-            color: var(--text);
-            font-size: 1.5rem;
-            transition: color 0.3s;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: var(--transition);
+            font-size: 0.9rem;
+            padding: 6px 12px;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 4px;
         }
 
         .social-links a:hover {
             color: var(--accent);
+            background: rgba(6, 182, 212, 0.1);
+            transform: translateY(-2px);
         }
 
-        .related-topics ul {
-            list-style: none;
+        .article-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.2rem;
+            background-color: var(--surface);
+            border-radius: var(--radius);
+            margin: 1.5rem 0 2.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+            border-left: 5px solid var(--accent);
         }
 
-        .related-topics ul li {
-            margin-bottom: 0.5rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 1px solid var(--border);
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
         }
 
-        .related-topics ul li a {
-            color: var(--text);
-            text-decoration: none;
-            transition: color 0.3s;
+        .meta-item .icon {
+            font-size: 1rem;
         }
 
-        .related-topics ul li a:hover {
+        main {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        @media (min-width: 1024px) {
+            main {
+                grid-template-columns: 1fr 300px;
+            }
+        }
+
+        article {
+            background-color: var(--card);
+            border-radius: var(--radius);
+            padding: 2rem;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+        }
+
+        .section-counter::before {
+            counter-increment: section;
+            content: counter(section) ". ";
+            color: var(--primary);
+            font-weight: bold;
+            margin-right: 0.5rem;
+        }
+
+        .subsection-counter::before {
+            counter-increment: subsection;
+            content: counter(section) "." counter(subsection) ". ";
             color: var(--accent);
+            font-weight: bold;
+            margin-right: 0.5rem;
         }
 
-        .illustration {
-            width: 100%;
-            max-width: 600px;
-            margin: 2rem auto;
-            background-color: var(--surface);
-            padding: 1.5rem;
-            border-radius: 8px;
-            text-align: center;
+        h2 {
+            color: var(--primary);
+            margin: 2.5rem 0 1.2rem;
+            padding-bottom: 0.6rem;
+            border-bottom: 2px solid var(--border);
+            font-size: 1.6rem;
+            position: relative;
         }
 
-        .illustration img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 4px;
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 80px;
+            height: 2px;
+            background: var(--primary);
         }
 
-        .prevention-tips {
-            background-color: var(--surface);
-            padding: 1.5rem;
-            border-radius: 8px;
-            margin: 2rem 0;
+        h3 {
+            color: var(--accent);
+            margin: 1.8rem 0 0.8rem;
+            font-size: 1.3rem;
         }
 
-        .prevention-tips h3 {
-            color: var(--success);
-            margin-bottom: 1rem;
+        h4 {
+            color: var(--text);
+            margin: 1.2rem 0 0.6rem;
+            font-size: 1.1rem;
         }
 
-        .prevention-tips ul {
-            list-style-position: inside;
+        p {
+            margin-bottom: 1.2rem;
+            color: var(--text-secondary);
+            font-size: 1rem;
+            line-height: 1.7;
         }
 
-        .prevention-tips li {
+        .exam-tip {
+            background-color: rgba(245, 158, 11, 0.1);
+            border-left: 5px solid var(--warning);
+            padding: 1.2rem;
+            margin: 1.5rem 0;
+            border-radius: 0 var(--radius) var(--radius) 0;
+            position: relative;
+            font-size: 0.95rem;
+        }
+
+        .exam-tip::before {
+            content: "📝 EXAM TIP";
+            font-weight: bold;
+            color: var(--warning);
+            display: block;
             margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+        }
+
+        .definition-box {
+            background-color: rgba(6, 182, 212, 0.1);
+            border-left: 5px solid var(--accent);
+            padding: 1.2rem;
+            margin: 1.5rem 0;
+            border-radius: 0 var(--radius) var(--radius) 0;
+            font-size: 0.95rem;
+        }
+
+        .definition-box::before {
+            content: "📖 DEFINITION";
+            font-weight: bold;
+            color: var(--accent);
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+        }
+
+        .code-block {
+            background-color: var(--code-bg);
+            padding: 1.2rem;
+            border-radius: var(--radius);
+            margin: 1.5rem 0;
+            overflow-x: auto;
+            border: 1px solid var(--border);
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            line-height: 1.4;
+            font-size: 0.9rem;
+        }
+
+        code {
+            background-color: rgba(30, 41, 59, 0.8);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            color: var(--accent);
+            font-size: 0.9rem;
+        }
+
+        .code-block code {
+            background: none;
+            padding: 0;
+            color: #e2e8f0;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            background-color: var(--surface);
+            border-radius: var(--radius);
+            overflow: hidden;
+            border: 1px solid var(--border);
+            font-size: 0.9rem;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 1rem;
+            text-align: left;
+            border: 1px solid var(--border);
+            vertical-align: top;
+        }
+
+        .comparison-table th {
+            background-color: var(--primary-dark);
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background-color: rgba(30, 41, 59, 0.5);
+        }
+
+        .comparison-table td:first-child {
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .example-box {
+            background-color: rgba(37, 99, 235, 0.1);
+            border: 2px solid var(--primary);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            margin: 2rem 0;
+            position: relative;
+        }
+
+        .example-box::before {
+            content: "🔍 EXAMPLE";
+            position: absolute;
+            top: -10px;
+            left: 15px;
+            background: var(--primary);
+            color: white;
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        .important-note {
+            background-color: rgba(16, 185, 129, 0.1);
+            border-left: 5px solid var(--success);
+            padding: 1.2rem;
+            margin: 1.5rem 0;
+            border-radius: 0 var(--radius) var(--radius) 0;
+            font-size: 0.95rem;
+        }
+
+        .important-note::before {
+            content: "✅ IMPORTANT";
+            font-weight: bold;
+            color: var(--success);
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+        }
+
+        .warning-box {
+            background-color: rgba(239, 68, 68, 0.1);
+            border-left: 5px solid var(--error);
+            padding: 1.2rem;
+            margin: 1.5rem 0;
+            border-radius: 0 var(--radius) var(--radius) 0;
+            font-size: 0.95rem;
+        }
+
+        .warning-box::before {
+            content: "⚠️ WARNING";
+            font-weight: bold;
+            color: var(--error);
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+        }
+
+        aside {
+            background-color: var(--surface);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .toc-title {
+            color: var(--accent);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--border);
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .toc-list {
+            list-style-type: none;
+            margin-bottom: 1.5rem;
+        }
+
+        .toc-list li {
+            margin-bottom: 0.4rem;
+            position: relative;
+        }
+
+        .toc-list>li>a {
+            font-weight: 600;
+            color: var(--text);
+            padding: 6px 10px;
+            display: block;
+            border-radius: 6px;
+            transition: var(--transition);
+            border-left: 3px solid transparent;
+            font-size: 0.95rem;
+        }
+
+        .toc-list>li>a:hover {
+            background-color: rgba(6, 182, 212, 0.1);
+            border-left-color: var(--accent);
+            color: var(--accent);
+            transform: translateX(5px);
+        }
+
+        .toc-sublist {
+            list-style-type: none;
+            margin: 0.3rem 0 0.3rem 1rem;
+            padding-left: 0.8rem;
+            border-left: 1px solid var(--border);
+        }
+
+        .toc-sublist li {
+            margin-bottom: 0.2rem;
+        }
+
+        .toc-sublist a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            padding: 4px 6px;
+            display: block;
+            border-radius: 4px;
+            transition: var(--transition);
+        }
+
+        .toc-sublist a:hover {
+            color: var(--accent);
+            background-color: rgba(6, 182, 212, 0.05);
+        }
+
+        .quick-facts {
+            background: rgba(100, 116, 139, 0.1);
+            border-radius: var(--radius);
+            padding: 1.2rem;
+            margin-top: 1.5rem;
+            border: 1px solid var(--border);
+            font-size: 0.9rem;
+        }
+
+        .quick-facts h4 {
+            color: var(--text);
+            margin-bottom: 0.8rem;
+            font-size: 1rem;
+        }
+
+        .quick-facts ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .quick-facts li {
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+
+        .quick-facts li::before {
+            content: "•";
+            color: var(--accent);
+            font-weight: bold;
+            font-size: 1rem;
+            line-height: 1;
+        }
+
+        .conclusion {
+            background: linear-gradient(135deg, var(--surface) 0%, var(--background) 100%);
+            border-radius: var(--radius);
+            padding: 2rem;
+            margin: 3rem 0;
+            border: 1px solid var(--border);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .conclusion::before {
+            content: "🎯 EXAM SUMMARY";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: var(--primary);
+            color: white;
+            padding: 10px;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        .conclusion>* {
+            position: relative;
+            z-index: 1;
+        }
+
+        .conclusion h2 {
+            margin-top: 1.5rem;
+            border: none;
+        }
+
+        .conclusion h2::after {
+            display: none;
         }
 
         footer {
-            background-color: var(--surface);
-            padding: 2rem 0;
-            border-top: 1px solid var(--border);
             text-align: center;
+            padding: 2rem;
             margin-top: 3rem;
-        }
-
-        .footer-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1rem;
+            border-top: 2px solid var(--border);
+            color: var(--text-secondary);
+            background-color: var(--surface);
+            border-radius: var(--radius);
         }
 
         .footer-links {
             display: flex;
+            justify-content: center;
             gap: 1.5rem;
+            margin: 1.5rem 0;
+            flex-wrap: wrap;
         }
 
         .footer-links a {
-            color: var(--text);
+            color: var(--text-secondary);
             text-decoration: none;
-            transition: color 0.3s;
+            transition: var(--transition);
+            font-weight: 500;
+            padding: 6px 12px;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.05);
+            font-size: 0.9rem;
         }
 
         .footer-links a:hover {
             color: var(--accent);
+            background: rgba(6, 182, 212, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .copyright {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .note {
+            background-color: rgba(100, 116, 139, 0.1);
+            padding: 1.2rem;
+            border-radius: var(--radius);
+            margin: 1.5rem 0;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+
+        .practice-question {
+            background-color: rgba(139, 92, 246, 0.1);
+            border-left: 5px solid #8b5cf6;
+            padding: 1.2rem;
+            margin: 1.5rem 0;
+            border-radius: 0 var(--radius) var(--radius) 0;
+            font-size: 0.95rem;
+        }
+
+        .practice-question::before {
+            content: "🧠 PRACTICE QUESTION";
+            font-weight: bold;
+            color: #8b5cf6;
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+        }
+
+        .keyword {
+            background-color: rgba(6, 182, 212, 0.2);
+            color: var(--accent);
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-weight: 500;
+            border: 1px solid rgba(6, 182, 212, 0.3);
+            font-size: 0.9rem;
+        }
+
+        .technical-detail {
+            background-color: rgba(30, 41, 59, 0.5);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.2rem;
+            margin: 1.2rem 0;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .diagram-placeholder {
+            background: linear-gradient(135deg, var(--surface), var(--background));
+            border: 2px dashed var(--border);
+            border-radius: var(--radius);
+            padding: 2rem 1.5rem;
+            margin: 1.5rem 0;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .diagram-placeholder::before {
+            content: "📊 DIAGRAM";
+            display: block;
+            font-weight: bold;
+            margin-bottom: 0.8rem;
+            color: var(--accent);
+            font-size: 0.85rem;
         }
 
         @media (max-width: 768px) {
-            .article-content {
-                grid-template-columns: 1fr;
+            body {
+                padding: 15px;
             }
 
-            .header-content {
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            h2 {
+                font-size: 1.4rem;
+                margin: 2rem 0 1rem;
+            }
+
+            h3 {
+                font-size: 1.2rem;
+                margin: 1.5rem 0 0.8rem;
+            }
+
+            .subtitle {
+                font-size: 1rem;
+            }
+
+            header {
+                padding: 2rem 1rem;
+            }
+
+            header::before {
+                font-size: 0.7rem;
+                padding: 4px 8px;
+                top: 10px;
+                right: 10px;
+            }
+
+            .article-meta {
                 flex-direction: column;
+                align-items: flex-start;
+                gap: 0.8rem;
+                padding: 1rem;
+            }
+
+            .social-links {
+                gap: 0.8rem;
+            }
+
+            .social-links a {
+                font-size: 0.85rem;
+                padding: 5px 10px;
+            }
+
+            article {
+                padding: 1.5rem;
+            }
+
+            .code-block {
+                padding: 1rem;
+                font-size: 0.85rem;
+            }
+
+            .comparison-table {
+                font-size: 0.85rem;
+            }
+
+            .comparison-table th,
+            .comparison-table td {
+                padding: 0.8rem;
+            }
+
+            aside {
+                position: static;
+                margin-top: 2rem;
+            }
+
+            .footer-links {
                 gap: 1rem;
             }
 
-            nav ul {
+            .footer-links a {
+                font-size: 0.85rem;
+                padding: 5px 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.6rem;
+            }
+
+            h2 {
+                font-size: 1.3rem;
+            }
+
+            h3 {
+                font-size: 1.1rem;
+            }
+
+            .social-links {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .social-links a {
+                width: 100%;
                 justify-content: center;
             }
 
-            nav ul li {
-                margin: 0 0.75rem;
+            .comparison-table {
+                display: block;
+                overflow-x: auto;
             }
 
-            .hero h1 {
+            .code-block {
+                font-size: 0.8rem;
+            }
+
+            .footer-links {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .footer-links a {
+                width: 100%;
+                text-align: center;
+            }
+        }
+
+        @media (min-width: 1400px) {
+            body {
+                max-width: 1400px;
+                padding: 30px;
+            }
+
+            h1 {
+                font-size: 3rem;
+            }
+
+            h2 {
                 font-size: 2rem;
+            }
+
+            .subtitle {
+                font-size: 1.3rem;
+            }
+        }
+
+        /* Print styles */
+        @media print {
+            body {
+                background: white;
+                color: black;
+                max-width: 100%;
+                padding: 20px;
+            }
+
+            header,
+            article,
+            aside,
+            footer {
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+
+            .code-block {
+                background: #f5f5f5;
+                border: 1px solid #ddd;
+            }
+
+            .social-links,
+            .footer-links {
+                display: none;
+            }
+
+            .conclusion {
+                page-break-inside: avoid;
             }
         }
     </style>
@@ -292,172 +860,1005 @@
 
 <body>
     <header>
-        <div class="container">
-            <div class="header-content">
-                <div id="blog_site_name">TechBlog by Ritik</div>
-                <nav>
-                    <ul>
-                        <li><a href="#">Home</a></li>
-                        <li><a href="#">Cybersecurity</a></li>
-                        <li><a href="#">Web Development</a></li>
-                        <li><a href="#">About</a></li>
-                        <li><a href="#">Contact</a></li>
-                    </ul>
-                </nav>
-            </div>
+        <div id="blog_site_name">TechBlog by Ritik</div>
+        <h1>Complete Web Technologies Exam Study Guide</h1>
+        <div class="exam-badge">Exam Preparation • 100% Syllabus Coverage • Detailed Examples</div>
+        <p class="subtitle">Comprehensive guide covering every topic from the Web Technologies syllabus including HTTP
+            protocols, security policies, DOM manipulation, Virtual DOM, React Fiber architecture, Shadow DOM, SPA vs
+            MPA, and browser rendering engine - with detailed explanations and exam-focused examples.</p>
+
+        <div class="social-links">
+            <a href="https://github.com/ritikraj07" target="_blank">📁 GitHub</a>
+            <a href="https://www.youtube.com/@Beer-with-Bugs" target="_blank">📺 YouTube</a>
+            <a href="https://www.instagram.com/dev_ritik07/" target="_blank">📷 Instagram</a>
+            <a href="https://www.linkedin.com/in/ritik-raj07/" target="_blank">💼 LinkedIn</a>
+            <a href="mailto:imritikraj0@gmail.com">📧 Email</a>
         </div>
     </header>
 
-    <section class="hero">
-        <div class="container">
-            <h1>Man in the Middle Attack: The Digital Eavesdropper</h1>
-            <p>How someone can secretly intercept your private conversations online, and what you can do to stop them
-            </p>
+    <div class="article-meta">
+        <div class="meta-item">
+            <span class="icon">📅</span>
+            <div>
+                <strong>Published Date:</strong> November 11, 2025
+            </div>
         </div>
-    </section>
-
-    <div class="container">
-        <div class="article-content">
-            <main class="main-content">
-                <h2>The Digital Postman Who Reads Your Mail</h2>
-
-                <p>Imagine you're sending a secret love letter to your crush. You carefully write it, seal it in an
-                    envelope, and hand it to the postman. But instead of delivering it directly, this sneaky postman
-                    opens your letter, reads all your embarrassing romantic poetry, maybe even changes a few words, then
-                    reseals it and delivers it. That's essentially what a Man-in-the-Middle (MitM) attack is in the
-                    digital world.</p>
-
-                <div class="illustration">
-                    <!-- Placeholder for illustration -->
-                    <div
-                        style="background-color: var(--border); height: 300px; display: flex; align-items: center; justify-content: center; border-radius: 4px;">
-                        <p>Illustration: How MitM Attack Works</p>
-                    </div>
-                </div>
-
-                <h3>How Does This Digital Eavesdropping Work?</h3>
-
-                <p>In technical terms, a Man-in-the-Middle attack occurs when an attacker secretly intercepts and
-                    potentially alters the communication between two parties who believe they are directly communicating
-                    with each other.</p>
-
-                <p>Let's break it down with a story:</p>
-
-                <blockquote>
-                    Alice wants to send Bob a message saying "Meet me at the cafe at 5 PM."
-                    But Mallory (our digital villain) positions herself between Alice and Bob.
-                    When Alice sends her message, Mallory intercepts it, changes it to "Meet me at the park at 7 PM,"
-                    and forwards this altered message to Bob. Both Alice and Bob think they're communicating directly
-                    with each other, unaware that Mallory is manipulating their conversation.
-                </blockquote>
-
-                <h3>Common Types of MitM Attacks</h3>
-
-                <p>Just like there are different flavors of sneaky behavior, there are different types of MitM attacks:
-                </p>
-
-                <ul>
-                    <li><strong>Wi-Fi Eavesdropping:</strong> Attackers set up malicious Wi-Fi hotspots in public places
-                        with innocent-sounding names like "Free Airport Wi-Fi." When you connect, they can monitor all
-                        your internet activity.</li>
-                    <li><strong>DNS Spoofing:</strong> This tricks your browser into visiting a fake website instead of
-                        the real one. You think you're logging into your bank's website, but you're actually on a clever
-                        imitation designed to steal your credentials.</li>
-                    <li><strong>HTTPS Spoofing:</strong> The attacker creates a fake website with a similar-looking URL
-                        to the legitimate one, hoping you won't notice the difference.</li>
-                    <li><strong>SSL Stripping:</strong> This downgrades your secure HTTPS connection to an unencrypted
-                        HTTP connection, making your data easy to intercept.</li>
-                </ul>
-
-                <div class="prevention-tips">
-                    <h3>How to Protect Yourself from Digital Eavesdroppers</h3>
-                    <p>Don't worry, you're not defenseless against these digital spies! Here are some practical tips:
-                    </p>
-                    <ul>
-                        <li><strong>Always check for HTTPS:</strong> Look for the padlock icon in your browser's address
-                            bar before entering sensitive information.</li>
-                        <li><strong>Avoid public Wi-Fi for sensitive tasks:</strong> If you must use public Wi-Fi, use a
-                            VPN to encrypt your connection.</li>
-                        <li><strong>Keep your software updated:</strong> Regular updates often include security patches
-                            that protect against known vulnerabilities.</li>
-                        <li><strong>Be wary of certificate warnings:</strong> If your browser shows a security
-                            certificate warning, pay attention - it might be trying to protect you from a MitM attack.
-                        </li>
-                        <li><strong>Use multi-factor authentication:</strong> Even if someone intercepts your password,
-                            they won't be able to access your accounts without the second factor.</li>
-                    </ul>
-                </div>
-
-                <h3>The Bottom Line</h3>
-
-                <p>Man-in-the-Middle attacks are like digital pickpockets - they work best when you're not paying
-                    attention. By understanding how they work and taking simple precautions, you can significantly
-                    reduce your risk of falling victim to these attacks.</p>
-
-                <p>Remember, in the digital world, a little paranoia is healthy! Stay safe out there.</p>
-
-                <!-- Reading time information (not displayed, for JSON use) -->
-                <!-- READING_TIME: 6 minutes -->
-            </main>
-
-            <aside class="side-content">
-                <div class="author-card">
-                    <div
-                        style="background-color: var(--border); width: 100px; height: 100px; border-radius: 50%; margin-bottom: 1rem; display: flex; align-items: center; justify-content: center;">
-                        <p>Ritik</p>
-                    </div>
-                    <h3>About the Author</h3>
-                    <p>Ritik is a cybersecurity enthusiast and full-stack developer who loves breaking things to
-                        understand how they work. When he's not defending the digital world from villains, he's probably
-                        debugging his own code.</p>
-                    <div class="social-links">
-                        <a href="https://github.com/ritikraj07" target="_blank" title="GitHub">
-                            <i>GH</i>
-                        </a>
-                        <a href="https://www.youtube.com/@Beer-with-Bugs" target="_blank" title="YouTube">
-                            <i>YT</i>
-                        </a>
-                        <a href="https://www.instagram.com/dev_ritik07/" target="_blank" title="Instagram">
-                            <i>IG</i>
-                        </a>
-                        <a href="https://www.linkedin.com/in/ritik-raj07/" target="_blank" title="LinkedIn">
-                            <i>LI</i>
-                        </a>
-                        <a href="mailto:imritikraj0@gmail.com" title="Email">
-                            <i>EM</i>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="related-topics">
-                    <h3>Related Topics</h3>
-                    <ul>
-                        <li><a href="#">What is Encryption and How Does It Work?</a></li>
-                        <li><a href="#">Phishing Attacks: Don't Take the Bait</a></li>
-                        <li><a href="#">Secure Your Home Network in 5 Steps</a></li>
-                        <li><a href="#">The Importance of Strong Passwords</a></li>
-                        <li><a href="#">Understanding Two-Factor Authentication</a></li>
-                    </ul>
-                </div>
-            </aside>
+        <div class="meta-item">
+            <span class="icon">⏱️</span>
+            <div>
+                <strong>Reading Time:</strong> 1.5 - 2 hours (comprehensive study)
+            </div>
+        </div>
+        <div class="meta-item">
+            <span class="icon">📚</span>
+            <div>
+                <strong>Topics Covered:</strong> 96/96 PDF Pages
+            </div>
+        </div>
+        <div class="meta-item">
+            <span class="icon">🎯</span>
+            <div>
+                <strong>Exam Level:</strong> University/Professional Certification
+            </div>
         </div>
     </div>
 
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div id="blog_site_name">TechBlog by Ritik</div>
-                <div class="footer-links">
-                    <a href="https://github.com/ritikraj07" target="_blank">GitHub</a>
-                    <a href="https://www.youtube.com/@Beer-with-Bugs" target="_blank">YouTube</a>
-                    <a href="https://www.instagram.com/dev_ritik07/" target="_blank">Instagram</a>
-                    <a href="https://www.linkedin.com/in/ritik-raj07/" target="_blank">LinkedIn</a>
-                    <a href="mailto:imritikraj0@gmail.com">Contact</a>
-                </div>
-                <p>&copy; 2025 TechBlog by Ritik. All rights reserved.</p>
+    <main>
+        <article>
+            <!-- Introduction -->
+            <div class="definition-box">
+                <p>This comprehensive guide covers <strong>EVERY SINGLE TOPIC</strong> from the Web Technologies
+                    syllabus. Each section includes detailed explanations, technical examples, and exam-focused
+                    insights. Bookmark this page for your exam preparation!</p>
             </div>
+
+            <div class="exam-tip">
+                <p><strong>Exam Strategy:</strong> Focus on understanding concepts rather than memorization. Pay special
+                    attention to HTTP headers, Same Origin Policy, DOM manipulation, and SPA/MPA comparisons - these are
+                    common exam questions.</p>
+            </div>
+
+            <!-- Section 1: How the Web Works -->
+            <h2 class="section-counter">How the Web Works</h2>
+
+            <div class="definition-box">
+                <p><strong>Client-Server Architecture:</strong> The fundamental model of web communication where clients
+                    (browsers) request resources from servers (computers storing websites).</p>
+            </div>
+
+            <h3 class="subsection-counter">Clients</h3>
+            <p>Clients are end-user devices and software that initiate requests:</p>
+            <ul>
+                <li><span class="keyword">Devices:</span> Computers, smartphones, tablets</li>
+                <li><span class="keyword">Software:</span> Web browsers (Chrome, Firefox, Safari)</li>
+                <li><span class="keyword">Function:</span> Send HTTP requests and render responses</li>
+            </ul>
+
+            <h3 class="subsection-counter">Servers</h3>
+            <p>Servers are powerful computers that store and serve web content:</p>
+            <ul>
+                <li><span class="keyword">Function:</span> Receive requests, process them, send responses</li>
+                <li><span class="keyword">Content:</span> Store HTML, CSS, JavaScript, images, videos</li>
+                <li><span class="keyword">Types:</span> Web servers, application servers, database servers</li>
+            </ul>
+
+            <div class="example-box">
+                <h4>Complete Request-Response Cycle:</h4>
+                <div class="code-block">
+                    <code>User types URL → Browser sends HTTP Request → 
+Server processes request → Server sends HTTP Response → 
+Browser renders HTML/CSS/JS → User sees webpage</code>
+                </div>
+            </div>
+
+            <!-- Section 2: The Web Toolbox -->
+            <h2 class="section-counter">The Web Toolbox</h2>
+
+            <h3 class="subsection-counter">Internet Connection</h3>
+            <p>The physical/non-physical medium for data transfer between clients and servers.</p>
+
+            <h3 class="subsection-counter">TCP/IP Protocol Suite</h3>
+            <p>Transmission Control Protocol/Internet Protocol - the foundation of internet communication:</p>
+            <div class="technical-detail">
+                <p><strong>TCP:</strong> Reliable, connection-oriented protocol ensuring data arrives completely and in
+                    order.</p>
+                <p><strong>IP:</strong> Handles addressing and routing of packets across networks.</p>
+                <p><strong>Ports:</strong> HTTP uses port 80, HTTPS uses port 443.</p>
+            </div>
+
+            <h3 class="subsection-counter">DNS (Domain Name System)</h3>
+            <p>The internet's phonebook that translates domain names to IP addresses:</p>
+            <div class="example-box">
+                <h4>DNS Resolution Process:</h4>
+                <div class="code-block">
+                    <code>1. User enters "google.com"
+2. Browser checks local DNS cache
+3. If not found, queries DNS resolver
+4. Resolver queries root DNS servers
+5. Root directs to .com TLD servers
+6. TLD directs to google.com authoritative server
+7. Returns IP address (142.250.185.78)
+8. Browser caches IP for future use</code>
+                </div>
+            </div>
+
+            <h3 class="subsection-counter">HTTP (Hypertext Transfer Protocol)</h3>
+            <p>Application-layer protocol for communication between clients and servers:</p>
+            <div class="important-note">
+                <p><strong>HTTP Methods:</strong> GET (retrieve), POST (submit), PUT (update), DELETE (remove), HEAD
+                    (headers only), OPTIONS (supported methods)</p>
+            </div>
+
+            <!-- Section 3: Same Origin Policy -->
+            <h2 class="section-counter">Same Origin Policy (SOP)</h2>
+
+            <div class="definition-box">
+                <p><strong>Same Origin Policy:</strong> A critical security mechanism that restricts how a document or
+                    script loaded from one origin can interact with resources from another origin.</p>
+            </div>
+
+            <h3 class="subsection-counter">Origin Definition</h3>
+            <p>Two URLs have the same origin if they share the same:</p>
+            <ul>
+                <li><span class="keyword">Protocol</span> (http vs https)</li>
+                <li><span class="keyword">Host</span> (domain/subdomain)</li>
+                <li><span class="keyword">Port</span> (80 vs 443 vs 8080)</li>
+            </ul>
+
+            <h3 class="subsection-counter">Origin Comparison Examples</h3>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Comparison URL</th>
+                        <th>Origin Match?</th>
+                        <th>Reason</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>http://store.company.com/dir2/other.html</td>
+                        <td>✅ Same</td>
+                        <td>Only path differs</td>
+                    </tr>
+                    <tr>
+                        <td>https://store.company.com/page.html</td>
+                        <td>❌ Different</td>
+                        <td>Different protocol (http vs https)</td>
+                    </tr>
+                    <tr>
+                        <td>http://store.company.com:81/dir/page.html</td>
+                        <td>❌ Different</td>
+                        <td>Different port (80 vs 81)</td>
+                    </tr>
+                    <tr>
+                        <td>http://news.company.com/dir/page.html</td>
+                        <td>❌ Different</td>
+                        <td>Different host (store vs news)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="exam-tip">
+                <p><strong>Exam Question Alert:</strong> Be prepared to identify whether two URLs have the same origin.
+                    Remember: protocol, host, and port must ALL match exactly.</p>
+            </div>
+
+            <!-- Section 4: Referrer Policy -->
+            <h2 class="section-counter">Referrer Policy</h2>
+
+            <div class="definition-box">
+                <p><strong>Referrer Header:</strong> Sent by browsers to tell servers where the request came from (which
+                    page linked to the current request).</p>
+                <p><strong>Referrer Policy:</strong> Controls how much referrer information is shared for privacy and
+                    security.</p>
+            </div>
+
+            <h3 class="subsection-counter">Common Referrer Policy Values</h3>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Policy</th>
+                        <th>Behavior</th>
+                        <th>Use Case</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>no-referrer</code></td>
+                        <td>No Referer header sent at all</td>
+                        <td>Maximum privacy</td>
+                    </tr>
+                    <tr>
+                        <td><code>no-referrer-when-downgrade</code> (default)</td>
+                        <td>Full URL for HTTPS→HTTPS, nothing for HTTPS→HTTP</td>
+                        <td>Balance security & functionality</td>
+                    </tr>
+                    <tr>
+                        <td><code>origin</code></td>
+                        <td>Only scheme+host (no path)</td>
+                        <td>Basic origin information</td>
+                    </tr>
+                    <tr>
+                        <td><code>strict-origin-when-cross-origin</code> (recommended)</td>
+                        <td>Full URL for same-origin, origin only for cross-origin, nothing on downgrade</td>
+                        <td>Modern default</td>
+                    </tr>
+                    <tr>
+                        <td><code>unsafe-url</code></td>
+                        <td>Always sends full URL (including query parameters)</td>
+                        <td>Debugging only (security risk)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="example-box">
+                <h4>Referrer vs Origin Header Difference:</h4>
+                <p><strong>Origin Header:</strong> Only contains scheme://host:port</p>
+                <div class="code-block">
+                    <code>Origin: https://www.youtube.com</code>
+                </div>
+                <p><strong>Referer Header:</strong> Contains full URL including path</p>
+                <div class="code-block">
+                    <code>Referer: https://www.youtube.com/watch?v=abcd1234</code>
+                </div>
+            </div>
+
+            <!-- Section 5: HTTP Headers Deep Dive -->
+            <h2 class="section-counter">HTTP Headers Detailed Analysis</h2>
+
+            <h3 class="subsection-counter">Request Headers Example</h3>
+            <div class="code-block">
+                <code>GET /pagead/id HTTP/1.1
+Host: googleads.g.doubleclick.net
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en;q=0.5
+Connection: keep-alive
+Origin: https://www.youtube.com
+Referer: https://www.youtube.com/
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: cross-site
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:142.0) Gecko/20100101 Firefox/142.0</code>
+            </div>
+
+            <h4>Header Analysis:</h4>
+            <ul>
+                <li><span class="keyword">Accept:</span> Client accepts any MIME type</li>
+                <li><span class="keyword">Accept-Encoding:</span> Supports compressed responses (saves bandwidth)</li>
+                <li><span class="keyword">Connection: keep-alive</span> Keep TCP connection open for multiple requests
+                </li>
+                <li><span class="keyword">Sec-Fetch-* headers:</span> Modern security headers for fetch requests</li>
+                <li><span class="keyword">User-Agent:</span> Identifies browser, OS, and version</li>
+            </ul>
+
+            <!-- Section 6: Browser Rendering Process -->
+            <h2 class="section-counter">How Browsers Load and Render Websites</h2>
+
+            <h3 class="subsection-counter">Step-by-Step Rendering Pipeline</h3>
+            <div class="diagram-placeholder">
+                <p>HTML Download → HTML Parsing → DOM Construction → CSS Parsing → Render Tree → Layout → Paint →
+                    Composite</p>
+            </div>
+
+            <h4>Detailed Process:</h4>
+            <ol>
+                <li><strong>HTML Download & Parsing:</strong> Browser downloads HTML and parses it into tokens</li>
+                <li><strong>DOM Construction:</strong> Tokens are converted to nodes, forming DOM tree</li>
+                <li><strong>CSS Download & Parsing:</strong> CSS is parsed into CSSOM (CSS Object Model)</li>
+                <li><strong>Render Tree:</strong> DOM + CSSOM combined into render tree</li>
+                <li><strong>Layout:</strong> Calculate exact position and size of each element</li>
+                <li><strong>Paint:</strong> Fill pixels with colors, images, borders, etc.</li>
+                <li><strong>Composite:</strong> Layers are combined in correct order</li>
+            </ol>
+
+            <!-- Section 7: HTML DOM -->
+            <h2 class="section-counter">HTML DOM (Document Object Model)</h2>
+
+            <div class="definition-box">
+                <p><strong>DOM:</strong> A programming interface for HTML/XML documents that represents the structure as
+                    a tree of objects that can be manipulated with JavaScript.</p>
+            </div>
+
+            <h3 class="subsection-counter">DOM Tree Structure</h3>
+            <div class="example-box">
+                <h4>HTML to DOM Conversion:</h4>
+                <div class="code-block">
+                    <code>&lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;My Page&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;Hello&lt;/h1&gt;
+    &lt;p&gt;Welcome!&lt;/p&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code>
+                </div>
+                <p><strong>DOM Tree:</strong> document → html → [head, body] → head → [title] → body → [h1, p]</p>
+            </div>
+
+            <h3 class="subsection-counter">DOM Node Types</h3>
+            <ul>
+                <li><span class="keyword">Document Node:</span> The entire document (root)</li>
+                <li><span class="keyword">Element Node:</span> HTML tags (div, p, h1, etc.)</li>
+                <li><span class="keyword">Attribute Node:</span> Attributes of elements (class, id, src)</li>
+                <li><span class="keyword">Text Node:</span> Text content inside elements</li>
+                <li><span class="keyword">Comment Node:</span> HTML comments</li>
+            </ul>
+
+            <!-- Section 8: DOM Manipulation -->
+            <h2 class="section-counter">DOM Manipulation with JavaScript</h2>
+
+            <h3 class="subsection-counter">Basic DOM Manipulation Methods</h3>
+
+            <div class="example-box">
+                <h4>1. Selecting Elements:</h4>
+                <div class="code-block">
+                    <code>// By ID
+document.getElementById('myId');
+
+// By class name (returns HTMLCollection)
+document.getElementsByClassName('myClass');
+
+// By tag name (returns HTMLCollection)
+document.getElementsByTagName('div');
+
+// CSS selector (returns first match)
+document.querySelector('.myClass');
+
+// CSS selector (returns all matches)
+document.querySelectorAll('p');</code>
+                </div>
+
+                <h4>2. Modifying Elements:</h4>
+                <div class="code-block">
+                    <code>// Change text content
+element.innerText = 'New text';
+
+// Change HTML content
+element.innerHTML = '&lt;strong&gt;Bold text&lt;/strong&gt;';
+
+// Change CSS styles
+element.style.color = 'red';
+element.style.backgroundColor = '#000';
+
+// Modify attributes
+element.setAttribute('class', 'new-class');
+element.getAttribute('href');
+element.removeAttribute('disabled');</code>
+                </div>
+
+                <h4>3. Creating/Removing Elements:</h4>
+                <div class="code-block">
+                    <code>// Create new element
+const newDiv = document.createElement('div');
+
+// Add to DOM
+parentElement.appendChild(newDiv);
+
+// Remove element
+element.remove();
+
+// Insert before
+parentElement.insertBefore(newElement, referenceElement);</code>
+                </div>
+            </div>
+
+            <div class="example-box">
+                <h4>Complete DOM Manipulation Example from PDF:</h4>
+                <p><strong>Change Wikipedia page background:</strong></p>
+                <div class="code-block">
+                    <code>document.getElementsByClassName('mw-page-container-inner')[0]
+        .style.backgroundColor = 'Red';</code>
+                </div>
+
+                <p><strong>Replace page title:</strong></p>
+                <div class="code-block">
+                    <code>document.querySelector('.mw-page-title-main').innerText = 'MCA Web Technologies';</code>
+                </div>
+
+                <p><strong>Replace all paragraphs (Elon Musk example):</strong></p>
+                <div class="code-block">
+                    <code>let quotes = [
+  "Failure is an option here. If things are not failing, you are not innovating enough.",
+  "If you get up in the morning and think the future is going to be better, it is a bright day.",
+  "You shouldn't do things differently just because they're different."
+];
+
+let paragraphs = document.querySelectorAll("#mw-content-text .mw-content-ltr p");
+paragraphs.forEach((p, index) => {
+    p.innerText = quotes[index % quotes.length];
+    p.style.color = ["blue", "red", "purple"][index % 3];
+});</code>
+                </div>
+            </div>
+
+            <!-- Section 9: Browser Architecture -->
+            <h2 class="section-counter">Browser Architecture</h2>
+
+            <h3 class="subsection-counter">Browser Components</h3>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Component</th>
+                        <th>Function</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>User Interface</td>
+                        <td>Address bar, back/forward buttons, bookmarks (everything except page display)</td>
+                    </tr>
+                    <tr>
+                        <td>Browser Engine</td>
+                        <td>Manages interactions between UI and rendering engine</td>
+                    </tr>
+                    <tr>
+                        <td>Rendering Engine</td>
+                        <td>Parses HTML/CSS, creates render tree, displays content (Blink, Gecko, WebKit)</td>
+                    </tr>
+                    <tr>
+                        <td>Networking</td>
+                        <td>Handles HTTP requests, network calls, security</td>
+                    </tr>
+                    <tr>
+                        <td>JavaScript Interpreter</td>
+                        <td>Parses and executes JavaScript code (V8, SpiderMonkey)</td>
+                    </tr>
+                    <tr>
+                        <td>UI Backend</td>
+                        <td>Draws basic widgets (combo boxes, windows) using OS methods</td>
+                    </tr>
+                    <tr>
+                        <td>Data Persistence</td>
+                        <td>Storage (cookies, localStorage, IndexedDB, Web SQL)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- Section 10: Virtual DOM -->
+            <h2 class="section-counter">Virtual DOM</h2>
+
+            <div class="definition-box">
+                <p><strong>Virtual DOM:</strong> A lightweight JavaScript representation of the actual DOM. React
+                    creates and maintains this virtual copy to optimize updates to the real DOM.</p>
+            </div>
+
+            <h3 class="subsection-counter">Why Virtual DOM is Needed</h3>
+            <div class="important-note">
+                <p><strong>Problem:</strong> Direct DOM manipulation is slow because browsers must:
+                    1. Recalculate styles (reflow)
+                    2. Update layout (relayout)
+                    3. Repaint affected elements
+                    These operations are expensive for complex applications.</p>
+            </div>
+
+            <h3 class="subsection-counter">How Virtual DOM Works</h3>
+            <div class="diagram-placeholder">
+                <p>State Change → New Virtual DOM → Diff Algorithm → Minimal DOM Updates → Real DOM Update</p>
+            </div>
+
+            <h4>Step-by-Step Process:</h4>
+            <ol>
+                <li><strong>Initial Render:</strong> Create virtual DOM tree from React components</li>
+                <li><strong>State Change:</strong> User interaction triggers state update</li>
+                <li><strong>Re-render Virtual DOM:</strong> Create new virtual DOM tree</li>
+                <li><strong>Diffing:</strong> Compare new and old virtual DOM trees to find differences</li>
+                <li><strong>Reconciliation:</strong> Calculate minimal set of DOM operations needed</li>
+                <li><strong>Batch Update:</strong> Apply all changes to real DOM in one batch</li>
+            </ol>
+
+            <div class="example-box">
+                <h4>React Counter Virtual DOM Example:</h4>
+                <div class="code-block">
+                    <code>import React, { useState } from 'react';
+
+function App() {
+  const [count, setCount] = useState(0);
+  
+  return (
+    &lt;div&gt;
+      &lt;h1&gt;Counter: {count}&lt;/h1&gt;
+      &lt;button onClick={() => setCount(count + 1)}&gt;
+        Increment
+      &lt;/button&gt;
+    &lt;/div&gt;
+  );
+}</code>
+                </div>
+                <p><strong>Virtual DOM Structure (JSON representation):</strong></p>
+                <div class="code-block">
+                    <code>{
+  type: "div",
+  props: {},
+  children: [
+    {
+      type: "h1",
+      props: {},
+      children: [
+        { type: "TEXT_ELEMENT", props: { nodeValue: "Counter: 0" } }
+      ]
+    },
+    {
+      type: "button",
+      props: { onClick: "setCount(count + 1)" },
+      children: [
+        { type: "TEXT_ELEMENT", props: { nodeValue: "Increment" } }
+      ]
+    }
+  ]
+}</code>
+                </div>
+            </div>
+
+            <h3 class="subsection-counter">Benefits of Virtual DOM</h3>
+            <ul>
+                <li><span class="keyword">Performance:</span> Minimizes expensive DOM operations</li>
+                <li><span class="keyword">Declarative:</span> Describe UI state, not how to update it</li>
+                <li><span class="keyword">Cross-platform:</span> Same reconciler for web and native (React Native)</li>
+                <li><span class="keyword">Optimized updates:</span> Batches multiple state changes</li>
+            </ul>
+
+            <h3 class="subsection-counter">Common Misconceptions</h3>
+            <div class="warning-box">
+                <p><strong>Misconception 1:</strong> Virtual DOM is a browser feature.<br>
+                    <strong>Reality:</strong> It's a React library implementation.
+                </p>
+
+                <p><strong>Misconception 2:</strong> Virtual DOM replaces real DOM.<br>
+                    <strong>Reality:</strong> It's an intermediary optimization layer.
+                </p>
+
+                <p><strong>Misconception 3:</strong> Only React uses Virtual DOM.<br>
+                    <strong>Reality:</strong> Vue.js, SolidJS, and others also use similar concepts.
+                </p>
+
+                <p><strong>Misconception 4:</strong> Virtual DOM solves all performance issues.<br>
+                    <strong>Reality:</strong> Poor code can still cause performance problems.
+                </p>
+
+                <p><strong>Misconception 5:</strong> Virtual DOM = Shadow DOM.<br>
+                    <strong>Reality:</strong> Completely different concepts (Shadow DOM is for encapsulation).
+                </p>
+            </div>
+
+            <!-- Section 11: React Fiber -->
+            <h2 class="section-counter">React Fiber Architecture</h2>
+
+            <div class="definition-box">
+                <p><strong>React Fiber:</strong> A complete rewrite of React's core algorithm introduced in React 16. It
+                    enables incremental rendering, allowing React to split rendering work into chunks and prioritize
+                    updates.</p>
+            </div>
+
+            <h3 class="subsection-counter">Problems with Stack Reconciler (Pre-Fiber)</h3>
+            <ul>
+                <li><span class="keyword">Synchronous:</span> Once rendering starts, it can't be interrupted</li>
+                <li><span class="keyword">Blocking:</span> Large component trees block main thread</li>
+                <li><span class="keyword">No prioritization:</span> All updates treated equally</li>
+                <li><span class="keyword">Jank:</span> Animations could drop frames</li>
+            </ul>
+
+            <h3 class="subsection-counter">Fiber's Solutions</h3>
+            <ul>
+                <li><span class="keyword">Incremental Rendering:</span> Split work into chunks</li>
+                <li><span class="keyword">Priority-based Scheduling:</span> User interactions > background updates</li>
+                <li><span class="keyword">Pause/Resume:</span> Can stop work and continue later</li>
+                <li><span class="keyword">Error Boundaries:</span> Better error handling</li>
+            </ul>
+
+            <h3 class="subsection-counter">Fiber Architecture Benefits</h3>
+            <div class="important-note">
+                <p><strong>Key Improvements:</strong></p>
+                <ol>
+                    <li><strong>Smoother Animations:</strong> High-priority updates don't wait for low-priority work
+                    </li>
+                    <li><strong>Better Responsiveness:</strong> User interactions are prioritized</li>
+                    <li><strong>Concurrent Features:</strong> Suspense, transitions, streaming SSR</li>
+                    <li><strong>Memory Efficiency:</strong> Can reuse or abort work</li>
+                </ol>
+            </div>
+
+            <!-- Section 12: Shadow DOM -->
+            <h2 class="section-counter">Shadow DOM</h2>
+
+            <div class="definition-box">
+                <p><strong>Shadow DOM:</strong> A browser technology that enables encapsulation of DOM subtrees,
+                    allowing components to have private styling and markup that doesn't leak to the main document.</p>
+            </div>
+
+            <h3 class="subsection-counter">Shadow DOM vs Virtual DOM</h3>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Aspect</th>
+                        <th>Shadow DOM</th>
+                        <th>Virtual DOM</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Purpose</strong></td>
+                        <td>Encapsulation and scoping</td>
+                        <td>Performance optimization</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Browser Feature</strong></td>
+                        <td>✅ Native browser API</td>
+                        <td>❌ Library implementation</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Use Case</strong></td>
+                        <td>Web Components, custom elements</td>
+                        <td>React, Vue.js, other frameworks</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Styling</strong></td>
+                        <td>Scoped styles (don't leak out)</td>
+                        <td>Global or CSS-in-JS</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="example-box">
+                <h4>Creating Shadow DOM:</h4>
+                <div class="code-block">
+                    <code>// Create element with shadow DOM
+const element = document.createElement('div');
+const shadowRoot = element.attachShadow({ mode: 'open' });
+
+// Add encapsulated content
+shadowRoot.innerHTML = `
+  &lt;style&gt;
+    p { color: red; }  /* Only applies inside shadow DOM */
+  &lt;/style&gt;
+  &lt;p&gt;Hello from Shadow DOM!&lt;/p&gt;
+`;
+
+// Add to document
+document.body.appendChild(element);</code>
+                </div>
+                <p><strong>Browser controls like &lt;input type="range"&gt; use Shadow DOM internally.</strong></p>
+            </div>
+
+            <!-- Section 13: SPA vs MPA -->
+            <h2 class="section-counter">Single Page vs Multi-Page Applications</h2>
+
+            <h3 class="subsection-counter">Definitions</h3>
+            <div class="definition-box">
+                <p><strong>Single Page Application (SPA):</strong> A web application that loads a single HTML page and
+                    dynamically updates content as users interact. Examples: Gmail, Facebook, Trello.</p>
+                <p><strong>Multi-Page Application (MPA):</strong> A traditional web application where each page reloads
+                    completely when navigating. Examples: Wikipedia, Amazon, eBay.</p>
+            </div>
+
+            <h3 class="subsection-counter">Detailed Comparison</h3>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>SPA</th>
+                        <th>MPA</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Page Loading</strong></td>
+                        <td>Initial load only, then dynamic updates</td>
+                        <td>Full page reload for each navigation</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Performance</strong></td>
+                        <td>Fast after initial load (like native app)</td>
+                        <td>Consistent but potentially slower</td>
+                    </tr>
+                    <tr>
+                        <td><strong>SEO</strong></td>
+                        <td>Challenging (requires SSR/SSG)</td>
+                        <td>Excellent (each page indexable)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Development</strong></td>
+                        <td>Complex (routing, state management)</td>
+                        <td>Straightforward (traditional web)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Browser History</strong></td>
+                        <td>Manual management (History API)</td>
+                        <td>Automatic (browser handles)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Offline Support</strong></td>
+                        <td>Excellent (Service Workers, PWA)</td>
+                        <td>Limited (traditional caching)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Examples</strong></td>
+                        <td>React apps, Angular, Vue.js</td>
+                        <td>WordPress, Drupal, PHP sites</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 class="subsection-counter">When to Choose SPA</h3>
+            <ul>
+                <li>Highly interactive applications (dashboards, social media)</li>
+                <li>Applications requiring offline functionality</li>
+                <li>When you want app-like user experience</li>
+                <li>When you can implement SSR for SEO</li>
+            </ul>
+
+            <h3 class="subsection-counter">When to Choose MPA</h3>
+            <ul>
+                <li>Content-heavy websites (blogs, news, e-commerce)</li>
+                <li>When SEO is primary concern</li>
+                <li>Applications requiring broad browser compatibility</li>
+                <li>When JavaScript might be disabled</li>
+            </ul>
+
+            <!-- Section 14: Real-world Scenarios -->
+            <h2 class="section-counter">Real-world Scenarios & Practice Questions</h2>
+
+            <div class="practice-question">
+                <h4>Scenario 1: Low-Connectivity News Portal</h4>
+                <p>A startup wants to build a news portal for areas with poor internet. Articles need to load quickly,
+                    and users revisit sections frequently.</p>
+                <p><strong>Question:</strong> SPA or MPA? Justify your choice.</p>
+                <p><strong>Answer:</strong> SPA - Can cache articles, implement offline reading, and minimize data
+                    transfer after initial load.</p>
+            </div>
+
+            <div class="practice-question">
+                <h4>Scenario 2: SEO-focused Magazine</h4>
+                <p>An online magazine wants maximum search engine visibility for thousands of articles.</p>
+                <p><strong>Question:</strong> SPA or MPA? Justify your choice.</p>
+                <p><strong>Answer:</strong> MPA - Each article has unique URL, easily indexable by search engines
+                    without complex SSR setup.</p>
+            </div>
+
+            <div class="practice-question">
+                <h4>Scenario 3: Government Portal Accessibility</h4>
+                <p>A government portal must work on older browsers and devices with JavaScript disabled.</p>
+                <p><strong>Question:</strong> SPA or MPA? Justify your choice.</p>
+                <p><strong>Answer:</strong> MPA - Works without JavaScript, compatible with assistive technologies and
+                    legacy systems.</p>
+            </div>
+
+            <!-- Section 15: Conclusion -->
+            <div class="conclusion">
+                <h2>Exam Preparation Summary</h2>
+
+                <div class="important-note" style="margin: 1.5rem auto; max-width: 800px;">
+                    <p><strong>Must-Know Topics for Exams:</strong></p>
+                    <ol>
+                        <li><strong>HTTP Protocol:</strong> Methods, headers, status codes</li>
+                        <li><strong>Security Policies:</strong> Same Origin Policy, Referrer Policy, CORS</li>
+                        <li><strong>DOM Manipulation:</strong> Methods, properties, events</li>
+                        <li><strong>Virtual DOM:</strong> Why, how it works, benefits</li>
+                        <li><strong>React Fiber:</strong> Problems it solves, how it works</li>
+                        <li><strong>SPA vs MPA:</strong> Differences, when to use each</li>
+                        <li><strong>Browser Rendering:</strong> Process from HTML to pixels</li>
+                    </ol>
+                </div>
+
+                <div class="exam-tip" style="margin: 1.5rem auto; max-width: 800px;">
+                    <p><strong>Final Exam Tips:</strong></p>
+                    <ul>
+                        <li>Understand concepts rather than memorizing</li>
+                        <li>Practice writing code snippets for DOM manipulation</li>
+                        <li>Compare and contrast similar concepts (VDOM vs Shadow DOM)</li>
+                        <li>Be prepared to explain with examples</li>
+                        <li>Review HTTP headers and security policies thoroughly</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="note">
+                <p><strong>Found an error or have questions?</strong> I'm here to help! Email me at <a
+                        href="mailto:imritikraj0@gmail.com">imritikraj0@gmail.com</a> with any corrections, suggestions,
+                    or questions about the material. Good luck with your exam preparation!</p>
+            </div>
+        </article>
+
+        <!-- Sidebar TOC -->
+        <aside>
+            <h3 class="toc-title">📑 Study Guide Contents</h3>
+            <ul class="toc-list">
+                <li><a href="#section1">1. How the Web Works</a>
+                    <ul class="toc-sublist">
+                        <li><a href="#clients">1.1 Clients</a></li>
+                        <li><a href="#servers">1.2 Servers</a></li>
+                    </ul>
+                </li>
+                <li><a href="#section2">2. The Web Toolbox</a>
+                    <ul class="toc-sublist">
+                        <li><a href="#tcpip">2.1 TCP/IP</a></li>
+                        <li><a href="#dns">2.2 DNS</a></li>
+                        <li><a href="#http">2.3 HTTP</a></li>
+                    </ul>
+                </li>
+                <li><a href="#section3">3. Same Origin Policy</a>
+                    <ul class="toc-sublist">
+                        <li><a href="#origin-def">3.1 Origin Definition</a></li>
+                        <li><a href="#examples">3.2 Examples</a></li>
+                    </ul>
+                </li>
+                <li><a href="#section4">4. Referrer Policy</a>
+                    <ul class="toc-sublist">
+                        <li><a href="#policies">4.1 Policy Values</a></li>
+                    </ul>
+                </li>
+                <li><a href="#section5">5. HTTP Headers</a>
+                    <ul class="toc-sublist">
+                        <li><a href="#headers-example">5.1 Example Analysis</a></li>
+                    </ul>
+                </li>
+                <li><a href="#section6">6. Browser Rendering</a>
+                    <ul class="toc-sublist">
+                        <li><a href="#rendering-process">6.1 Step-by-Step</a></li>
+                    </ul>
+                </li>
+                <li><a href="#section7">7. HTML DOM</a>
+                    <ul class="toc-sublist">
+                        <li><a href="#dom-structure">7.1 Tree Structure</a></li>
+                        <li><a href="#node-types">7.2 Node Types</a></li>
+                    </ul>
+                </li>
+                <li><a href="#section8">8. DOM Manipulation</a>
+                    <ul class="toc-sublist">
+                        <li><a href="#methods">8.1 Methods</a></li>
+                        <li><a href="#examples-code">8.2 Code Examples</a></li>
+                    </ul>
+                </li>
+                <li><a href="#section9">9. Browser Architecture</a>
+                    <ul class="toc-sublist">
+                        <li><a href="#components">9.1 Components</a></li>
+                    </ul>
+                </li>
+                <li><a href="#section10">10. Virtual DOM</a>
+                    <ul class="toc-sublist">
+                        <li><a href="#why-vdom">10.1 Why Needed</a></li>
+                        <li><a href="#how-vdom">10.2 How It Works</a></li>
+                        <li><a href="#benefits">10.3 Benefits</a></li>
+                        <li><a href="#misconceptions">10.4 Misconceptions</a></li>
+                    </ul>
+                </li>
+                <li><a href="#section11">11. React Fiber</a>
+                    <ul class="toc-sublist">
+                        <li><a href="#problems">11.1 Problems Solved</a></li>
+                        <li><a href="#solutions">11.2 Solutions</a></li>
+                    </ul>
+                </li>
+                <li><a href="#section12">12. Shadow DOM</a>
+                    <ul class="toc-sublist">
+                        <li><a href="#vs-virtual">12.1 vs Virtual DOM</a></li>
+                        <li><a href="#example-shadow">12.2 Example</a></li>
+                    </ul>
+                </li>
+                <li><a href="#section13">13. SPA vs MPA</a>
+                    <ul class="toc-sublist">
+                        <li><a href="#definitions">13.1 Definitions</a></li>
+                        <li><a href="#comparison">13.2 Comparison</a></li>
+                        <li><a href="#when-to-choose">13.3 When to Choose</a></li>
+                    </ul>
+                </li>
+                <li><a href="#section14">14. Practice Questions</a></li>
+                <li><a href="#conclusion">Conclusion & Tips</a></li>
+            </ul>
+
+            <div class="quick-facts">
+                <h4>📋 Quick Facts</h4>
+                <ul>
+                    <li><strong>Same Origin Policy:</strong> Protocol + Host + Port must match</li>
+                    <li><strong>HTTP Default Port:</strong> 80 (443 for HTTPS)</li>
+                    <li><strong>Virtual DOM:</strong> React's performance optimization</li>
+                    <li><strong>Shadow DOM:</strong> Browser's encapsulation feature</li>
+                    <li><strong>React Fiber:</strong> Introduced in React 16</li>
+                    <li><strong>SPA:</strong> Single HTML, dynamic updates</li>
+                    <li><strong>MPA:</strong> Multiple pages, full reloads</li>
+                </ul>
+            </div>
+
+            <div class="exam-tip" style="margin-top: 1.5rem; padding: 1rem;">
+                <p style="margin: 0; font-size: 0.85rem;"><strong>Study Strategy:</strong> Review this guide 2-3 times.
+                    Test yourself by explaining each concept aloud.</p>
+            </div>
+        </aside>
+    </main>
+
+    <footer>
+        <div class="footer-links">
+            <a href="https://github.com/ritikraj07" target="_blank">GitHub</a>
+            <a href="https://www.youtube.com/@Beer-with-Bugs" target="_blank">YouTube</a>
+            <a href="https://www.instagram.com/dev_ritik07/" target="_blank">Instagram</a>
+            <a href="https://www.linkedin.com/in/ritik-raj07/" target="_blank">LinkedIn</a>
+            <a href="mailto:imritikraj0@gmail.com">Report Errors</a>
+        </div>
+
+        <div class="note" style="margin: 1.5rem auto; max-width: 800px;">
+            <p><strong>Note to Students:</strong> This guide covers 100% of the Web Technologies syllabus from the
+                provided PDF. If you find any discrepancies or need clarification on any topic, please email me at <a
+                    href="mailto:imritikraj0@gmail.com">imritikraj0@gmail.com</a>. I'll respond within 24 hours to help
+                with your exam preparation.</p>
+        </div>
+
+        <div class="copyright">
+            <p>© 2025 TechBlog by Ritik. Complete Web Technologies Exam Study Guide.</p>
+            <p>All rights reserved. Created for educational purposes to assist students in exam preparation.</p>
         </div>
     </footer>
+
+    <script>
+        // Add IDs to all sections for TOC navigation
+        document.addEventListener('DOMContentLoaded', function () {
+            // Add IDs to main sections
+            const sections = document.querySelectorAll('h2, h3');
+            sections.forEach((section, index) => {
+                let id = section.textContent
+                    .toLowerCase()
+                    .replace(/[^a-z0-9\s]/g, '')
+                    .replace(/\s+/g, '-')
+                    .replace(/^-+|-+$/g, '');
+
+                // Ensure unique IDs
+                if (document.getElementById(id)) {
+                    id = id + '-' + index;
+                }
+
+                section.id = id;
+            });
+
+            // Update TOC links
+            document.querySelectorAll('.toc-list a, .toc-sublist a').forEach(link => {
+                const href = link.getAttribute('href');
+                if (href && href.startsWith('#')) {
+                    link.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        const targetId = this.getAttribute('href').substring(1);
+                        const targetElement = document.getElementById(targetId);
+                        if (targetElement) {
+                            window.scrollTo({
+                                top: targetElement.offsetTop - 100,
+                                behavior: 'smooth'
+                            });
+                        }
+                    });
+                }
+            });
+
+            // Add active class to current section in TOC
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.3
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        // Remove active class from all links
+                        document.querySelectorAll('.toc-list a, .toc-sublist a').forEach(link => {
+                            link.classList.remove('active');
+                        });
+
+                        // Add active class to corresponding link
+                        const id = entry.target.id;
+                        const correspondingLink = document.querySelector(`a[href="#${id}"]`);
+                        if (correspondingLink) {
+                            correspondingLink.classList.add('active');
+                            correspondingLink.style.color = 'var(--accent)';
+                            correspondingLink.style.fontWeight = 'bold';
+                        }
+                    }
+                });
+            }, observerOptions);
+
+            // Observe all sections
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+        });
+    </script>
 </body>
 
 </html>
